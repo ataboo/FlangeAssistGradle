@@ -1,0 +1,133 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+	android:paddingLeft="12dp"
+	android:paddingRight="12dp" >
+	<RelativeLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" >
+		<TextView
+			android:id="@+id/cpi_header"
+			android:text="@string/cpi_header"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true" />
+		<TextView
+			android:id="@+id/cpi_wageval"
+			android:text="Avg. Group 4 Wage:"
+			android:textSize="18dp"
+			android:textStyle="bold"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/cpi_header"
+			android:layout_marginLeft="15dp"
+			android:layout_marginTop="7dp" />
+		<EditText
+			android:id="@+id/cpi_wageedit"
+			android:inputType="numberDecimal"
+			android:layout_width="200dp"
+			android:layout_height="wrap_content"
+			android:maxLines="1"
+			android:hint="Group 4 Average Wage Package"
+			android:maxLength="20"
+			android:singleLine="true"
+			android:layout_toRightOf="@id/cpi_wageval"
+			android:layout_below="@id/cpi_header" />
+		<View
+			android:id="@+id/cpi_border_line"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_below="@id/cpi_wageedit"
+			android:layout_marginTop="6dp"
+			android:layout_marginBottom="6dp"
+			android:background="#70a5b3" />
+		<TextView
+			android:id="@+id/cpi_cpi_label"
+			android:text="CPI Annual"
+			android:textSize="14dp"
+			android:textStyle="bold"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/cpi_border_line"
+			android:layout_marginLeft="15dp" />
+		<TextView
+			android:id="@+id/cpi_wtc_label"
+			android:text="WTC ($/BBL)"
+			android:textSize="14dp"
+			android:textStyle="bold"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/cpi_border_line"
+			android:layout_toRightOf="@id/cpi_cpi_label"
+			android:layout_marginLeft="15dp" />
+		<NumberPicker
+			android:id="@+id/cpi_picker"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/cpi_cpi_label" 
+			android:layout_marginLeft="12dp" />
+		<NumberPicker
+			android:id="@+id/wtc_picker"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/cpi_cpi_label"
+			android:layout_toRightOf="@id/cpi_cpi_label"
+			android:layout_marginLeft="16dp" />
+		<Button
+			android:id="@+id/cpi_send"
+			android:text="@string/cpi_send"
+			android:textSize="24dp"
+			android:layout_marginTop="64dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/cpi_cpi_label"
+			android:layout_toRightOf="@id/wtc_picker" />
+
+		<View
+			android:id="@+id/cpi_border_line2"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_below="@id/cpi_picker"
+			android:layout_marginTop="6dp"
+			android:layout_marginBottom="6dp"
+			android:background="#70a5b3" />
+		<TextView
+			android:id="@+id/cpi_rateannual"
+			android:text="Potential Annual Raise: 2.1%"
+			android:textSize="14dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/cpi_border_line2" />
+		<TextView
+			android:id="@+id/cpi_ratesemi"
+			android:text="Semi Annual Increase: 2.1%"
+			android:textSize="14dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/cpi_rateannual" />
+		<TextView
+			android:id="@+id/cpi_amountsemi"
+			android:text="Semi Annual Raise: $0.76"
+			android:textSize="14dp"
+			android:textStyle="bold"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/cpi_ratesemi" />
+		<TextView
+			android:id="@+id/cpi_ratefinal"
+			android:text="Final Wage: $45.00"
+			android:textSize="14dp"
+			android:textStyle="bold"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/cpi_amountsemi" />
+		<TextView
+			android:id="@+id/cpi_messages"
+			android:text="This is where the messages will go."
+			android:textSize="18dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/cpi_ratefinal"
+			android:textColor="#CB594C" />
+	</RelativeLayout>
+</ScrollView>

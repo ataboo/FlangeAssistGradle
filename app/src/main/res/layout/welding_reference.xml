@@ -1,0 +1,165 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+	android:paddingLeft="12dp"
+	android:paddingRight="12dp" >
+	<RelativeLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" >
+		<TextView
+			android:id="@+id/weld_header"
+			android:text="Change the welding electrode AWS numbers to see it's attributes."
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true" />
+		<LinearLayout
+			android:id="@+id/weld_PickerLinearLayout"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/weld_header"
+			android:orientation="horizontal"
+			android:layout_centerHorizontal="true"
+			>
+			<TextView
+				android:id="@+id/weld_e_label"
+				android:text="E"
+				android:textSize="32sp"
+				android:textStyle="bold"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/weld_header"
+				android:layout_marginTop="68dp" />
+			<NumberPicker
+				android:id="@+id/weld_strength_picker"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="12dp" />
+			<NumberPicker
+				android:id="@+id/weld_position_picker"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/weld_header"
+				android:layout_toRightOf="@id/weld_strength_picker"
+				android:layout_marginLeft="12dp" />
+			<NumberPicker
+				android:id="@+id/weld_coating_picker"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/weld_header"
+				android:layout_toRightOf="@id/weld_position_picker"
+				android:layout_marginLeft="12dp" />
+		</LinearLayout>
+		<View
+			android:id="@+id/weld_pb1"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_below="@id/weld_PickerLinearLayout"
+			android:layout_marginTop="6dp"
+			android:layout_marginBottom="6dp"
+			android:background="#70a5b3" />
+		<TextView
+			android:id="@+id/weld_strengthTitle"
+			android:text="Weldmetal Strength:"
+			android:textSize="14dp"
+			android:textStyle="bold"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/weld_pb1" />
+		<TextView
+			android:id="@+id/weld_strengthBlurb"
+			android:text=""
+			android:textSize="14dp"
+			android:layout_marginLeft="12dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/weld_strengthTitle"
+			android:layout_below="@id/weld_pb1" />
+		<TextView
+			android:id="@+id/weld_positionTitle"
+			android:text="Recommended Positions:"
+			android:textSize="14dp"
+			android:textStyle="bold"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/weld_strengthTitle" />
+		<TextView
+			android:id="@+id/weld_positionBlurb"
+			android:text=""
+			android:textSize="14dp"
+			android:layout_marginLeft="12dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/weld_positionTitle"
+			android:layout_below="@id/weld_strengthTitle" />
+		<TextView
+			android:id="@+id/weld_coatingTitle"
+			android:text="Electrode Coating:"
+			android:textSize="14dp"
+			android:textStyle="bold"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/weld_positionTitle" />
+		<TextView
+			android:id="@+id/weld_coatingBlurb"
+			android:text=""
+			android:textSize="14dp"
+			android:layout_marginLeft="12dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/weld_coatingTitle"
+			android:layout_below="@id/weld_positionTitle" />
+		<TextView
+			android:id="@+id/weld_polarityTitle"
+			android:text="Supported Polarity:"
+			android:textSize="14dp"
+			android:textStyle="bold"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/weld_coatingTitle" />
+		<TextView
+			android:id="@+id/weld_polarityBlurb"
+			android:text=""
+			android:textSize="14dp"
+			android:layout_marginLeft="12dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/weld_polarityTitle"
+			android:layout_below="@id/weld_coatingTitle" />
+		<TextView
+			android:id="@+id/weld_footNotes"
+			android:text=""
+			android:layout_marginTop="16dp"
+			android:textSize="14dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/weld_polarityTitle" />
+		<View
+			android:id="@+id/weld_pb2"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_below="@id/weld_footNotes"
+			android:layout_marginTop="6dp"
+			android:layout_marginBottom="6dp"
+			android:background="#70a5b3" />
+		<!--
+		<TextView
+			android:id="@+id/symbol_header"
+			android:text="Specify a weld in the dropdowns to generate a symbol."
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/weld_pb2" />
+		<LinearLayout
+			android:id="@+id/symbol_linear"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			>
+			<Spinner
+				android:id="@+id/symbol_mainCatSpin"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+		</LinearLayout>
+		-->
+		
+	</RelativeLayout>
+</ScrollView>

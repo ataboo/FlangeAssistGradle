@@ -1,0 +1,106 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+	android:paddingLeft="12dp"
+	android:paddingRight="12dp" >
+	<RelativeLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" >
+		<TextView
+			android:id="@+id/nozzle_header"
+			android:text="Change the values to calculate arclengths for nozzle placement:"
+			android:textSize="18sp"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true" />
+		<TextView
+			android:id="@+id/nozzle_shellODText"
+			android:text="Shell O.D:"
+			android:layout_margin="4dp"
+			android:layout_width="180dp"
+			android:layout_height="wrap_content"
+			android:textSize="16sp"
+			android:layout_below="@id/nozzle_header" />
+		<EditText
+			android:id="@+id/nozzle_shellODEdit"
+			android:layout_width="250dp"
+			android:layout_height="wrap_content"
+			android:maxLines="1"
+			android:maxLength="20"
+			android:singleLine="true"
+			android:inputType="numberDecimal"
+			android:layout_below="@id/nozzle_header"
+			android:layout_toRightOf="@id/nozzle_shellODText" />
+		<TextView
+			android:id="@+id/nozzle_angleText"
+			android:text="Angle to Nozzle Center:"
+			android:layout_margin="4dp"
+			android:layout_width="180dp"
+			android:layout_height="wrap_content"
+			android:textSize="16sp"
+			android:layout_below="@id/nozzle_shellODText" />
+		<EditText
+			android:id="@+id/nozzle_angleEdit"
+			android:layout_width="250dp"
+			android:layout_height="wrap_content"
+			android:maxLines="1"
+			android:maxLength="20"
+			android:singleLine="true"
+			android:inputType="numberDecimal"
+			android:layout_below="@id/nozzle_shellODText"
+			android:layout_toRightOf="@id/nozzle_angleText" />
+		<TextView
+			android:id="@+id/nozzle_nozODText"
+			android:text="Nozzle O.D:"
+			android:layout_margin="4dp"
+			android:layout_width="180dp"
+			android:layout_height="wrap_content"
+			android:textSize="16sp"
+			android:layout_below="@id/nozzle_angleText" />
+		<EditText
+			android:id="@+id/nozzle_nozODEdit"
+			android:layout_width="250dp"
+			android:layout_height="wrap_content"
+			android:maxLines="1"
+			android:maxLength="20"
+			android:singleLine="true"
+			android:inputType="numberDecimal"
+			android:layout_below="@id/nozzle_angleText"
+			android:layout_toRightOf="@id/nozzle_nozODText" />
+		<View
+			android:id="@+id/nozzle_pb1"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_below="@id/nozzle_nozODText"
+			android:layout_marginTop="24dp"
+			android:layout_marginBottom="24dp"
+			android:background="#70a5b3" />
+		<TextView
+			android:id="@+id/nozzle_arcCenterText"
+			android:text="Arclength to Nozzle Center:"
+			android:layout_margin="4dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textStyle="bold"
+			android:textSize="16sp"
+			android:layout_below="@id/nozzle_pb1" />
+		<TextView
+			android:id="@+id/nozzle_angleEdgeText"
+			android:text="Angles to Nozzle Edges:"
+			android:layout_margin="4dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="16sp"
+			android:textStyle="bold"
+			android:layout_below="@id/nozzle_arcCenterText" />
+		<TextView
+			android:id="@+id/nozzle_arcEdgesText"
+			android:text="Arclength to Nozzle Edges:"
+			android:layout_margin="4dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textStyle="bold"
+			android:textSize="16sp"
+			android:layout_below="@id/nozzle_angleEdgeText" />
+		</RelativeLayout>
+</ScrollView>

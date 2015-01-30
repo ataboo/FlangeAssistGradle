@@ -1,0 +1,177 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+	android:paddingLeft="12dp"
+	android:paddingRight="12dp" >
+	<RelativeLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" >
+		<!-- Load Calculator   -->
+		<TextView
+			android:id="@+id/rigtrig_header"
+			android:text="Change the values to calculate the load on each sling:"
+			android:textSize="18sp"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true" />
+		<TextView
+			android:id="@+id/rigtrig_legsText"
+			android:text="Legs:"
+			android:layout_margin="4dp"
+			android:layout_width="180dp"
+			android:layout_height="wrap_content"
+			android:textSize="16sp"
+			android:layout_below="@id/rigtrig_header" />
+		<Spinner
+			android:id="@+id/rigtrig_legsSpinner"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/rigtrig_header"
+			android:layout_toRightOf="@id/rigtrig_legsText" />
+		<TextView
+			android:id="@+id/rigtrig_wrapText"
+			android:text="Wrap:"
+			android:layout_margin="4dp"
+			android:layout_width="180dp"
+			android:textSize="16sp"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/rigtrig_legsText" />
+		
+		<!-- drawable -->
+			
+		<Spinner
+			android:id="@+id/rigtrig_wrapSpinner"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/rigtrig_legsText"
+			android:layout_toRightOf="@id/rigtrig_wrapText" />
+		<TextView
+			android:id="@+id/rigtrig_loadText"
+			android:text="Load Weight:"
+			android:layout_margin="4dp"
+			android:layout_width="180dp"
+			android:textSize="16sp"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/rigtrig_wrapText" />
+		<EditText
+			android:id="@+id/rigtrig_loadEdit"
+			android:layout_width="250dp"
+			android:layout_height="wrap_content"
+			android:maxLines="1"
+			android:hint="Load Weight"
+			android:maxLength="20"
+			android:singleLine="true"
+			android:inputType="numberDecimal"
+			android:layout_below="@id/rigtrig_wrapText"
+			android:layout_toRightOf="@id/rigtrig_loadText" />
+		<TextView
+			android:id="@+id/rigtrig_angleText"
+			android:text="Sling Angle:"
+			android:layout_margin="4dp"
+			android:layout_width="180dp"
+			android:textSize="16sp"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/rigtrig_loadText" />
+		<EditText
+			android:id="@+id/rigtrig_angleEdit"
+			android:layout_width="250dp"
+			android:layout_height="wrap_content"
+			android:maxLines="1"
+			android:hint="Sling Angle"
+			android:maxLength="20"
+			android:singleLine="true"
+			android:inputType="numberDecimal"
+			android:layout_below="@id/rigtrig_loadText"
+			android:layout_toRightOf="@id/rigtrig_angleText" />
+		<TextView
+			android:id="@+id/rigtrig_slingCapText"
+			android:text="Sling Capacity:"
+			android:textSize="20sp"
+			android:layout_margin="4dp"
+			android:textStyle="bold"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/rigtrig_angleEdit" />
+		<TextView
+			android:id="@+id/rigtrig_legWarning"
+			android:text="For lifts with 4 legs it is good practice to treat it as if it has 3 legs when calculating capacity."
+			android:textSize="12dp"
+			android:textColor="#ffff00"
+			android:visibility="invisible"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/rigtrig_slingCapText" />
+		
+		<View
+			android:id="@+id/rigtrig_pb2"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_below="@id/rigtrig_legWarning"
+			android:layout_marginTop="24dp"
+			android:layout_marginBottom="24dp"
+			android:background="#70a5b3" />
+		
+		<TextView
+			android:id="@+id/rigtrig_nylonTableHeader"
+			android:text="2-ply Nylon Sling Table:"
+			android:textSize="18sp"
+			android:layout_marginBottom="8dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/rigtrig_pb2" />
+		<TextView
+			android:id="@+id/rigtrig_nylonSizeText"
+			android:layout_width="180dp"
+			android:layout_margin="4dp"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/rigtrig_nylonTableHeader"
+			android:textSize="16sp"
+			android:text="Sling Width:"/>
+		<Spinner
+			android:id="@+id/rigtrig_nylonSizeSpin"
+			android:layout_width="160dp"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/rigtrig_nylonTableHeader"
+			android:layout_toRightOf="@id/rigtrig_nylonSizeText"/>
+		<TextView
+			android:id="@+id/rigtrig_nylonWrapText"
+			android:layout_width="180dp"
+			android:layout_margin="4dp"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/rigtrig_nylonSizeText"
+			android:textSize="16sp"
+			android:text="Wrap:" />
+		<Spinner
+			android:id="@+id/rigtrig_nylonWrapSpin"
+			android:layout_below="@id/rigtrig_nylonSizeText"
+			android:layout_toRightOf="@id/rigtrig_nylonWrapText"
+			android:layout_width="160dp"
+			android:layout_height="wrap_content"/>
+		<TextView
+			android:id="@+id/rigtrig_nylonTableCapacity"
+			android:text="Rated Capacity: "
+			android:layout_marginBottom="8dp"
+			android:textSize="20sp"
+			android:textStyle="bold"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/rigtrig_nylonWrapText" />
+		<View
+			android:id="@+id/rigtrig_pb3"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_below="@id/rigtrig_nylonTableCapacity"
+			android:layout_marginTop="12dp"
+			android:layout_marginBottom="36dp"
+			android:background="#70a5b3" />
+		
+		<TextView
+			android:id="@+id/rigtrig_nylonTableDisclaimer"
+			android:text="These calculations and tables are not guaranteed to be accurate. Official resources should be used when planning out rigging."
+			android:textSize="12dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/rigtrig_pb3" />
+		
+	</RelativeLayout>
+</ScrollView>

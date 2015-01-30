@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp" >
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingBottom="12dp">
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:text="By ASME Flange Size:" />
+        <Spinner
+            android:id="@+id/sizeSpinner"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_alignParentLeft="true" />
+        <Spinner
+            android:id="@+id/rateSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/sizeSpinner"
+            android:layout_below="@id/title" />
+
+        <!-- Description Boxes -->
+        <TextView
+            android:id="@+id/sDiamText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="@string/sDiam_text"
+            android:textSize="18sp"
+            android:layout_below="@id/sizeSpinner" />
+        <TextView
+            android:id="@+id/wrenchText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="@string/wrench_text"
+            android:textSize="18sp"
+            android:layout_below="@id/sDiamText" />
+        <TextView
+            android:id="@+id/driftText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="@string/drift_text"
+            android:textSize="18sp"
+            android:layout_below="@id/wrenchText" />
+        <TextView
+            android:id="@+id/sCountText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="@string/sCount_text"
+            android:textSize="18sp"
+            android:layout_below="@id/driftText" />
+        <TextView
+            android:id="@+id/sLengthText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="@string/sLength_text"
+            android:textSize="18sp"
+            android:layout_below="@id/sCountText" />
+            <TextView
+            android:id="@+id/b7Text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="@string/b7_text"
+            android:textSize="18sp"
+            android:layout_below="@id/sLengthText" />
+                <TextView
+            android:id="@+id/b7MText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="@string/b7m_text"
+            android:textSize="18sp"
+            android:layout_below="@id/b7Text" />
+
+        <!-- Stats Boxes -->
+        <TextView
+            android:id="@+id/sDiamVal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:freezesText="true"
+            android:gravity="right"
+            android:text="@string/default_value"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_below="@id/sizeSpinner" />
+        <TextView
+            android:id="@+id/wrenchVal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:freezesText="true"
+            android:gravity="right"
+            android:text="@string/default_value"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_below="@id/sDiamVal" />
+        <TextView
+            android:id="@+id/driftVal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:freezesText="true"
+            android:gravity="right"
+            android:text="@string/default_value"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_below="@id/wrenchVal" />
+        <TextView
+            android:id="@+id/sCountVal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:freezesText="true"
+            android:gravity="right"
+            android:text="@string/default_value"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_below="@id/driftVal" />
+        <TextView
+            android:id="@+id/sLengthVal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:freezesText="true"
+            android:gravity="right"
+            android:text="@string/default_value"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_below="@id/sCountVal" />
+        <TextView
+            android:id="@+id/b7Val"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:freezesText="true"
+            android:gravity="right"
+            android:text="@string/default_value"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_below="@id/sLengthVal" />
+        <TextView
+            android:id="@+id/b7MVal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:freezesText="true"
+            android:gravity="right"
+            android:text="@string/default_value"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_below="@id/b7Val" />
+
+        <!--By Stud Size Reference-->
+
+        <View
+            android:id="@+id/flange_pb1"
+            android:layout_below="@id/b7MVal"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="6dp"
+            android:background="#70a5b3" />
+        <TextView
+            android:id="@+id/stud_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_marginTop="8dp"
+            android:layout_below="@+id/flange_pb1"
+            android:text="By Stud Size:" />
+        <Spinner
+            android:id="@+id/stud_spinner"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/stud_title"
+        />
+        <TextView
+            android:id="@+id/stud_wrenchText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="Wrench Size"
+            android:textSize="18sp"
+            android:layout_below="@id/stud_spinner" />
+        <TextView
+            android:id="@+id/stud_driftText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="Drift Pin"
+            android:textSize="18sp"
+            android:layout_below="@id/stud_wrenchText" />
+        <TextView
+            android:id="@+id/stud_b7Text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="B7 Torque"
+            android:textSize="18sp"
+            android:layout_below="@id/stud_driftText" />
+        <TextView
+            android:id="@+id/stud_b7mText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="B7M Torque"
+            android:textSize="18sp"
+            android:layout_below="@id/stud_b7Text" />
+        <!-- Val Boxes on Right -->
+        <TextView
+            android:id="@+id/stud_wrenchVal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:freezesText="true"
+            android:gravity="right"
+            android:text="-"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_below="@id/stud_spinner" />
+        <TextView
+            android:id="@+id/stud_driftVal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:freezesText="true"
+            android:gravity="right"
+            android:text="-"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_below="@id/stud_wrenchVal" />
+        <TextView
+            android:id="@+id/stud_b7Val"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:freezesText="true"
+            android:gravity="right"
+            android:text="-"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_below="@id/stud_driftVal" />
+        <TextView
+            android:id="@+id/stud_b7mVal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:freezesText="true"
+            android:gravity="right"
+            android:text="-"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_below="@id/stud_b7Val" />
+    </RelativeLayout>
+</ScrollView>

@@ -1,0 +1,5 @@
+C:\AndroidStuff\Projects\AndroidstudioProjects\FlangeAssist\app\build\intermediates\classes\debug
+C:\AndroidStuff\Projects\AndroidstudioProjects\FlangeAssist\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.0-7ad99075ae27b74d3ec9416a21418016fc38086f.jar
+C:\AndroidStuff\Projects\AndroidstudioProjects\FlangeAssist\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.0-2b99130cd2dd1c38b76f5bbe553e4e2e251a3778.jar
+C:\AndroidStuff\Projects\AndroidstudioProjects\FlangeAssist\app\build\intermediates\pre-dexed\debug\classes-29aeeac4ef34df29dcb65b7574491e8f85e6df6a.jar
+C:\AndroidStuff\Projects\AndroidstudioProjects\FlangeAssist\app\build\intermediates\pre-dexed\debug\classes-bd4d308cb870cf7660b7368e6c152acb8bb124f4.jar

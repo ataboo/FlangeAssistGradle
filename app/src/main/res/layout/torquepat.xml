@@ -1,0 +1,40 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+	android:paddingLeft="12dp"
+	android:paddingRight="12dp" >
+	<TextView
+		android:id="@+id/torque_title"
+		android:text="@string/torqueInstruction"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true" />
+    <EditText
+		android:id="@+id/studBox"
+	    android:layout_width="120dp"
+		android:layout_height="wrap_content"
+		android:maxLines="1"
+		android:hint="@string/studCount"
+		android:maxLength="50"
+		android:singleLine="true"
+		android:layout_below="@id/torque_title" />
+	<Spinner
+		android:id="@+id/patSpin"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/studBox" />
+	<Button
+		android:id="@+id/submit"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/torque_title"
+		android:layout_toRightOf="@id/studBox"
+		android:text="@string/torque_but" />
+	<TextView
+		android:id="@+id/torqueReturn"
+		android:text="@string/torque_header"
+		android:textSize="18sp"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/patSpin" />
+</RelativeLayout>

@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	<LinearLayout
+		android:id="@+id/main_topLin"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:orientation="vertical"
+		android:layout_marginLeft="40dp"
+		android:layout_marginRight="40dp"
+		android:layout_marginTop="16dp" >
+		<Button
+			android:id="@+id/main_paychequeButton"
+			android:layout_width="fill_parent"
+			android:layout_height="60dp"
+			android:padding="10dp"
+			android:text="Paycheque Calculator" />
+		<Button
+			android:id="@+id/main_toolButton"
+			android:layout_width="fill_parent"
+			android:layout_height="60dp"
+			android:text="Trade Tools"
+			android:padding="10dp" />
+		<Button
+			android:id="@+id/main_linkButton"
+			android:layout_width="fill_parent"
+			android:layout_height="60dp"
+			android:padding="10dp"
+			android:text="Hall Contacts" />
+		<Button
+			android:id="@+id/main_settingsButton"
+			android:layout_width="fill_parent"
+			android:layout_height="60dp"
+			android:padding="10dp"
+			android:text="Settings" />
+		<Button
+			android:id="@+id/main_aboutButton"
+			android:layout_width="fill_parent"
+			android:layout_height="60dp"
+			android:text="About"
+			android:padding="10dp"/>
+	</LinearLayout>
+</RelativeLayout>

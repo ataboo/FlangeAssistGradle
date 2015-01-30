@@ -1,0 +1,230 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/cash_mainLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp" >
+
+        <LinearLayout
+            android:id="@+id/cash_countLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+			android:layout_marginTop="24dp" >
+
+            <TextView
+                android:id="@+id/cash_dollarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$"
+                android:textSize="80sp" />
+
+            <TextView
+                android:id="@+id/cash_thousandText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="80sp" />
+
+            <TextView
+                android:id="@+id/cash_hundredsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="80sp" />
+
+            <TextView
+                android:id="@+id/cash_tensText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="80sp" />
+
+            <TextView
+                android:id="@+id/cash_onesText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="80sp" />
+
+            <TextView
+                android:id="@+id/cash_decimalText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="."
+                android:textSize="80sp" />
+
+            <TextView
+                android:id="@+id/cash_tenthsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="80sp" />
+
+            <TextView
+                android:id="@+id/cash_hundredthsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="80sp" />
+        </LinearLayout>
+		<LinearLayout
+			android:id="@+id/cash_counterOTLayout"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_horizontal">
+    	    <TextView
+				android:id="@+id/cash_counterOTIndicator"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Straight Time (1x)"
+				android:textSize="24sp"
+				android:layout_marginLeft="10dp"
+				android:textColor="#CD7F32"/>
+        </LinearLayout>
+		<Button
+            android:id="@+id/cash_settingsBut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@android:drawable/ic_menu_more"
+            android:layout_marginTop="36dp"
+			android:text="Change Settings:"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:id="@+id/cash_setLin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            <LinearLayout
+                android:id="@+id/cash_Lin"
+				android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+				android:gravity="center_vertical" >
+				<NumberPicker
+					android:id="@+id/cash_startHour"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					/>
+				<TextView
+					android:id="@+id/cash_startSeperator"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textSize="42sp"
+					android:text=":"
+				/>
+				<NumberPicker
+					android:id="@+id/cash_startMin"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+				/>
+			</LinearLayout>
+			<LinearLayout
+                android:id="@+id/cash_wageLin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+				android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/cash_wageLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:text="Wage Rate:"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/cash_wageEdit"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:maxLength="10"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/cash_nightshiftCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nightshift" />
+			<CheckBox
+				android:id="@+id/cash_weekendDoubleCheck"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Weekend Doubletime"
+				/>
+            <CheckBox
+                android:id="@+id/cash_holidayCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Holiday" />
+
+            <CheckBox
+                android:id="@+id/cash_fourTensCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Four Tens" />
+
+            <LinearLayout
+                android:id="@+id/cash_weekdayLay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/cash_weekdayLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Weekday Hrs   1x:" />
+
+                <EditText
+                    android:id="@+id/cash_weekdaySingle"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:maxLength="5"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+                <TextView
+                    android:id="@+id/cash_weekdayLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1.5x:" />
+
+                <EditText
+                    android:id="@+id/cash_weekdayHalf"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:maxLength="5"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+                <TextView
+                    android:id="@+id/cash_weekdayLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2x:" />
+
+                <EditText
+                    android:id="@+id/cash_weekdayDouble"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:maxLength="5"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

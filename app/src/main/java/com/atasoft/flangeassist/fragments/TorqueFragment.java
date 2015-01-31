@@ -9,10 +9,10 @@ import com.atasoft.flangeassist.*;
 
 public class TorqueFragment extends Fragment implements OnClickListener
 {
-    View thisFrag;
-	public static final int[] EIGHT_BASE = {1,5,3,7,2,6,4,8};
-	public static final int[] FOUR_BASE = {1,3,2,4};
-	public static final String[] PAT_STRINGS = {"4-point", "8-point", "8-point alternate"};
+    private View thisFrag;
+	private static final int[] EIGHT_BASE = {1,5,3,7,2,6,4,8};
+	private static final int[] FOUR_BASE = {1,3,2,4};
+	private static final String[] PAT_STRINGS = {"4-point", "8-point", "8-point alternate"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,7 +49,7 @@ public class TorqueFragment extends Fragment implements OnClickListener
 		Spinner patSpin = (Spinner) thisFrag.findViewById(R.id.patSpin);
 		int selectedPos = patSpin.getSelectedItemPosition();
 		int[] patBase = selectedPos > 0 ? EIGHT_BASE : FOUR_BASE;
-		boolean isReverse = selectedPos == 2 ? true : false;
+		boolean isReverse = selectedPos == 2;
 		
 		String torqueString = genTorquePattern(patBase, isReverse);
 		

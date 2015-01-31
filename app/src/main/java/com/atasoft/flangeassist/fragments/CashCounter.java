@@ -16,10 +16,9 @@ import android.graphics.*;
 
 
 public class CashCounter extends Fragment implements OnClickListener {
-	
-	boolean tickPause = true;
-	View thisFrag;
-	Context context; 
+
+	private View thisFrag;
+	private Context context;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -29,7 +28,6 @@ public class CashCounter extends Fragment implements OnClickListener {
         this.thisFrag = v;
 		this.context = getActivity().getApplicationContext();
 		setupViews();
-		this.tickPause = false;
 		setupTicker();
 		
 		return v;
@@ -88,47 +86,44 @@ public class CashCounter extends Fragment implements OnClickListener {
     }
 		
 	//-------------------------initial functions-----------------
-	Time timeNow;
-	int[] shiftStartVal = {18, 30};
-	Button setExpand;
-	EditText wageEdit;
-	TextView wageLabel;
-	TextView otIndicator;
-	LinearLayout setLay;
-	CheckBox nightToggle;
-	CheckBox holidayToggle;
-	CheckBox fourTenToggle;
-	CheckBox weekendDoubleToggle;
-	EditText[] weekdayEdits = new EditText[3];
-	AtaTimePicker startAtaPicker;
+    private Time timeNow;
+	private int[] shiftStartVal = {18, 30};
+	private Button setExpand;
+	private EditText wageEdit;
+	private TextView otIndicator;
+	private LinearLayout setLay;
+	private CheckBox nightToggle;
+	private CheckBox holidayToggle;
+	private CheckBox fourTenToggle;
+	private CheckBox weekendDoubleToggle;
+	private EditText[] weekdayEdits = new EditText[3];
+	private AtaTimePicker startAtaPicker;
 	
-	float[] weekdayHours = new float[3];
+	private float[] weekdayHours = new float[3];
 	
-	TranslateAnimation slideInListen;
-	TranslateAnimation slideOutListen;
-	TranslateAnimation slideIn;
-	TranslateAnimation slideOut;
-	
-	Button testButton;
-	int[] oldCountVals = {0,0,0,0,0,0};
-	CounterDigit hundredthDigit;
-	CounterDigit tenthDigit;
-	CounterDigit oneDigit;
-	CounterDigit tenDigit;
-	CounterDigit hundredDigit;
-	CounterDigit thousandDigit;
+	private TranslateAnimation slideInListen;
+	private TranslateAnimation slideOutListen;
+	private TranslateAnimation slideIn;
+	private TranslateAnimation slideOut;
+
+	private int[] oldCountVals = {0,0,0,0,0,0};
+	private CounterDigit hundredthDigit;
+	private CounterDigit tenthDigit;
+	private CounterDigit oneDigit;
+	private CounterDigit tenDigit;
+	private CounterDigit hundredDigit;
+	private CounterDigit thousandDigit;
 	private static final String goldColor = "#FFDF00";
 	private static final String silverColor = "#C0C0C0";
 	private static final String bronzeColor = "#CD7F32";
 	
-	float wageRate;
-	CounterDigit[] counterDigits;
-	SharedPreferences prefs;
+	private float wageRate;
+	private CounterDigit[] counterDigits;
+	private SharedPreferences prefs;
 	private void setupViews(){
 		this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
 		this.timeNow = new Time(Time.getCurrentTimezone());
-		this.wageLabel = (TextView) thisFrag.findViewById(R.id.cash_wageLabel);
 		this.otIndicator = (TextView) thisFrag.findViewById(R.id.cash_counterOTIndicator);
 		this.wageEdit = (EditText) thisFrag.findViewById(R.id.cash_wageEdit);
 		//if(wageEdit.getText().toString() == "") 
@@ -235,9 +230,9 @@ public class CashCounter extends Fragment implements OnClickListener {
 	}
 	
 	//hh,mm,ss
-	int[] currentTimeArr = new int[3];
-	int[] shiftEnd = new int[3];
-	int[] shiftDuration = new int[3];
+    private int[] currentTimeArr = new int[3];
+	private int[] shiftEnd = new int[3];
+	private int[] shiftDuration = new int[3];
 	private void updateValues(){
 		
 		//------Update time info-----
@@ -307,12 +302,10 @@ public class CashCounter extends Fragment implements OnClickListener {
 		float floatEnd = getFloatTime(rangeEnd);
 		float floatCheck = getFloatTime(timeCheck);
 		if(floatStart <= floatEnd){
-			if(floatCheck < floatStart || floatCheck > floatEnd) return false;
-			return true;
-		} else { //range stradles midnight
-			if(floatCheck > floatStart || floatCheck < floatEnd) return true;
-			return false;
-		}
+            return !(floatCheck < floatStart || floatCheck > floatEnd);
+        } else { //range stradles midnight
+            return floatCheck > floatStart || floatCheck < floatEnd;
+        }
 	}
 	
 	private double getEarnings(int[] timeNowArr, int[] shiftStart, float wageVal){
@@ -472,8 +465,7 @@ public class CashCounter extends Fragment implements OnClickListener {
 	
 	private float parseFromEdit(EditText eText, String name) throws NumberFormatException{
 		try{
-			float retFloat = Float.parseFloat(eText.getText().toString());
-			return retFloat;
+			return Float.parseFloat(eText.getText().toString());
 		} catch(NumberFormatException e){
 			Log.e("CashCounter", "NumberFormatException for EditText " + name + ".");
 			return 0f;
@@ -482,7 +474,7 @@ public class CashCounter extends Fragment implements OnClickListener {
 	
 	
 	
-	boolean changeFlag = false;  //true when counter is changing to prevent multiple calls
+	private boolean changeFlag = false;  //true when counter is changing to prevent multiple calls
 	private void updateCounter(int[] newVals){
 		/*
 		if(newString.length() <= 6 && newString.length() > 0){

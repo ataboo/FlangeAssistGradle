@@ -3,7 +3,7 @@ package com.atasoft.helpers;
 public class AtaMathUtils
 {
 	public static float bracketFloat(float value, float lower, float upper){
-		if(upper < lower) return 0f;
+        if(upper < lower) return 0f;
 		if(value > upper) return upper;
 		if(value < lower) return lower;
 		return value;}
@@ -14,4 +14,16 @@ public class AtaMathUtils
 		if(value < lower) return lower;
 		return value;
 	}
+
+    //Attempts to parse float between floor and ceiling values.  Returns 0 on invalid.
+    public static float bracketFloat(String str, float floor, float ceiling) throws NumberFormatException{
+        float val = 0f;
+        try{
+            val = Float.parseFloat(str);
+        } catch(NumberFormatException e){
+            e.printStackTrace();
+        }
+        val = bracketFloat(val, floor, ceiling);
+        return val;
+    }
 }

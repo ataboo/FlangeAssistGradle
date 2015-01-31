@@ -14,49 +14,46 @@ import com.atasoft.helpers.*;
 
 public class PaychequeFragment extends Fragment implements OnClickListener
 {
-	//TODO day wage calc class
 	public enum DayType {
-		FIVE_WEEK, 
-		FIVE_END, 
-		FOUR_WEEK, 
-		FOUR_FRI, 
-		FOUR_END;
+		FIVE_WEEK,
+		FIVE_END,
+		FOUR_WEEK,
+		FOUR_FRI,
+		FOUR_END
 	}
-	
+
 	public static final String NAME = "Paycheque Calculator";
-	double wageRates[];
-	double vacationPay;
-	double workingDuesRate;
-	Boolean oldDayToggle;
-    View thisFrag;
-	Spinner sunSpin;
-	Spinner monSpin;
-	Spinner tueSpin;
-	Spinner wedSpin;
-	Spinner thuSpin;
-	Spinner friSpin;
-	Spinner satSpin;
+	private double[] wageRates;
+	private double vacationPay;
+    private View thisFrag;
+	private Spinner sunSpin;
+	private Spinner monSpin;
+	private Spinner tueSpin;
+	private Spinner wedSpin;
+	private Spinner thuSpin;
+	private Spinner friSpin;
+	private Spinner satSpin;
 	
-	Spinner mealSpin;
-	Spinner loaSpin;
-	Spinner wageSpin;
+	private Spinner mealSpin;
+	private Spinner loaSpin;
+	private Spinner wageSpin;
 	
-	CheckBox taxVal;
-	CheckBox cppVal;
-	CheckBox duesVal;
-	CheckBox monthlyDuesVal;
+	private CheckBox taxVal;
+	private CheckBox cppVal;
+	private CheckBox duesVal;
+	private CheckBox monthlyDuesVal;
 	
-	CheckBox monHol;
-	CheckBox tueHol;
-	CheckBox wedHol;
-	CheckBox thuHol;
-	CheckBox friHol;
+	private CheckBox monHol;
+	private CheckBox tueHol;
+	private CheckBox wedHol;
+	private CheckBox thuHol;
+	private CheckBox friHol;
 	
-	SharedPreferences prefs;
-	Context context;
-	Boolean customDay;
-	String oldProvWage;
-	TaxManager taxManager;
+	private SharedPreferences prefs;
+	private Context context;
+	private Boolean customDay;
+	private String oldProvWage;
+	private TaxManager taxManager;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -118,8 +115,7 @@ public class PaychequeFragment extends Fragment implements OnClickListener
 		redoSpinners();
 		
 		super.onResume();
-		return;
-	}
+    }
 	
 	private void redoSpinners(){
 		Boolean custDayCheck = prefs.getBoolean("custom_daycheck", false);
@@ -151,19 +147,19 @@ public class PaychequeFragment extends Fragment implements OnClickListener
         }
     }
 	
-	TextView sTimeText;
-	TextView hTimeText;
-	TextView dTimeText;
-	TextView wageRateVal;
-	TextView vacationVal;
-	TextView grossVal;
-	TextView exemptVal;
-	TextView dedVal;
-	TextView netVal;
-	ToggleButton fourToggle;
-	ToggleButton nightToggle;
-	ToggleButton travelToggle;
-	ToggleButton dayTravelToggle;
+	private TextView sTimeText;
+	private TextView hTimeText;
+	private TextView dTimeText;
+	private TextView wageRateVal;
+	private TextView vacationVal;
+	private TextView grossVal;
+	private TextView exemptVal;
+	private TextView dedVal;
+	private TextView netVal;
+	private ToggleButton fourToggle;
+	private ToggleButton nightToggle;
+	private ToggleButton travelToggle;
+	private ToggleButton dayTravelToggle;
 	private void setupSpinners() {
         sTimeText = (TextView) thisFrag.findViewById(R.id.sing_val);
 		hTimeText = (TextView) thisFrag.findViewById(R.id.half_val);
@@ -326,8 +322,7 @@ public class PaychequeFragment extends Fragment implements OnClickListener
 		wageSpin.setAdapter(wageAdapt);
 		wageSpin.setSelection((int) wageRates[wageRates.length - 1]);
 		oldProvWage = provWage;
-		return;
-	}
+    }
 	
 	private Boolean verifyCustDays() {
 		String[] dayKeys = {"custom_dayA", "custom_dayB", "custom_dayC"};
@@ -379,9 +374,8 @@ public class PaychequeFragment extends Fragment implements OnClickListener
 			if(strParse[i] < 0) return false;
 		}
 
-		if(strParse[0] + strParse[1] + strParse[2] > 24) return false;		
-		return true;
-	}
+        return strParse[0] + strParse[1] + strParse[2] <= 24;
+    }
 
 	private void pushBootan() {
 		
@@ -410,8 +404,8 @@ public class PaychequeFragment extends Fragment implements OnClickListener
 		if(wageSpin.getSelectedItem().toString().contains("Custom")) {
 		    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
-			// TODO: filter bad custom wages
-			wageRate = Double.parseDouble(prefs.getString("custom_wage", "20"));	
+            float wageFloat = AtaMathUtils.bracketFloat(prefs.getString("custom wage", "20"), 0f, 1000000000f);
+			wageRate = (double) wageFloat;
 		} else {
 			wageRate = wageRates[wageSpin.getSelectedItemPosition()];
 		}
@@ -476,16 +470,16 @@ public class PaychequeFragment extends Fragment implements OnClickListener
 		String yearString = prefs.getString("list_taxYear", "2014");
 		String provString = prefs.getString("list_provwage", "AB");
 
-        //TODO: turn down the suck on the prefs
+        //get strings out of the year prefs. array adapter?
 		int taxYear = TaxManager.TY_2015;
 		int taxProv = TaxManager.PROV_AB;
 		
 		if(yearString.contains("2013")) taxYear = TaxManager.TY_2013;
-        if(yearString.contains("2014")) taxYear = taxManager.TY_2014;
+        if(yearString.contains("2014")) taxYear = TaxManager.TY_2014;
 		
 		if(provString.contains("BC")) taxProv = TaxManager.PROV_BC;
 		if(provString.contains("ON")) taxProv = TaxManager.PROV_ON;
-		//TODO other provinces
+		//other provinces
 		
 		double[] taxReturns = taxManager.getTaxes(grossVac, taxYear, taxProv);
 		//double[] taxReturns = taxManager.getTaxes(1020, taxYear, taxProv);
@@ -557,8 +551,7 @@ public class PaychequeFragment extends Fragment implements OnClickListener
 		SharedPreferences.Editor prefEdit = prefs.edit();
 		prefEdit.putString(prefKey, defaultVal);
 		prefEdit.commit();
-		return;
-	}
+    }
 	
 	private void preSets(int index){
 		if(index == 0) {
@@ -587,7 +580,6 @@ public class PaychequeFragment extends Fragment implements OnClickListener
         if(index == 3) {
         	mealSpin.setSelection(7, false);
         }
-        return;
     }
 	
 	private double[] getCustomDayPrefs(String itemStr) {
@@ -640,7 +632,6 @@ public class PaychequeFragment extends Fragment implements OnClickListener
 	}
 	
 	private double calcDues(double grossNoVac, double duesRate) {		
-		double dues = grossNoVac * duesRate;
-		return dues;
+		return grossNoVac * duesRate;
 	}
 }

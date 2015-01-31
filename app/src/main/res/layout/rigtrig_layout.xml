@@ -95,7 +95,7 @@
 		<TextView
 			android:id="@+id/rigtrig_legWarning"
 			android:text="For lifts with 4 legs it is good practice to treat it as if it has 3 legs when calculating capacity."
-			android:textSize="12dp"
+			android:textSize="12sp"
 			android:textColor="#ffff00"
 			android:visibility="invisible"
 			android:layout_width="wrap_content"
@@ -161,14 +161,14 @@
 			android:layout_width="match_parent"
 			android:layout_height="1dp"
 			android:layout_below="@id/rigtrig_nylonTableCapacity"
-			android:layout_marginTop="12dp"
+			android:layout_marginTop="12sp"
 			android:layout_marginBottom="36dp"
 			android:background="#70a5b3" />
 		
 		<TextView
 			android:id="@+id/rigtrig_nylonTableDisclaimer"
 			android:text="These calculations and tables are not guaranteed to be accurate. Official resources should be used when planning out rigging."
-			android:textSize="12dp"
+			android:textSize="12sp"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_below="@id/rigtrig_pb3" />

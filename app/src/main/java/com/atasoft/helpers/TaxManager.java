@@ -40,11 +40,11 @@ public class TaxManager {
 		public double vacRate;
 	}
 	
-	public TaxManager.TaxStats fedStats;
-	public TaxManager.TaxStats bcStats;
-	public TaxManager.TaxStats abStats;
-	public TaxManager.TaxStats onStats;
-	public double[][] cppEi;
+	private TaxManager.TaxStats fedStats;
+	private TaxManager.TaxStats bcStats;
+	private TaxManager.TaxStats abStats;
+	private TaxManager.TaxStats onStats;
+	private double[][] cppEi;
 	private void setupTaxStats(){
 		
 		//2013, 2014, 2015
@@ -275,8 +275,7 @@ public class TaxManager {
 			(anGross<bracket[3] ? 2 : 3));
 		double rate = fedStats.rates[year][taxIndex];
 		double constK = fedStats.constK[year][taxIndex];
-		double fedTax = anGross * rate - constK - fedStats.taxCred[year];
-		return fedTax;
+		return anGross * rate - constK - fedStats.taxCred[year];
 	}
 	
 	private double getBCTax(double anGross, int year){
@@ -288,8 +287,7 @@ public class TaxManager {
 			(anGross<bracket[5] ? 4 : 5))));
 		double rate = bcStats.rates[year][taxIndex];  //Rate and constant will share same index
 		double constK = bcStats.constK[year][taxIndex];	
-		double taxTotal = rate * anGross - constK - bcStats.taxCred[year] - bcTaxReduction(anGross, year);
-		return taxTotal;
+		return rate * anGross - constK - bcStats.taxCred[year] - bcTaxReduction(anGross, year);
 	}
 	
 	private double getABTax(double anGross, int year){

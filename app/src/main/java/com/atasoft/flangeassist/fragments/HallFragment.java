@@ -12,8 +12,8 @@ import com.atasoft.flangeassist.*;
 public class HallFragment extends Fragment {
 	
 	public static final String NAME = "Hall Contacts";
-    View thisFrag;
-	SparseArray<ExpandableGroup> groups = new SparseArray<ExpandableGroup>();
+    private View thisFrag;
+	private SparseArray<ExpandableGroup> groups = new SparseArray<ExpandableGroup>();
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -13,8 +13,8 @@ import com.atasoft.flangeassist.*;
 public class ExListAd extends BaseExpandableListAdapter {
 
 	private final SparseArray<ExpandableGroup> groups;
-	public LayoutInflater inflater;
-	public Activity activity;
+	private LayoutInflater inflater;
+	private Activity activity;
 
 	public ExListAd(Activity act, SparseArray<ExpandableGroup> groups) {
 		activity = act;
@@ -142,9 +142,8 @@ public class ExListAd extends BaseExpandableListAdapter {
 		}
 			
 		intent.setData(Uri.parse(uri));
-		activity.startActivity(intent);	
-		return;
-	}
+		activity.startActivity(intent);
+    }
 	
 	private TextView makeOption(String children, TextView text) {
 		Drawable catIcon;

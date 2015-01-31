@@ -9,7 +9,7 @@ import com.atasoft.flangeassist.*;
 
 public class WageCPIEstimate extends Fragment implements OnClickListener
 {
-    View thisFrag;
+    private View thisFrag;
 	boolean beenLoaded = false;
 	
 	@Override
@@ -82,14 +82,11 @@ public class WageCPIEstimate extends Fragment implements OnClickListener
 			this.semiAnnualCapped = wageAnnualRate / 2 < annualCap ? wageAnnualRate / 2 : annualCap;
 			this.wageIncrease = wageRate * semiAnnualCapped;
 			this.finalWage = wageRate + wageIncrease;
-			
-			return;
-			
-		}
+
+        }
 	}
-	
-	private Button cpiSend;
-	private EditText cpiWageEdit;
+
+    private EditText cpiWageEdit;
 	private NumberPicker cpiRatePick;
 	private NumberPicker wtcPricePick;
 	private String[] cpiValStrings;
@@ -101,13 +98,13 @@ public class WageCPIEstimate extends Fragment implements OnClickListener
 	private TextView textFinalWage;
 	private TextView textMessages;
 	
-	CPIHolder cpiHolder;
+	private CPIHolder cpiHolder;
 	private void setupSpinners() {
 		this.cpiWageEdit = (EditText) thisFrag.findViewById(R.id.cpi_wageedit);
 		cpiWageEdit.setText("58");
 		
 		this.cpiHolder = new CPIHolder();
-		this.cpiSend = (Button) thisFrag.findViewById(R.id.cpi_send);
+        Button cpiSend = (Button) thisFrag.findViewById(R.id.cpi_send);
 		cpiSend.setOnClickListener(this);
 		this.cpiRatePick = (NumberPicker) thisFrag.findViewById(R.id.cpi_picker);
 		this.wtcPricePick = (NumberPicker) thisFrag.findViewById(R.id.wtc_picker);
@@ -125,8 +122,7 @@ public class WageCPIEstimate extends Fragment implements OnClickListener
 		wtcPricePick.setValue(81); //110
 		
 		sendPush();
-		return;
-	}
+    }
 	
 	//Populates a number picker with range and interval specified and returns the String Array
 	private String[] makePickerVals(NumberPicker picker, String pickName, String formatStr, float floor, float ceiling, float interval){
@@ -164,7 +160,7 @@ public class WageCPIEstimate extends Fragment implements OnClickListener
 		updateText();
 	}
 	
-	public void updatePickerVals() throws NumberFormatException {
+	void updatePickerVals() throws NumberFormatException {
 		try{
 			this.cpiVal = Float.parseFloat(cpiValStrings[cpiRatePick.getValue()].replace("%", "")) / 100;
 			this.wtcVal = Float.parseFloat(wtcValStrings[wtcPricePick.getValue()].replace("$", ""));
@@ -175,7 +171,7 @@ public class WageCPIEstimate extends Fragment implements OnClickListener
 		}
 	}
 	
-	public void parseWageInput() throws NumberFormatException {
+	void parseWageInput() throws NumberFormatException {
 		try{
 			this.wageVal = Float.parseFloat(cpiWageEdit.getText().toString());
 		} catch (NumberFormatException e) {

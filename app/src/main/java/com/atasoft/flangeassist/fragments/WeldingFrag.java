@@ -8,7 +8,7 @@ import com.atasoft.flangeassist.*;
 
 public class WeldingFrag extends Fragment implements NumberPicker.OnValueChangeListener
 {
-    View thisFrag;
+    private View thisFrag;
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class WeldingFrag extends Fragment implements NumberPicker.OnValueChangeL
 	}
 	
 	//-------------------Weld Electrodes Functions-----------
-	public static final String[][] STRENGTHS = new String[][] {
+	private static final String[][] STRENGTHS = new String[][] {
 		{"60","70","80", "90", "100", "110", "120"},
 		{"60,000 PSI (CSA 43 MPa)", 
 		"70,000 PSI (CSA 49 MPa)", 
@@ -37,10 +37,10 @@ public class WeldingFrag extends Fragment implements NumberPicker.OnValueChangeL
 		"100,000 PSI (CSA 69 MPa)",
 		"110,000 PSI (CSA 76 MPa)",
 		"120,000 PSI (CSA 83 MPa)"}};
-	public static final String[][] POSITIONS = new String[][] {
+	private static final String[][] POSITIONS = new String[][] {
 		{"1","2","3"},
 		{"All Positions", "Flat and Horizontal", "Flat Only"}};
-	public static final String[][] COATINGS = new String[][] {
+	private static final String[][] COATINGS = new String[][] {
 		{"0","1","2","3","4","5","6","7","8"},
 		{"High Cellulose Sodium.",
 		"High Cellulose Potassium.",
@@ -53,9 +53,9 @@ public class WeldingFrag extends Fragment implements NumberPicker.OnValueChangeL
 		"Iron Powder Low Hydrogen."},
 		{"DCRP", "AC, DCSP", "AC, DCSP", "AC, DCRP", "AC, DCRP, DCSP", "DCRP", "AC, DCRP", "AC, DCRP, DCSP", "AC, DCRP"}
 	};
-	public static final String footNotes = 
+	private static final String footNotes =
 		"*DCRP = Reverse Polarity (Electrode +ve).\n*DCSP = Straight Polarity (Electrode -ve)";
-	public static final String EXCEPTION = "AC, DCRP, DCSP"; //xx20
+	private static final String EXCEPTION = "AC, DCRP, DCSP"; //xx20
 		
 	private NumberPicker strengthPicker;
 	private NumberPicker positionPicker;
@@ -65,8 +65,8 @@ public class WeldingFrag extends Fragment implements NumberPicker.OnValueChangeL
 	private TextView positionBlurb;
 	private TextView coatingBlurb;
 	private TextView polarityBlurb;
-	private TextView footNoteText;
-	private void setupElectrodeViews() {
+
+    private void setupElectrodeViews() {
 		this.strengthPicker = (NumberPicker) thisFrag.findViewById(R.id.weld_strength_picker);
 		this.positionPicker = (NumberPicker) thisFrag.findViewById(R.id.weld_position_picker);
 		this.coatingPicker = (NumberPicker) thisFrag.findViewById(R.id.weld_coating_picker);
@@ -75,7 +75,7 @@ public class WeldingFrag extends Fragment implements NumberPicker.OnValueChangeL
 		this.positionBlurb = (TextView) thisFrag.findViewById(R.id.weld_positionBlurb);
 		this.coatingBlurb = (TextView) thisFrag.findViewById(R.id.weld_coatingBlurb);
 		this.polarityBlurb = (TextView) thisFrag.findViewById(R.id.weld_polarityBlurb);
-		this.footNoteText = (TextView) thisFrag.findViewById(R.id.weld_footNotes);
+        TextView footNoteText = (TextView) thisFrag.findViewById(R.id.weld_footNotes);
 		
 		footNoteText.setText(footNotes);
 		
@@ -88,8 +88,7 @@ public class WeldingFrag extends Fragment implements NumberPicker.OnValueChangeL
 		coatingPicker.setOnValueChangedListener(this);
 		
 		updateElectrodeOutputs();
-		return;
-	}
+    }
 	
 	private void setPicker(NumberPicker picker, String[] strings){
 		picker.setMinValue(0);

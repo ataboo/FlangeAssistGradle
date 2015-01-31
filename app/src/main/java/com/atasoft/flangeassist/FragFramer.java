@@ -9,7 +9,7 @@ public class FragFramer extends Activity {
 	public static final int PAY_CALC = 0;
 	public static final int HALL = 1;
 	public static final int ABOUT = 2;
-	ActionBar actionBar;
+	private ActionBar actionBar;
 	
 	@SuppressLint("NewApi")
 	@Override

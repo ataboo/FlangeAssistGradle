@@ -14,8 +14,7 @@ import android.app.FragmentTransaction;
 public class ToolsActivity extends FragmentActivity implements ActionBar.TabListener {
 
 	private ViewPager viewPager;
-	private TabsPagerAdapter mAdapter;
-	private ActionBar actionBar;
+    private ActionBar actionBar;
 	// Tab titles
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +25,7 @@ public class ToolsActivity extends FragmentActivity implements ActionBar.TabList
 		String[] tabs = TabsPagerAdapter.TABS;
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		actionBar = getActionBar();
-		mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+        TabsPagerAdapter mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
 
 		viewPager.setAdapter(mAdapter);
 		//actionBar.setHomeButtonEnabled(false);

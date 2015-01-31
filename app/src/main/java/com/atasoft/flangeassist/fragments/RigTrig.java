@@ -13,8 +13,8 @@ import com.atasoft.flangeassist.*;
 
 public class RigTrig extends Fragment
 {
-    View thisFrag;
-	Context context;
+    private View thisFrag;
+	private Context context;
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,9 +45,9 @@ public class RigTrig extends Fragment
 	}
 	
 	//-------------------Startup Functions-----------
-	public static final String[] WRAP_TYPES = {"Vertical (1x)", "Choke (.75x)", "Basket (2x)"};
+	private static final String[] WRAP_TYPES = {"Vertical (1x)", "Choke (.75x)", "Basket (2x)"};
 	//Sizes[], Vertical[], Choker[], Basket[] 
-	public static final String[][] NYLON_CAPACITIES = new String[][] {
+	private static final String[][] NYLON_CAPACITIES = new String[][] {
 		{"1\"", "2\"", "3\"", "4\"", "6\"", "8\"", "10\"", "12\""},
 		{"3,200", "6,200", "9,400", "12,400", "16,500", "22,000", "24,000", "28,800"},
 		{"2,600", "5,000", "7,500", "10,000", "12,400", "16,500", "18,000", "21,600"},
@@ -93,11 +93,10 @@ public class RigTrig extends Fragment
 		nylonWrapSpin.setAdapter(wrapAd);
 		
 		this.nylonCapText = (TextView) thisFrag.findViewById(R.id.rigtrig_nylonTableCapacity);
-		
-		return;
-	}
+
+    }
 	
-	boolean listenFlag = false;
+	private boolean listenFlag = false;
 	private void setListeners(){
 		if(listenFlag) return; 
 		
@@ -150,8 +149,7 @@ public class RigTrig extends Fragment
 			});
 		
 		listenFlag = true;
-		return;
-	}
+    }
 
 	//----------------Updating Functions---------------
 	
@@ -222,12 +220,9 @@ public class RigTrig extends Fragment
 	}
 	
 	private double calculateSlingCapacity(double load, int legs, double angle){
-		double legsDoub = legs;
 		double angleRad = Math.toRadians(angle);
-		double capacity = ((load / legsDoub) / Math.sin(angleRad));
+		return ((load /(double) legs) / Math.sin(angleRad));
 		//Toast.makeText(context, String.format("Load: %.2f, Legs: %d, Angle: %.2f", load, legs, angle), Toast.LENGTH_SHORT).show();
-		
-		return capacity;
 	}
 	
 	private double parseFromEditText(EditText eText, String identity) throws NumberFormatException{

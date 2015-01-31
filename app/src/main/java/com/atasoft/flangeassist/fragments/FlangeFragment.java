@@ -11,8 +11,8 @@ import com.atasoft.flangeassist.*;
 import com.atasoft.helpers.*;
 
 public class FlangeFragment extends Fragment {
-    View thisFrag;
-	Context context;
+    private View thisFrag;
+	private Context context;
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
@@ -41,28 +41,27 @@ public class FlangeFragment extends Fragment {
 		super.onPause();
 	}
 	
-	Spinner rateS;
-	Spinner sizeS;
-	JsonPuller jPuller;
-	TextView sDiamVal;
-	TextView wrenchVal;	
-	TextView driftVal;
-	TextView sCountVal;
-	TextView sLengthVal;
-	TextView b7Val;
-	TextView b7mVal;
-	String[] fSizesCombined;
-	String[] fSizes;
-	String[] fRates;
+	private Spinner rateS;
+	private Spinner sizeS;
+	private JsonPuller jPuller;
+	private TextView sDiamVal;
+	private TextView wrenchVal;
+	private TextView driftVal;
+	private TextView sCountVal;
+	private TextView sLengthVal;
+	private TextView b7Val;
+	private TextView b7mVal;
+	private String[] fSizes;
+	private String[] fRates;
 
-    Spinner studSizeSpinner;
-    TextView studWrenchVal;
-    TextView studDriftVal;
-    TextView studB7Val;
-    TextView studB7MVal;
-    String[] fStuds;
+    private Spinner studSizeSpinner;
+    private TextView studWrenchVal;
+    private TextView studDriftVal;
+    private TextView studB7Val;
+    private TextView studB7MVal;
+    private String[] fStuds;
 
-	SharedPreferences prefs;
+	private SharedPreferences prefs;
 	private void setupSpinners() {
 		this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		this.jPuller = new JsonPuller(thisFrag);
@@ -120,8 +119,8 @@ public class FlangeFragment extends Fragment {
         this.studB7MVal = (TextView) thisFrag.findViewById(R.id.stud_b7mVal);
 	}
 
-	String[] flangeVals;
-	String[] studVals;
+	private String[] flangeVals;
+	private String[] studVals;
 	private void spinSend() {
 		String fSize = (String) sizeS.getSelectedItem();
 		String fRate = (String) rateS.getSelectedItem();
@@ -155,8 +154,7 @@ public class FlangeFragment extends Fragment {
 		sLengthVal.setText(flangeVals[3] + "\"");
 		b7Val.setText(studVals[3] + " ft-lbs");
 		b7mVal.setText(studVals[2] + " ft-lbs");
-		return;
-	}
+    }
 	
 	private void displayErr(boolean realError){
 		if(realError){

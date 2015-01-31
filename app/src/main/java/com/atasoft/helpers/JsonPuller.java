@@ -8,51 +8,37 @@ import org.json.*;
 
 public class JsonPuller
 {
-	View pView;
+	private View pView;
 	public JsonPuller(View parentView) {
 		this.pView = parentView;
 		populateValues();
-		return;
-	}
+    }
 	
-	public static final int STUD_ARRAY_LENGTH = 4;
-	public static final int RATE_ARRAY_LENGTH = 4;
+	private static final int STUD_ARRAY_LENGTH = 4;
+	private static final int RATE_ARRAY_LENGTH = 4;
 	private static final String jFileName = "FlangeValues.json";
 	private static final String jFileNameXL = "FlangeValuesXL.json";
 	
 	private boolean failFlag = false;
-	private JSONObject masterObj;
-	private String[] fSizes;
+    private String[] fSizes;
 	private String[] fRatings;
 	private String[] studSizeOrdered;
 	private HashMap<String, String[]> studStats;
-	private HashMap<String, String[]> fStats150;
-	private HashMap<String, String[]> fStats300;
-	private HashMap<String, String[]> fStats400;
-	private HashMap<String, String[]> fStats600;
-	private HashMap<String, String[]> fStats900;
-	private HashMap<String, String[]> fStats1500;
-	private HashMap<String, HashMap<String, String[]>> fStatHashes;
-	
-	private JSONObject masterXL;
-	private String[] fSizesXL;
+    private HashMap<String, HashMap<String, String[]>> fStatHashes;
+
+    private String[] fSizesXL;
 	private String[] fRatingsXL;
 	private String[] fRatingsXXL;
-	private String[] studSizesXL;
-	private HashMap<String, String[]> studStatsXL;
-	private HashMap<String, String[]> fStats150XL;
-	private HashMap<String, String[]> fStats400XL;
-	private HashMap<String, String[]> fStats900XL;
-	
-	public void populateValues(){
-		this.masterObj = loadJSON(jFileName);
-		this.masterXL = loadJSON(jFileNameXL);
-		if(this.masterObj == null) {
+
+    void populateValues(){
+        JSONObject masterObj = loadJSON(jFileName);
+        JSONObject masterXL = loadJSON(jFileNameXL);
+		if(masterObj == null) {
 			Log.e("JSON Puller", "masterObj is null. oops.");
 			this.failFlag = true;
 			return;
 		}
-		if(this.masterXL == null) {
+		if(masterXL == null) {
 			Log.e("JSON Puller", "masterXL is null. oops.");
 			this.failFlag = true;
 			return;
@@ -62,29 +48,29 @@ public class JsonPuller
 		this.fRatings = getJSONStringArray(masterObj, "fRatings");
 		this.studSizeOrdered = getJSONStringArray(masterObj, "studSizeOrdered");
 		this.studStats = makeHash(masterObj, "studSizes", studSizeOrdered, STUD_ARRAY_LENGTH);
-		this.fStats150 = makeHash(masterObj, "fStats150", fSizes, RATE_ARRAY_LENGTH);
+        HashMap<String, String[]> fStats150 = makeHash(masterObj, "fStats150", fSizes, RATE_ARRAY_LENGTH);
 		fStatHashes.put("150", fStats150);
-		this.fStats300 = makeHash(masterObj, "fStats300", fSizes, RATE_ARRAY_LENGTH);
+        HashMap<String, String[]> fStats300 = makeHash(masterObj, "fStats300", fSizes, RATE_ARRAY_LENGTH);
 		fStatHashes.put("300", fStats300);
-		this.fStats400 = makeHash(masterObj, "fStats400", fSizes, RATE_ARRAY_LENGTH);
+        HashMap<String, String[]> fStats400 = makeHash(masterObj, "fStats400", fSizes, RATE_ARRAY_LENGTH);
 		fStatHashes.put("400", fStats400);
-		this.fStats600 = makeHash(masterObj, "fStats600", fSizes, RATE_ARRAY_LENGTH);
+        HashMap<String, String[]> fStats600 = makeHash(masterObj, "fStats600", fSizes, RATE_ARRAY_LENGTH);
 		fStatHashes.put("600", fStats600);
-		this.fStats900 = makeHash(masterObj, "fStats900", fSizes, RATE_ARRAY_LENGTH);
+        HashMap<String, String[]> fStats900 = makeHash(masterObj, "fStats900", fSizes, RATE_ARRAY_LENGTH);
 		fStatHashes.put("900", fStats900);
-		this.fStats1500 = makeHash(masterObj, "fStats1500", fSizes, RATE_ARRAY_LENGTH);
+        HashMap<String, String[]> fStats1500 = makeHash(masterObj, "fStats1500", fSizes, RATE_ARRAY_LENGTH);
 		fStatHashes.put("1500", fStats1500);
 		
 		//XL for sizes above 24"
 		this.fSizesXL = getJSONStringArray(masterXL, "fSizes");
 		this.fRatingsXL = getJSONStringArray(masterXL, "fRatings");
-		this.studSizesXL = getJSONStringArray(masterXL, "studSizeOrdered");
-		this.studStatsXL = makeHash(masterXL, "studSizes", studSizesXL, STUD_ARRAY_LENGTH);
-		this.fStats150XL = makeHash(masterXL, "fStats150", fSizesXL, RATE_ARRAY_LENGTH);
+        String[] studSizesXL = getJSONStringArray(masterXL, "studSizeOrdered");
+        HashMap<String, String[]> studStatsXL = makeHash(masterXL, "studSizes", studSizesXL, STUD_ARRAY_LENGTH);
+        HashMap<String, String[]> fStats150XL = makeHash(masterXL, "fStats150", fSizesXL, RATE_ARRAY_LENGTH);
 		fStatHashes.put("150XL", fStats150XL);
-		this.fStats400XL = makeHash(masterXL, "fStats400", fSizesXL, RATE_ARRAY_LENGTH);
+        HashMap<String, String[]> fStats400XL = makeHash(masterXL, "fStats400", fSizesXL, RATE_ARRAY_LENGTH);
 		fStatHashes.put("400XL", fStats400XL);
-		this.fStats900XL = makeHash(masterXL, "fStats900", fSizesXL, RATE_ARRAY_LENGTH);
+        HashMap<String, String[]> fStats900XL = makeHash(masterXL, "fStats900", fSizesXL, RATE_ARRAY_LENGTH);
 		fStatHashes.put("900XL", fStats900XL);
 		
 		//XXL for sizes above 48"
@@ -148,8 +134,7 @@ public class JsonPuller
 		try{
 			JSONArray jStringArr = parentObj.getJSONArray(jKey);
 			
-			String[] retStr = jArrayToString(jStringArr);
-			return retStr;
+			return jArrayToString(jStringArr);
 		} catch(JSONException jE){
 			jE.printStackTrace();
 			Log.e("JSON Puller", jKey + " was out to lunch.");

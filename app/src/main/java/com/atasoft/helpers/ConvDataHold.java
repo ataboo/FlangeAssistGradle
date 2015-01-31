@@ -55,8 +55,7 @@ public class ConvDataHold
 	}
 	
 	public String[] getUnitNames(String typeKey){
-		String[] retString = typeHash.get(typeKey).keyNames;
-		return retString;
+		return typeHash.get(typeKey).keyNames;
 	}
 	
 	public double convertValue(double inVal, String type, String unit1, String unit2){
@@ -107,7 +106,6 @@ public class ConvDataHold
 			denom /= 2;
 		}
 		
-		String retString = String.format("%d/%d", numerator, denom);
-		return retString;
+		return String.format("%d/%d", numerator, denom);
 	}
 }

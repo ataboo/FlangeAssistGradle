@@ -5,18 +5,15 @@ import android.widget.*;
 
 public class AtaTimePicker {
 	
-	private String[] HOURS;
-	private String[] MINUTES;
-	NumberPicker hourPick;
-	NumberPicker minPick;
-	LinearLayout pickLay;
+	private NumberPicker hourPick;
+	private NumberPicker minPick;
 	
 	public AtaTimePicker(NumberPicker hourPicker, NumberPicker minPicker){
 		this.hourPick = hourPicker;
 		this.minPick = minPicker;
 		
-		this.HOURS = makeStringsFromRange(0, 23);
-		this.MINUTES = makeStringsFromRange(0,59);
+		String[]HOURS = makeStringsFromRange(0, 23);
+		String[] MINUTES = makeStringsFromRange(0,59);
 		
 		populatePicker(hourPick, HOURS);
 		populatePicker(minPick, MINUTES);
@@ -66,8 +63,7 @@ public class AtaTimePicker {
 		hourPick.setValue(timeSet[0]);
 		minPick.setValue(timeSet[1]);
 		//Log.w("AtaTimePicker", String.format("Set value to %2d:%2d", timeSet[0], timeSet[1]));
-		return;
-	}
+    }
 	
 	public int[] getVals() throws NullPointerException{
 		int[] retInt = {0,0};
@@ -99,6 +95,5 @@ public class AtaTimePicker {
 		picker.setDisplayedValues(values);
 		picker.setMaxValue(values.length-1);
 		picker.setMinValue(0);
-		return;
-	}
+    }
 }

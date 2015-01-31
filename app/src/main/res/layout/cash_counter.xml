@@ -195,7 +195,7 @@
                     android:singleLine="true" />
 
                 <TextView
-                    android:id="@+id/cash_weekdayLabel"
+                    android:id="@+id/cash_otLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1.5x:" />
@@ -210,7 +210,7 @@
                     android:singleLine="true" />
 
                 <TextView
-                    android:id="@+id/cash_weekdayLabel"
+                    android:id="@+id/cash_doubleLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2x:" />

@@ -1,5 +1,5 @@
-C:\AndroidStuff\Projects\AndroidstudioProjects\FlangeAssist\app\build\intermediates\classes\debug
-C:\AndroidStuff\Projects\AndroidstudioProjects\FlangeAssist\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.0-7ad99075ae27b74d3ec9416a21418016fc38086f.jar
-C:\AndroidStuff\Projects\AndroidstudioProjects\FlangeAssist\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.0-2b99130cd2dd1c38b76f5bbe553e4e2e251a3778.jar
-C:\AndroidStuff\Projects\AndroidstudioProjects\FlangeAssist\app\build\intermediates\pre-dexed\debug\classes-29aeeac4ef34df29dcb65b7574491e8f85e6df6a.jar
-C:\AndroidStuff\Projects\AndroidstudioProjects\FlangeAssist\app\build\intermediates\pre-dexed\debug\classes-bd4d308cb870cf7660b7368e6c152acb8bb124f4.jar
+C:\AndroidStuff\Projects\AndroidstudioProjects\FlangeAssistGradle\app\build\intermediates\classes\debug
+C:\AndroidStuff\Projects\AndroidstudioProjects\FlangeAssistGradle\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-49754e03d1c392ad4f7af3a75e2519d17d74441e.jar
+C:\AndroidStuff\Projects\AndroidstudioProjects\FlangeAssistGradle\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-8143573d98f4d1c994e5fc870a2fbb768db1f60b.jar
+C:\AndroidStuff\Projects\AndroidstudioProjects\FlangeAssistGradle\app\build\intermediates\pre-dexed\debug\classes-9f9d37ce2676999099441f1921af133908d3c466.jar
+C:\AndroidStuff\Projects\AndroidstudioProjects\FlangeAssistGradle\app\build\intermediates\pre-dexed\debug\classes-d42a2c725c15c24498ab746ac55a9af3b4752a1a.jar

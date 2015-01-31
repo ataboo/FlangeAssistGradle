@@ -13,7 +13,7 @@ import android.text.*;
 
 public class ShapeCalcFrag extends Fragment //implements OnClickListener
 {
-	View thisFrag;
+	private View thisFrag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,13 +41,13 @@ public class ShapeCalcFrag extends Fragment //implements OnClickListener
 	}
 
 	//--------------------Shape Calc Functions----------------
-	ShapeCalcHold shapeCalc;
-	Spinner shapeTypeSpin;
-	ImageView shapeImage;
-	TextView shapeVolBox;
-	TextView shapeSurfBox;
-	EditText[] shapeInArr;
-	TextView[] shapeLabelArr;
+    private ShapeCalcHold shapeCalc;
+	private Spinner shapeTypeSpin;
+	private ImageView shapeImage;
+	private TextView shapeVolBox;
+	private TextView shapeSurfBox;
+	private EditText[] shapeInArr;
+	private TextView[] shapeLabelArr;
 	private void setupShapeSpinners(){
 		this.shapeCalc = new ShapeCalcHold();
 		this.shapeTypeSpin = (Spinner) thisFrag.findViewById(R.id.shapecalc_typeSpin);
@@ -78,10 +78,9 @@ public class ShapeCalcFrag extends Fragment //implements OnClickListener
 			shapeInArr[i].setText("0");
 		}
 
-		return;
-	}
+    }
 
-	String selectedShape;
+	private String selectedShape;
 	private void refreshShapeFields(){
 		this.selectedShape = (String) shapeTypeSpin.getSelectedItem();
 		String[] labelStrings = shapeCalc.getLabelStrings(selectedShape);

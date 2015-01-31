@@ -13,9 +13,9 @@ import com.atasoft.flangeassist.*;
 
 public class NozzleCalc extends Fragment
 {
-    View thisFrag;
-	Context context;
-	SharedPreferences prefs;
+    private View thisFrag;
+	private Context context;
+	private SharedPreferences prefs;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,10 +60,9 @@ public class NozzleCalc extends Fragment
 		this.nozzleCentArcText = (TextView) thisFrag.findViewById(R.id.nozzle_arcCenterText);
 		this.nozzleEdgeAngleText = (TextView) thisFrag.findViewById(R.id.nozzle_angleEdgeText);
 		this.nozzleEdgeArcText = (TextView) thisFrag.findViewById(R.id.nozzle_arcEdgesText);
-		return;
-	}
+    }
 
-	boolean listenFlag = false;
+	private boolean listenFlag = false;
 	private void setListeners(){
 		if(listenFlag) return; 
 		shellODEdit.addTextChangedListener(new TextWatcher(){
@@ -97,8 +96,7 @@ public class NozzleCalc extends Fragment
 				public void onTextChanged(CharSequence s, int start, int count, int after){}
 			});
 		listenFlag = true;
-		return;
-	}
+    }
 
 	//----------------Updating Functions---------------
 	private double shellOD;
@@ -135,7 +133,6 @@ public class NozzleCalc extends Fragment
 	}
 	
 	private double digitRound(double val, int digits){
-		//TODO
 		double factor = Math.pow(10, digits);
 		return Math.round(val * factor) / factor;
 	}

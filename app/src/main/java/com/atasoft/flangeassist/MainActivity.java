@@ -65,12 +65,12 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
     }
 	
-	Button toolButton;
-	Button paychequeButton;
-	Button linkButton;
-	Button settingsButton;
-	Button aboutButton;
-	Button[] buttonArr;
+	private Button toolButton;
+	private Button paychequeButton;
+	private Button linkButton;
+	private Button settingsButton;
+	private Button aboutButton;
+	private Button[] buttonArr;
 	private void setupButtons(){
 		this.toolButton = (Button) findViewById(R.id.main_toolButton);
 		this.paychequeButton = (Button) findViewById(R.id.main_paychequeButton);

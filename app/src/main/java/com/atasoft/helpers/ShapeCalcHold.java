@@ -117,7 +117,7 @@ public class ShapeCalcHold
 		return retArr;
 	}
 	
-	HashMap<String, ShapeObject> shapeHash;
+	private HashMap<String, ShapeObject> shapeHash;
 	private void setupValues(){
 		this.shapeHash = new HashMap<String, ShapeObject>(SHAPE_TYPES.length);
 		for(int i=0; i<SHAPE_TYPES.length; i++){
@@ -126,13 +126,10 @@ public class ShapeCalcHold
 	}
 	
 	public boolean isThis2D(String checkName){
-		if(checkName == SHAPE_TYPES[3] || checkName == SHAPE_TYPES[4]){
-			return true;
-		}
-		return false;
-	}
+        return checkName == SHAPE_TYPES[3] || checkName == SHAPE_TYPES[4];
+    }
 	
-	public static double roundDouble(double val, int decimals) {
+	private static double roundDouble(double val, int decimals) {
 		double factor = Math.pow(10, decimals);
 		val = (Math.round(val * factor)) / factor;
 		return val;

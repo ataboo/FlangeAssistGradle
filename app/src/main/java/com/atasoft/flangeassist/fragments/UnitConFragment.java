@@ -13,7 +13,7 @@ import android.text.*;
 
 public class UnitConFragment extends Fragment //implements OnClickListener
 {
-	View thisFrag;
+	private View thisFrag;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,14 +39,14 @@ public class UnitConFragment extends Fragment //implements OnClickListener
 	}
 	
 	//------------------Converter Functions------------------
-	Spinner typeSpin;
-	Spinner unitSpin1;
-	Spinner unitSpin2;
-	EditText inBox;
-	TextView outBox;
-	TextView fracBox;
+    private Spinner typeSpin;
+	private Spinner unitSpin1;
+	private Spinner unitSpin2;
+	private EditText inBox;
+	private TextView outBox;
+	private TextView fracBox;
 	Button goButton;
-	ConvDataHold dataHold;
+	private ConvDataHold dataHold;
 	private void setupConvSpinners(){
 		this.typeSpin = (Spinner) thisFrag.findViewById(R.id.unit_conv_type_spinner);
 		this.unitSpin1 = (Spinner) thisFrag.findViewById(R.id.unit_conv_unit1_spinner);
@@ -66,10 +66,9 @@ public class UnitConFragment extends Fragment //implements OnClickListener
 				}
 			});
 		refreshUnits();
-		return;
-	}
+    }
 
-	String oldType = null;
+	private String oldType = null;
 	private void refreshUnits(){
 		String type = (String) typeSpin.getSelectedItem();
 		if(type != oldType){

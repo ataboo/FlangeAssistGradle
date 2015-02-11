@@ -2,8 +2,8 @@
 <resources>
 
     <!-- Update Values (last checked Oct.26/13) -->
-    <string name="version_info">Boilermaker Toolbox v0.21
-		\nLast updated December 9, 2014
+    <string name="version_info">Boilermaker Toolbox v0.22
+		\nLast updated February 11, 2015
 		\nAB Wages updated: Nov 2/14</string>
 
     <!-- Main Menu -->
@@ -112,8 +112,6 @@
     <string name="sLength_text">Stud Length</string>
     <string name="b7_text">B7 Torque</string>
     <string name="b7m_text">B7M Torque</string>
-    <string name="title_activity_frag_framer">FragFramer</string>
-    <string name="hello_world">Hello world!</string>
 
     <!-- Navigation Drawer-->
     <string name="navigation_drawer_open">Open Navigation Menu</string>

@@ -8,7 +8,7 @@ import com.atasoft.flangeassist.fragments.*;
 
 
 public class NavDrawerAdaptor {
-	public static final String[] TABS = {"Paycheque Fragment", "Flange Tables", "Torque Pattern",
+	public static final String[] TABS = {"Paycheque Calculator", "Flange Tables", "Torque Pattern",
             "CPI Raise Estimator", "Unit Converter", "Shape Calculator", "Welding Reference",
             "Cash Counter", "Rigging Calculator", "Nozzle Calculator", "Hall Links"};
 	private static int TAB_COUNT = TABS.length;

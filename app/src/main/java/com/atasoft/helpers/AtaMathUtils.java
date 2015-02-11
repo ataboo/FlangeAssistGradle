@@ -26,4 +26,21 @@ public class AtaMathUtils
         val = bracketFloat(val, floor, ceiling);
         return val;
     }
+
+    public static int bracketInt(int value, int floor, int ceiling){
+        if(ceiling < floor) return 0;
+        if(value > ceiling) return ceiling;
+        if(value < floor) return floor;
+        return value;
+    }
+
+    public static int bracketInt(String str, int floor, int ceiling) throws NumberFormatException{
+        int val = 0;
+        try{
+            val = Integer.parseInt(str);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return bracketInt(val, floor, ceiling);
+    }
 }

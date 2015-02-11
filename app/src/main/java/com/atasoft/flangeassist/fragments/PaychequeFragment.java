@@ -8,11 +8,13 @@ import android.support.v4.app.Fragment;
 import android.view.*;
 import android.view.View.*;
 import android.widget.*;
+import android.util.Log;
 
 import com.atasoft.flangeassist.*;
 import com.atasoft.helpers.*;
 
-public class PaychequeFragment extends Fragment implements OnClickListener
+
+ public class PaychequeFragment extends Fragment implements OnClickListener
 {
 	public enum DayType {
 		FIVE_WEEK,
@@ -67,24 +69,21 @@ public class PaychequeFragment extends Fragment implements OnClickListener
         Button bClr = (Button) v.findViewById(R.id.clr_but);
         Button bTens = (Button) v.findViewById(R.id.tens_but);
 		Button bTwelves = (Button) v.findViewById(R.id.twelves_but);
-		Button bFour = (Button) v.findViewById(R.id.four_but);
-		Button bNight = (Button) v.findViewById(R.id.night_but);
-		Button bTravel = (Button) v.findViewById(R.id.travel_but);
-		Button bDayTravel = (Button) v.findViewById(R.id.travelday_but);
+		ToggleButton bFour = (ToggleButton) v.findViewById(R.id.four_but);
+		ToggleButton bNight = (ToggleButton) v.findViewById(R.id.night_but);
+		ToggleButton bTravel = (ToggleButton) v.findViewById(R.id.travel_but);
+		ToggleButton bDayTravel = (ToggleButton) v.findViewById(R.id.travelday_but);
 		taxVal = (CheckBox) v.findViewById(R.id.tax_val);
 		cppVal = (CheckBox) v.findViewById(R.id.cpp_val);
 		duesVal = (CheckBox) v.findViewById(R.id.dues_val);
 		monthlyDuesVal = (CheckBox) v.findViewById(R.id.monthlydues_val);
-		taxVal.setChecked(true);
-		cppVal.setChecked(true);
-		duesVal.setChecked(true);
 		
 		monHol = (CheckBox) v.findViewById(R.id.hol_mon);
 		tueHol = (CheckBox) v.findViewById(R.id.hol_tue);
 		wedHol = (CheckBox) v.findViewById(R.id.hol_wed);
 		thuHol = (CheckBox) v.findViewById(R.id.hol_thu);
 		friHol = (CheckBox) v.findViewById(R.id.hol_fri);
-		
+
 		
 		
 		bClr.setOnClickListener(this);
@@ -113,11 +112,17 @@ public class PaychequeFragment extends Fragment implements OnClickListener
 	@Override
 	public void onResume() {
 		redoSpinners();
-		
-		super.onResume();
+        loadState();
+        super.onResume();
     }
-	
-	private void redoSpinners(){
+
+    @Override
+    public void onPause() {
+        saveState();
+        super.onPause();
+    }
+
+    private void redoSpinners(){
 		Boolean custDayCheck = prefs.getBoolean("custom_daycheck", false);
 		if(custDayCheck) {
 		    if(customDay != custDayCheck || !verifyCustDays()) updateDaySpinners(custDayCheck);
@@ -320,7 +325,7 @@ public class PaychequeFragment extends Fragment implements OnClickListener
 		ArrayAdapter<String> wageAdapt = new ArrayAdapter<String>(getActivity().getApplicationContext(), 
 			android.R.layout.simple_spinner_item, wageNames);
 		wageSpin.setAdapter(wageAdapt);
-		wageSpin.setSelection((int) wageRates[wageRates.length - 1]);
+		//wageSpin.setSelection((int) wageRates[wageRates.length - 1]);
 		oldProvWage = provWage;
     }
 	
@@ -634,4 +639,65 @@ public class PaychequeFragment extends Fragment implements OnClickListener
 	private double calcDues(double grossNoVac, double duesRate) {		
 		return grossNoVac * duesRate;
 	}
+
+    //Groups like views and serializes to CSV strings
+    private void saveState(){
+        //Had to make the arrays local or they'd be null before they were initialized
+        Spinner[] weekSpinners = {sunSpin, monSpin, tueSpin, wedSpin, thuSpin, friSpin, satSpin};
+        Spinner[] wageMealSpinners = {wageSpin, mealSpin, loaSpin};
+        CompoundButton[] saveChecks = {monHol, tueHol, wedHol, thuHol, friHol,  //Checkboxes
+                taxVal, cppVal, duesVal, monthlyDuesVal,
+                fourToggle, nightToggle, travelToggle, dayTravelToggle};
+        if(prefs == null || wageSpin == null) return;
+
+        StringBuilder weekStringBuild = new StringBuilder();
+        for(int i=0; i<weekSpinners.length; i++){
+            if(weekSpinners[i]==null) {
+                return;
+            }
+            weekStringBuild.append(Integer.toString(weekSpinners[i].getSelectedItemPosition())).append(",");
+        }
+        StringBuilder holidayStringBuild = new StringBuilder();
+        for(int i=0; i<saveChecks.length; i++){
+            int boolInt = (saveChecks[i].isChecked()) ? 1 : 0;
+            holidayStringBuild.append(boolInt).append(",");
+        }
+        StringBuilder wageMealBuild = new StringBuilder();
+        for(int i=0; i<wageMealSpinners.length; i++){
+            wageMealBuild.append(wageMealSpinners[i].getSelectedItemPosition()).append(",");
+        }
+
+        SharedPreferences.Editor prefEdit = prefs.edit();
+        prefEdit.putString("payCalc_weekSpinners", weekStringBuild.toString());
+        prefEdit.putString("payCalc_saveChecks", holidayStringBuild.toString());
+        prefEdit.putString("payCalc_wageMealSpinners", wageMealBuild.toString());
+
+        //prefEdit.putStringSet();
+        prefEdit.commit();
+    }
+
+    private void loadState(){
+        Spinner[] weekSpinners = {sunSpin, monSpin, tueSpin, wedSpin, thuSpin, friSpin, satSpin};
+        Spinner[] wageMealSpinners = {wageSpin, mealSpin, loaSpin};
+        CompoundButton[] saveChecks = {monHol, tueHol, wedHol, thuHol, friHol,  //Checkboxes
+                taxVal, cppVal, duesVal, monthlyDuesVal,
+                fourToggle, nightToggle, travelToggle, dayTravelToggle};
+        if(prefs == null) return;
+
+        String[] weekSpinnerIndices = prefs.getString("payCalc_weekSpinners", "0,0,0,0,0,0,0,").split(",");
+        for(int i=0; i<weekSpinners.length; i++){
+            if(weekSpinners[i] == null) return;
+            weekSpinners[i].setSelection(AtaMathUtils.bracketInt(weekSpinnerIndices[i], 0, 6));
+        }
+        String[] saveChecksIndices = prefs.getString("payCalc_saveChecks", "0,0,0,0,0,1,1,1,0,0,0,0,0,").split(",");
+        for(int i=0; i<saveChecks.length; i++){
+            saveChecks[i].setChecked(saveChecksIndices[i].equals("1"));
+        }
+        String[] wageMealIndices = prefs.getString("wageMealSpinners", "5,0,0,").split(",");
+        //Incase number of items in wage spinner has changed with province between saves
+        wageMealSpinners[0].setSelection(AtaMathUtils.bracketInt(
+                wageMealIndices[0], 0, wageMealSpinners[0].getAdapter().getCount() - 1));
+        wageMealSpinners[1].setSelection(AtaMathUtils.bracketInt(wageMealIndices[1], 0, 6));
+        wageMealSpinners[2].setSelection(AtaMathUtils.bracketInt(wageMealIndices[2], 0, 6));
+    }
 }

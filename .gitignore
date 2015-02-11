@@ -3,8 +3,12 @@
 *.ipr
 .idea/
 .gradle/
-import-summary.txt
 local.properties
+
+*/build/
 build/
+/gradle/
+app/src/main/gen
+
 *~
 *.swp

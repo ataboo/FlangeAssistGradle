@@ -77,11 +77,11 @@ public class ConvDataHold
 		int intVal = (int) decValue;
 		int numerator = (int) Math.round((decValue - intVal) * denom);
 		String fracString = lowComDen(numerator, denom);
-		if(fracString == "0") {
+		if(fracString.equals("0")) {
 			fracString = intVal > 0 ? sign + String.format("%d", intVal): "0";
 			return fracString;
 		}
-		if(fracString == "1") return(Integer.toString(intVal+1));			
+		if(fracString.equals("1")) return(Integer.toString(intVal+1));
 		
 		sign = intVal > 0 ? sign + String.format("%d-", intVal): sign;
 		fracString = sign + fracString;

@@ -326,6 +326,8 @@ public class CashCounter extends Fragment implements OnClickListener {
 		boolean isFriday = false;
 		boolean isWeekend = false;
 		boolean isHoliday = false;
+
+        //TODO add friday
 		
 		//during shift now is checked before
 		// if shift doesn't stradle midnight and its saturday or sunday now...

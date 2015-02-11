@@ -123,7 +123,7 @@ public class PaychequeFragment extends Fragment implements OnClickListener
 		    if(customDay != custDayCheck || !verifyCustDays()) updateDaySpinners(custDayCheck);
 		}
 		String provWage = prefs.getString("list_provwage", "AB");
-		if(provWage != oldProvWage) setupWageSpinner(provWage);
+		if(!provWage.equals(oldProvWage)) setupWageSpinner(provWage);
 		pushBootan();
 		
 		

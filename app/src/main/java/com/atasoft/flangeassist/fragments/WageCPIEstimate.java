@@ -74,7 +74,7 @@ public class WageCPIEstimate extends Fragment implements OnClickListener
 			this.wageAnnualRate = oilBonus + cpiRate;
 			this.wageAnnualCapped = wageAnnualRate;
 			if(wageAnnualRate > annualCap) {
-				flagStrings += flagStrings == "" ? "" : "\n";
+				flagStrings += flagStrings.equals("") ? "" : "\n";
 				this.flagStrings += "Total raise cannot exceed 5% in a year.";
 				this.wageAnnualCapped = annualCap;
 			}

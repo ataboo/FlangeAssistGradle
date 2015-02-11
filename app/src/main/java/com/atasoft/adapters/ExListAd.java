@@ -36,7 +36,7 @@ public class ExListAd extends BaseExpandableListAdapter {
 	public View getChildView(int groupPosition, final int childPosition,
 							 boolean isLastChild, View convertView, ViewGroup parent) {
 		final String children = (String) getChild(groupPosition, childPosition);
-		TextView text = null;
+		TextView text;
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.listrow_details, null);
 		}

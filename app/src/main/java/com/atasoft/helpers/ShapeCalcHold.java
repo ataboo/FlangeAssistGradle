@@ -126,7 +126,7 @@ public class ShapeCalcHold
 	}
 	
 	public boolean isThis2D(String checkName){
-        return checkName == SHAPE_TYPES[3] || checkName == SHAPE_TYPES[4];
+        return checkName.equals(SHAPE_TYPES[3]) || checkName.equals(SHAPE_TYPES[4]);
     }
 	
 	private static double roundDouble(double val, int decimals) {

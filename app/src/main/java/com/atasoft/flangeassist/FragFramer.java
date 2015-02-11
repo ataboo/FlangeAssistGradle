@@ -17,7 +17,7 @@ public class FragFramer extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragframer);	
 		actionBar = getActionBar();
-		actionBar.setHomeButtonEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
 		
 		//int fragCode = getIntent().getIntExtra("launch_frag", 0);
 		int fragCode  = getIntent().getIntExtra("launch_frag", 0);

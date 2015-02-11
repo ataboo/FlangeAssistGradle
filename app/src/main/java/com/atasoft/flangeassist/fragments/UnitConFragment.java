@@ -71,7 +71,7 @@ public class UnitConFragment extends Fragment //implements OnClickListener
 	private String oldType = null;
 	private void refreshUnits(){
 		String type = (String) typeSpin.getSelectedItem();
-		if(type != oldType){
+		if(!type.equals(oldType)){
 			String[] unitStrings = dataHold.getUnitNames(type);
 			ArrayAdapter<String> unitAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, unitStrings);
 			unitSpin1.setAdapter(unitAdapter);

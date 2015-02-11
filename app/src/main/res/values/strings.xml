@@ -93,6 +93,10 @@
         <item>532 - Regina,http://www.boilermaker.ca/532.htm,(306)545-7581</item>
         <item>555 - Praries,http://www.boilermakerslocal555.org,(204)987-9200,call_(204)987-9205</item>
         <item>600 - Saskatoon,http://www.boilermaker.ca/600.htm,(306)652-5008</item>
+        <item>International,http://www.boilermakers.org,(913)371-2640</item>
+        <item>IBB Canada,http://www.boilermaker.ca/home.htm</item>
+        <item>BCA Agreements,http://www.bcacanada.ca/bca-negotiated-agreements</item>
+
     </string-array>
 
     <!-- CPI Estimator -->
@@ -114,5 +118,6 @@
     <!-- Navigation Drawer-->
     <string name="navigation_drawer_open">Open Navigation Menu</string>
     <string name="navigation_drawer_close">Close Navigation Menu</string>
+    <string name="action_about">About</string>
 
 </resources>

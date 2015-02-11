@@ -92,9 +92,9 @@ public class ExListAd extends BaseExpandableListAdapter {
 			convertView = inflater.inflate(R.layout.listrow_group, null);
 		}
 		ExpandableGroup group = (ExpandableGroup) getGroup(groupPosition);
-		((CheckedTextView) convertView).setText("  " + group.string); // Don't judge me.
+		((CheckedTextView) convertView).setText(group.string); // Don't judge me.
 		((CheckedTextView) convertView).setChecked(isExpanded);
-		convertView = setLocalDraw((CheckedTextView) convertView, group.string);
+		//convertView = setLocalDraw((CheckedTextView) convertView, group.string);
 		return convertView;
 	}
 
@@ -169,7 +169,8 @@ public class ExListAd extends BaseExpandableListAdapter {
 		text.setCompoundDrawablesWithIntrinsicBounds(catIcon, null, null, null);
 		return text;
 	}
-	
+
+    //Removing for now
 	private CheckedTextView setLocalDraw(CheckedTextView textViewIn, String groupString) {
 		groupString = "logo" + (groupString.substring(0, 3)).trim();
 		Context context = textViewIn.getContext();

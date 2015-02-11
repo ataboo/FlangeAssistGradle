@@ -4,51 +4,51 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.atasoft.flangeassist.fragments.CashCounter;
-import com.atasoft.flangeassist.fragments.FlangeFragment;
-import com.atasoft.flangeassist.fragments.NozzleCalc;
-import com.atasoft.flangeassist.fragments.RigTrig;
-import com.atasoft.flangeassist.fragments.ShapeCalcFrag;
-import com.atasoft.flangeassist.fragments.TorqueFragment;
-import com.atasoft.flangeassist.fragments.UnitConFragment;
-import com.atasoft.flangeassist.fragments.WageCPIEstimate;
-import com.atasoft.flangeassist.fragments.WeldingFrag;
+import com.atasoft.flangeassist.fragments.*;
 
 
 public class NavDrawerAdaptor {
-	public static final String[] TABS = {"Flange\nTables", "Torque\nPattern", "CPI Raise\nEstimator", "Unit\nConverter", "Shape\nCalculator", "Welding\nReference","Cash\nCounter", "Rigging\nCalculator", "Nozzle\nCalculator"};
+	public static final String[] TABS = {"Paycheque Fragment", "Flange Tables", "Torque Pattern",
+            "CPI Raise Estimator", "Unit Converter", "Shape Calculator", "Welding Reference",
+            "Cash Counter", "Rigging Calculator", "Nozzle Calculator", "Hall Links"};
 	private static int TAB_COUNT = TABS.length;
 
     public static Fragment getItem(int index) {
 
         switch (index) {
-			case 0:
+            case 0:
+                // Flange Tables
+                return new PaychequeFragment();
+			case 1:
 				// Flange Tables
 				return new FlangeFragment();
-			case 1:
+			case 2:
 				// Torque Pattern
 				return new TorqueFragment();
-			case 2:
+			case 3:
 				// CPI Raise Estimator
 				return new WageCPIEstimate();
-			case 3:
+			case 4:
 				// Unit Converter
 				return new UnitConFragment();
-			case 4:
+			case 5:
 				// Shape Calculator
 				return new ShapeCalcFrag();
-			case 5:
+			case 6:
 				// Welding Reference
 				return new WeldingFrag();
-			case 6:
+			case 7:
 				// Cash Counter
 				return new CashCounter();
-			case 7:
+			case 8:
 				// Rigging Calculator
 				return new RigTrig();
-			case 8:
+			case 9:
 				// Nozzle Calculator
 				return new NozzleCalc();
+            case 10:
+                //Hall Links
+                return new HallFragment();
 		}
 
         return null;

@@ -17,7 +17,7 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>>
         </activity>
         <activity
             android:name="com.atasoft.flangeassist.PreferenceMenu"
@@ -27,25 +27,14 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.atasoft.flangeassist.MainActivity" />
+                android:value="com.atasoft.flangeassist.MainActivity" />>
         </activity>
-        <activity
-            android:name="com.atasoft.flangeassist.ToolsActivity"
-            android:label="@string/tools_name"
-            android:parentActivityName="com.atasoft.flangeassist.MainActivity" >
-
-            <!-- Parent activity meta-data to support 4.0 and lower -->
+        <activity android:name="com.atasoft.flangeassist.AboutPage"
+            android:label="About"
+            android:parentActivityName="com.atasoft.flangeassist.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.atasoft.flangeassist.MainActivity" />
-        </activity>
-        <activity
-            android:name="com.atasoft.flangeassist.FragFramer"
-            android:label="@string/title_activity_frag_framer"
-            android:parentActivityName="com.atasoft.flangeassist.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.atasoft.flangeassist.MainActivity" />
+                android:value="com.atasoft.flangeassist.MainActivity" />>
         </activity>
     </application>
 

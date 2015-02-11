@@ -16,7 +16,6 @@ import android.view.View.*;
 import android.widget.*;
 
 import com.atasoft.adapters.NavDrawerAdaptor;
-import com.atasoft.flangeassist.fragments.AboutFragment;
 import com.atasoft.flangeassist.fragments.NavigationDrawerFragment;
 
 //See if it's working
@@ -61,15 +60,24 @@ public class MainActivity extends ActionBarActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
-		if(item.getItemId() == R.id.action_settings){
-            openSettings();
-            return true;
-		}
-        return super.onOptionsItemSelected(item);
+        switch(item.getItemId()){
+            case R.id.action_settings:
+                openSettings();
+                return true;
+            case R.id.action_about:
+                openAbout();
+                return true;
+        }
+		return super.onOptionsItemSelected(item);
     }
 
     private void openSettings() {
         Intent intent = new Intent(this, PreferenceMenu.class);
+        startActivity(intent);
+    }
+
+    private void openAbout(){
+        Intent intent = new Intent(this, AboutPage.class);
         startActivity(intent);
     }
 

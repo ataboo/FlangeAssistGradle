@@ -5,6 +5,7 @@
     android:clickable="true"
     android:orientation="vertical"
     android:paddingLeft="48dp"
+    android:paddingBottom="6dp"
     tools:context=".MainActivity" >
 
     <TextView
@@ -15,13 +16,8 @@
         android:drawablePadding="6dp"
         android:gravity="center_vertical"
         android:text=""
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:textStyle="bold" >
     </TextView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/black" />
 
 </LinearLayout> 

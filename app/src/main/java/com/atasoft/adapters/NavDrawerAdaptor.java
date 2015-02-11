@@ -1,25 +1,25 @@
-//Depreciated
-
-
 package com.atasoft.adapters;
 
-import com.atasoft.flangeassist.fragments.*;
-
-//v13 once AIDE supports it
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-public class TabsPagerAdapter extends FragmentPagerAdapter {
+import com.atasoft.flangeassist.fragments.CashCounter;
+import com.atasoft.flangeassist.fragments.FlangeFragment;
+import com.atasoft.flangeassist.fragments.NozzleCalc;
+import com.atasoft.flangeassist.fragments.RigTrig;
+import com.atasoft.flangeassist.fragments.ShapeCalcFrag;
+import com.atasoft.flangeassist.fragments.TorqueFragment;
+import com.atasoft.flangeassist.fragments.UnitConFragment;
+import com.atasoft.flangeassist.fragments.WageCPIEstimate;
+import com.atasoft.flangeassist.fragments.WeldingFrag;
+
+
+public class NavDrawerAdaptor {
 	public static final String[] TABS = {"Flange\nTables", "Torque\nPattern", "CPI Raise\nEstimator", "Unit\nConverter", "Shape\nCalculator", "Welding\nReference","Cash\nCounter", "Rigging\nCalculator", "Nozzle\nCalculator"};
 	private static int TAB_COUNT = TABS.length;
-	
-    public TabsPagerAdapter(FragmentManager fm) {
-        super(fm);
-    }
 
-    @Override
-    public Fragment getItem(int index) {
+    public static Fragment getItem(int index) {
 
         switch (index) {
 			case 0:
@@ -54,7 +54,6 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         return null;
     }
 
-    @Override
     public int getCount() {
         return TAB_COUNT;
     }

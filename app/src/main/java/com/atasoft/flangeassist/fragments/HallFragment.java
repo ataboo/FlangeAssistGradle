@@ -1,7 +1,7 @@
 package com.atasoft.flangeassist.fragments;
 
 import android.os.*;
-import android.app.*;
+import android.support.v4.app.Fragment;
 import android.util.*;
 import android.view.*;
 import android.widget.*;

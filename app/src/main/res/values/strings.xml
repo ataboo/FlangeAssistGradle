@@ -111,4 +111,8 @@
     <string name="title_activity_frag_framer">FragFramer</string>
     <string name="hello_world">Hello world!</string>
 
+    <!-- Navigation Drawer-->
+    <string name="navigation_drawer_open">Open Navigation Menu</string>
+    <string name="navigation_drawer_close">Close Navigation Menu</string>
+
 </resources>

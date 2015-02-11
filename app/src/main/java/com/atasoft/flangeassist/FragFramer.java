@@ -1,11 +1,12 @@
 package com.atasoft.flangeassist;
 
 import android.annotation.*;
-import android.app.*;
+import android.support.v4.app.*;
+import android.app.ActionBar;
 import android.os.*;
 import com.atasoft.flangeassist.fragments.*;
 
-public class FragFramer extends Activity {
+public class FragFramer extends FragmentActivity {
 	public static final int PAY_CALC = 0;
 	public static final int HALL = 1;
 	public static final int ABOUT = 2;
@@ -45,7 +46,7 @@ public class FragFramer extends Activity {
 			break;
 		}
 		if(getFragmentManager().findFragmentByTag(name) == null){
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			setTitle(name);
 			transaction.add(R.id.fragframe, frag, name);
 			transaction.commit();

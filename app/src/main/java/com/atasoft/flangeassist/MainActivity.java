@@ -9,7 +9,7 @@ import android.view.*;
 import android.view.View.*;
 import android.widget.*;
 
-@SuppressLint("NewApi")
+
 public class MainActivity extends Activity implements OnClickListener {
 
 	@Override

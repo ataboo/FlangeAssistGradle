@@ -2,16 +2,9 @@
 *.iws
 *.ipr
 .idea/
-gradle/
 .gradle/
-gradlew.bat
-gradlew
 import-summary.txt
 local.properties
-build.gradle
-
 build/
-
-
 *~
 *.swp

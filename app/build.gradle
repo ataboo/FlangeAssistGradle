@@ -5,8 +5,8 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "atasoft.com.flangeassistgradle"
-        minSdkVersion 13
+        applicationId "com.atasoft.flangeassist"
+        minSdkVersion 11
         targetSdkVersion 21
         versionCode 13
         versionName "0.22"

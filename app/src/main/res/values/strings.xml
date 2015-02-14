@@ -118,4 +118,14 @@
     <string name="navigation_drawer_close">Close Navigation Menu</string>
     <string name="action_about">About</string>
 
+    <!-- Reporter Frag  -->
+    <string name="reporter_intro">Apprentice reports can completed by the (also free) Boilermaker
+        Reporter App.</string>
+    <string name="reporter_launch_super">Apprentice Report\nas Supervisor</string>
+    <string name="reporter_launch_apprentice">Apprentice Report\nas Apprentice</string>
+    <string name="reporter_not_found">Boilermaker Reporter isn\'t installed.</string>
+    <string name="reporter_download">Download from Play Store</string>
+    <string name="reporter_footer">The report generation wasn\'t included in stock Boilermaker Toolbox
+        because of added file size and permissions for writing to storage.</string>
+
 </resources>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+	android:padding="16dp" >
+	<TextView
+		android:id="@+id/introText"
+		android:layout_alignParentTop="true"
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:text="@string/reporter_intro"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textStyle="bold" />
+    <View
+        android:id="@+id/pb1"
+        android:layout_width="fill_parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_height="1dp"
+        android:layout_below="@id/introText"
+        android:background="@android:color/darker_gray"/>
+
+    <TextView
+        android:id="@+id/reporterNotFoundText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pb1"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone"
+        android:text="@string/reporter_not_found"/>
+	<ImageView
+		android:id="@+id/report_play_launch"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="24dp"
+		android:src="@drawable/play_store_link"
+        android:scaleType="center"
+        android:visibility="gone"
+		android:layout_below="@id/reporterNotFoundText"/>
+
+    <Button
+        android:id="@+id/reportLaunchAppren"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/reporter_launch_apprentice"
+        android:textSize="14sp"
+        android:textAllCaps="false"
+        android:layout_below="@id/pb1"
+        android:padding="18dp"
+        android:visibility="gone"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+    <Button
+        android:id="@+id/reportLaunchSuper"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="@string/reporter_launch_super"
+        android:textSize="14sp"
+        android:visibility="gone"
+        android:layout_below="@id/reportLaunchAppren"
+        android:padding="18dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
+    <TextView
+        android:id="@+id/footerText"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:text="@string/reporter_footer"
+        android:paddingBottom="8dp"
+        android:textSize="18sp" />
+</RelativeLayout>

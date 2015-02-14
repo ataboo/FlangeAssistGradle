@@ -1,6 +1,5 @@
 package com.atasoft.flangeassist.fragments;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,8 +20,8 @@ public class ReporterFragment extends Fragment implements View.OnClickListener {
     public static final String packageName = "com.atasoft.flangeassist";
 
     public static final String bmReportPackage = "com.atasoft.boilermakerreporter";
-    public static final int APPRENTICE = 0;
-    public static final int SUPER = 1;
+    public static final int SUPER = 0;
+    public static final int APPRENTICE = 1;
 
     View thisFragView;
     Context context;
@@ -107,9 +106,6 @@ public class ReporterFragment extends Fragment implements View.OnClickListener {
     }
 
     private void launchReporter(int startMode){
-        String launchDescription = "Apprentice";
-        if(startMode == SUPER) launchDescription = "Supervisor";
-
         Intent intent;
         PackageManager manager = context.getPackageManager();
         try {
@@ -117,8 +113,6 @@ public class ReporterFragment extends Fragment implements View.OnClickListener {
             if (intent == null) {
                 throw new PackageManager.NameNotFoundException();
             }
-            Toast.makeText(context, "Launching Boilermaker Reporter as " + launchDescription,
-                    Toast.LENGTH_SHORT).show();
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
             intent.putExtra("launch_mode", startMode);
             startActivity(intent);

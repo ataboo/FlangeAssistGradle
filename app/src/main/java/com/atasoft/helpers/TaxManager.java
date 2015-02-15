@@ -103,7 +103,7 @@ public class TaxManager {
                             "Pre-App", "First Term", "Second Term", "Third Term", "Fourth Term",
                             "Fifth Term", "Sixth Term", "Journeyman", "Foreman", "GF"
                     };
-                    this.defaultWageIndex = 7; //Journeyman
+                    this.defaultWageIndex = 7d; //Journeyman
                     this.vacRate = 0.12d;
 
                     break;
@@ -123,7 +123,7 @@ public class TaxManager {
                             "Helper", "1st Year", "2nd Year", "3rd Year", "Journeyman (S)",
                             "Journeyman (N)", "Lead Hand", "Foreman", "GF"
                     };
-                    this.defaultWageIndex = 5; //Journeyman (N)
+                    this.defaultWageIndex = 5d; //Journeyman (N)
                     this.vacRate = 0.10d;
                     break;
                 //=====================================MB====================================
@@ -148,7 +148,21 @@ public class TaxManager {
                     //[2014] (9134 + 2425.5 + 913.68) * .1080 = 1347.10
                     //[2015] (9134 + 2479.95 + 930.60) * .1080 = 1354.81
                     this.taxCred = new double[]{1310.18, 1347.10, 1354.81};
+
+                    //-------------------------------Wage Rates---------------------------------
+                    this.wageRates = new double[]{
+                            24.81, 19.37, 24.81, 30.25, 33.87, 35.37, 39.12, 42.87
+                    };
+                    this.wageNames = new String[]{
+                            "Helper", "1st Year", "2nd Year", "3rd Year", "Journeyman",
+                            "Ass't Foreman", "Foreman", "GF"
+                    };
+                    this.defaultWageIndex = 4d;
+                    this.vacRate = 0.105d;
                     break;
+
+
+
                 //=====================================ON====================================
                 case PROV_ON:
                     this.surName = "ON - ";
@@ -188,7 +202,7 @@ public class TaxManager {
                             "Helper", "1st Year", "2nd Year", "3rd Year", "4th Year", "Journeyman",
                             "Ass't Foreman", "Foreman", "GF"
                     };
-                    this.defaultWageIndex = 5;
+                    this.defaultWageIndex = 5d;
                     this.vacRate = 0.12d;
                     break;
             }
@@ -207,7 +221,7 @@ public class TaxManager {
         {0.0495, 3500, 0.0188}
         };
 	
-	public static String[] getWageNames(int province) {
+	public static String[] getWageNames(String province) {
 		TaxStats stats = getStatType(province);
 
         String[] wageNames = stats.wageNames;
@@ -220,14 +234,15 @@ public class TaxManager {
 		return retString;
 	}
 	
-	public static double[] getWageRates(int province){
-        TaxStats activeRate = getStatType(province);  //returns ex bcStats
+	public static double[] getWageRates(String province){
+        TaxStats activeRate = getStatType(province);  //returns ex: bcStats
 
         double[] wageRates = activeRate.wageRates;
         double custVal = activeRate.defaultWageIndex;
 		double[] retDoub = new double[wageRates.length + 1];
         System.arraycopy(wageRates, 0, retDoub, 0, wageRates.length);
 		retDoub[retDoub.length-1] = custVal;
+        Log.w("TaxManager", "Packaged " + custVal + " as custVal");
 		return retDoub;
 	}
 
@@ -278,7 +293,7 @@ public class TaxManager {
                 getProvinceIndexFromName(province));
     }
 
-    public static double getVacationRate(int province){
+    public static double getVacationRate(String province){
         TaxStats stats = getStatType(province);
         return stats.vacRate;
     }
@@ -404,8 +419,8 @@ public class TaxManager {
         int count = brackets.length;
         for(int i=count; i>0;i--){
             if(gross > brackets[i-1]){
-                Log.w("TaxManager", String.format("Gross: %.2f is less than the [%d] Bracket: %.2f",
-                        gross, i-1, brackets[i-1]));
+                //Log.w("TaxManager", String.format("Gross: %.2f is greater than the [%d] Bracket: %.2f",
+                        //gross, i-1, brackets[i-1]));
                 return i-1;
             }
         }
@@ -424,6 +439,10 @@ public class TaxManager {
                 return mbStats;
         }
         return null;
+    }
+
+    private static TaxStats getStatType(String province){
+        return getStatType(getProvinceIndexFromName(province));
     }
 
     public static int getYearIndexFromName(String yearName){

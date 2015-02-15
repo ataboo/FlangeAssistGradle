@@ -13,6 +13,8 @@ import android.util.Log;
 import com.atasoft.flangeassist.*;
 import com.atasoft.helpers.*;
 
+import java.util.HashMap;
+
 
  public class PaychequeFragment extends Fragment implements OnClickListener
 {
@@ -127,7 +129,7 @@ import com.atasoft.helpers.*;
 		if(custDayCheck) {
 		    if(customDay != custDayCheck || !verifyCustDays()) updateDaySpinners(custDayCheck);
 		}
-		String provWage = prefs.getString("list_provwage", "AB");
+		String provWage = prefs.getString("list_provwage", TaxManager.provinceNames[1]);
 		if(!provWage.equals(oldProvWage)) setupWageSpinner(provWage);
 		pushBootan();
 		
@@ -165,6 +167,7 @@ import com.atasoft.helpers.*;
 	private ToggleButton nightToggle;
 	private ToggleButton travelToggle;
 	private ToggleButton dayTravelToggle;
+    private HashMap<String, ArrayAdapter<String>> wageAdaptMap;
 	private void setupSpinners() {
         sTimeText = (TextView) thisFrag.findViewById(R.id.sing_val);
 		hTimeText = (TextView) thisFrag.findViewById(R.id.half_val);
@@ -192,14 +195,25 @@ import com.atasoft.helpers.*;
 		loaSpin = (Spinner) thisFrag.findViewById(R.id.loa_spin);
 		wageSpin = (Spinner) thisFrag.findViewById(R.id.wageSpin);
 
+
 		updateDaySpinners(prefs.getBoolean("custom_daycheck",false));
 
         ArrayAdapter<String> weekCount = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, 
 																  new String[]{"0","1","2","3","4","5","6","7"});
         loaSpin.setAdapter(weekCount);
         mealSpin.setAdapter(weekCount);
-		
-		oldProvWage = prefs.getString("list_provwage", "AB");
+
+        if(wageAdaptMap == null) {
+            wageAdaptMap = new HashMap<String, ArrayAdapter<String>>();
+            String[] provinceNames = TaxManager.getActiveProvinceStrings();
+            for (String name: provinceNames) {
+                ArrayAdapter<String> wageAdapt = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+                        android.R.layout.simple_spinner_item, TaxManager.getWageNames(name));
+                wageAdaptMap.put(name, wageAdapt);
+            }
+        }
+
+        oldProvWage = prefs.getString("list_provwage", TaxManager.provinceNames[1]);
 		setupWageSpinner(oldProvWage);
 		
 		sunSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -282,7 +296,9 @@ import com.atasoft.helpers.*;
 				public void onNothingSelected(AdapterView<?> parent) {
 				}
 			});
-		
+
+
+
 		pushBootan();
 	}
 	
@@ -315,18 +331,24 @@ import com.atasoft.helpers.*;
 	}
 	
 	private void setupWageSpinner(String provWage) {
-		int prov = TaxManager.PROV_AB;
-		if(provWage.contains("BC")) prov = TaxManager.PROV_BC;
-		if(provWage.contains("ON")) prov = TaxManager.PROV_ON;
-		this.vacationPay = taxManager.getVacationRate(prov);
-		this.wageRates = taxManager.getWageRates(prov);
+
+		this.vacationPay = taxManager.getVacationRate(provWage);
+		this.wageRates = taxManager.getWageRates(provWage);
 		
-		String[] wageNames = taxManager.getWageNames(prov);
-		ArrayAdapter<String> wageAdapt = new ArrayAdapter<String>(getActivity().getApplicationContext(), 
-			android.R.layout.simple_spinner_item, wageNames);
-		wageSpin.setAdapter(wageAdapt);
-		//wageSpin.setSelection((int) wageRates[wageRates.length - 1]);
-		oldProvWage = provWage;
+		String[] wageNames = taxManager.getWageNames(provWage);
+
+        wageSpin.setAdapter(wageAdaptMap.get(provWage));
+        int defaultWage = (int) wageRates[wageRates.length-1];
+        defaultWage = AtaMathUtils.bracketInt(defaultWage, 0, wageSpin.getAdapter().getCount()-1);
+        wageSpin.refreshDrawableState();
+        //TODO: tried everything but the setSelection is Bugged.  Try again later?
+		wageSpin.setSelection(defaultWage);
+        /*
+        String itemAtDefault = wageSpin.getAdapter().getItem(defaultWage).toString();
+        Log.w("Paycheque Fragment", "setSelection to " + defaultWage + " item at default is " + itemAtDefault);
+        Log.w("Paycheque Fragment", "Selection is actually " + wageSpin.getSelectedItemPosition() + " what a load of crap.");
+		*/
+        oldProvWage = provWage;
     }
 	
 	private Boolean verifyCustDays() {
@@ -383,15 +405,10 @@ import com.atasoft.helpers.*;
     }
 
 	private void pushBootan() {
-		
+        //Log.w("Paycheque Fragment", "Selection is actually " + wageSpin.getSelectedItemPosition() + " also a load of crap.");
 		double splitArr[] = new double[3];
 		boolean fourTens = fourToggle.isChecked();
-		
-		//init with preferences now
-		//double loaRate = Double.parseDouble(getString(R.string.loa_rate));
-		//double mealRate = Double.parseDouble(getString(R.string.meal_rate));
-		//double vacationPay = Double.parseDouble(getString(R.string.vacation_pay));
-		//double travelRate = Double.parseDouble(getString(R.string.travel_rate));
+
 		int timeSum[] = {0,0,0};
 
 		int loaCount = Integer.parseInt(loaSpin.getSelectedItem().toString());
@@ -472,22 +489,10 @@ import com.atasoft.helpers.*;
 		
 		double[] deductions = new double[]{0,0,0,0,0,0};  //[fed tax, prov tax, cpp, ei, working dues, monthly dues]
 		
-		String yearString = prefs.getString("list_taxYear", "2014");
-		String provString = prefs.getString("list_provwage", "AB");
-
-        //get strings out of the year prefs. array adapter?
-		int taxYear = TaxManager.TY_2015;
-		int taxProv = TaxManager.PROV_AB;
+		String yearString = prefs.getString("list_taxYear", TaxManager.yearStrings[TaxManager.yearStrings.length-1]);
+		String provString = prefs.getString("list_provwage", TaxManager.provinceNames[1]);
 		
-		if(yearString.contains("2013")) taxYear = TaxManager.TY_2013;
-        if(yearString.contains("2014")) taxYear = TaxManager.TY_2014;
-		
-		if(provString.contains("BC")) taxProv = TaxManager.PROV_BC;
-		if(provString.contains("ON")) taxProv = TaxManager.PROV_ON;
-		//other provinces
-		
-		double[] taxReturns = taxManager.getTaxes(grossVac, taxYear, taxProv);
-		//double[] taxReturns = taxManager.getTaxes(1020, taxYear, taxProv);
+		double[] taxReturns = taxManager.getTaxes(grossVac, yearString, provString);
 		
 		boolean cppChecked = cppVal.isChecked();
 		if(taxVal.isChecked()){

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<!--=======Maybe useless? was setup for API under 14 but don't know why======-->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory 
         android:title="Paycheque Calculator: Wages/Deductions"

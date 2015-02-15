@@ -17,17 +17,11 @@
 		<ListPreference
 			android:key="list_provwage"
             android:title="Provincial Rates"
-            android:summary="Change the wages, vacation rate and taxes by province."
-            android:defaultValue="AB"
-            android:entries="@array/taxProv"
-            android:entryValues="@array/taxProvVals" />
+            android:summary="Change the wages, vacation rate and taxes by province."/>
 		<ListPreference
 			android:key="list_taxYear"
             android:title="Tax Year"
-            android:summary="Change the tax year."
-            android:defaultValue="2015"
-            android:entries="@array/taxYears"
-            android:entryValues="@array/taxYearVals" />
+            android:summary="Change the tax year."/>
 		<EditTextPreference
 			android:key="custom_addtax"
 			android:ems="10"

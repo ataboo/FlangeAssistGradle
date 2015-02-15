@@ -1,5 +1,7 @@
 package com.atasoft.helpers;
 
+import android.util.Log;
+
 public class AtaMathUtils
 {
 	public static float bracketFloat(float value, float lower, float upper){
@@ -42,5 +44,12 @@ public class AtaMathUtils
             e.printStackTrace();
         }
         return bracketInt(val, floor, ceiling);
+    }
+
+    public static double[] roundDoubles(double[] inArr){
+        for(int i=0; i<inArr.length; i++){
+            inArr[i] = Math.round(inArr[i] * 100d)/100d;
+        }
+        return inArr;
     }
 }

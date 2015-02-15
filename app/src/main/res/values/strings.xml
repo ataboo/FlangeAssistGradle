@@ -56,11 +56,13 @@
         <item name="AB">Alberta</item>
         <item name="BC">B.C</item>
         <item name="ON">Ontario</item>
+        <item name="MN">Manitoba</item>
     </string-array>
     <string-array name="taxProvVals">
         <item name="AB">AB</item>
         <item name="BC">BC</item>
         <item name="ON">ON</item>
+        <item name="MN">MN</item>
     </string-array>
 
     <!-- About Page -->
@@ -128,4 +130,15 @@
     <string name="reporter_footer">The report generation wasn\'t included in stock Boilermaker Toolbox
         because of added file size and permissions for writing to storage.</string>
 
+    <!-- TaxGrossFrag -->
+    <string name="tax_header_text">Estimate Income Tax by Province</string>
+    <string name="tax_year_text">Tax Year:</string>
+    <string name="tax_provincial_text">Provincial Rate:</string>
+    <string name="tax_gross_text">Week\'s Gross:</string>
+    <string name="tax_fedTotal_text">Federal Tax:</string>
+    <string name="tax_provTotal_text">Provincial Tax:</string>
+    <string name="tax_cpp_ei">CPP and EI:</string>
+    <string name="tax_total_ded">Total Deductions:</string>
+    <string name="tax_netIncome_text">Net Income:</string>
+    <string name="tax_submit_button">Submit</string>
 </resources>

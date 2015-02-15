@@ -9,7 +9,7 @@ import com.atasoft.flangeassist.fragments.*;
 public class NavDrawerAdaptor {
 	public static final String[] TABS = {"Paycheque Calculator", "Flange Tables", "Torque Pattern",
             "CPI Raise Estimator", "Unit Converter", "Shape Calculator", "Welding Reference",
-            "Cash Counter", "Rigging Calculator", "Nozzle Calculator", "Hall Links", "Boilermaker Reporter"};
+            "Cash Counter", "Rigging Calculator", "Nozzle Calculator", "Hall Links", "Boilermaker Reporter", "Gross Tax Estimator"};
 	private static int TAB_COUNT = TABS.length;
 
     public static Fragment getItem(int index) {
@@ -51,6 +51,9 @@ public class NavDrawerAdaptor {
             case 11:
                 //Boilermaker Reporter
                 return new ReporterFragment();
+            case 12:
+                //Gross Tax
+                return new TaxGrossFragment();
 		}
 
         return null;

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Update Values (last checked Oct.26/13) -->
     <string name="version_info">Boilermaker Toolbox v0.22
 		\nLast updated February 11, 2015
 		\nAB Wages updated: Nov 2/14</string>
@@ -68,7 +67,8 @@
     <!-- About Page -->
     <string name="about_blurb">Boilermaker Toolbox is a free reference tool geared towards industry in Alberta.  
 	    This tool is not affiliated with any associations and should be used for reference only.
-	    \n\nFeel free to mail bmtoolkit@gmail.com with any comments or suggestions.</string>
+	    \n\nFeel free to mail bmtoolkit@gmail.com with any comments or suggestions.  If you want
+        your province's taxes and rates added shoot me a comment or email.</string>
     <string name="about_header">About Boilermaker Toolbox</string>
     <string name="but_call146">View 146 Callout</string>
 

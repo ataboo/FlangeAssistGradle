@@ -18,7 +18,7 @@ import android.widget.*;
 import com.atasoft.adapters.NavDrawerAdaptor;
 import com.atasoft.flangeassist.fragments.NavigationDrawerFragment;
 
-//See if it's working
+//Todo: switch view setups over to onViewCreated() instead of onCreateView()
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {

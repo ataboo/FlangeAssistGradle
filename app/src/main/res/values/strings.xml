@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="version_info">Boilermaker Toolbox v0.22
-		\nLast updated February 11, 2015
+    <string name="version_info">Boilermaker Toolbox v0.23
+		\nLast updated February 19, 2015
 		\nAB Wages updated: Nov 2/14</string>
 
     <!-- Main Menu -->
@@ -68,7 +68,7 @@
     <string name="about_blurb">Boilermaker Toolbox is a free reference tool geared towards industry in Alberta.  
 	    This tool is not affiliated with any associations and should be used for reference only.
 	    \n\nFeel free to mail bmtoolkit@gmail.com with any comments or suggestions.  If you want
-        your province's taxes and rates added shoot me a comment or email.</string>
+        your province\'s taxes and rates added shoot me a comment or email.</string>
     <string name="about_header">About Boilermaker Toolbox</string>
     <string name="but_call146">View 146 Callout</string>
 
@@ -121,10 +121,10 @@
     <string name="action_about">About</string>
 
     <!-- Reporter Frag  -->
-    <string name="reporter_intro">Apprentice reports can completed by the (also free) Boilermaker
-        Reporter App.</string>
+    <string name="reporter_intro">Apprentice reports can completed by the (also free) BMToolbox Reporter App.</string>
     <string name="reporter_launch_super">Apprentice Report\nas Supervisor</string>
     <string name="reporter_launch_apprentice">Apprentice Report\nas Apprentice</string>
+    <string name="reporter_launch_steward">Apprentice Report\n as Job Steward</string>
     <string name="reporter_not_found">Boilermaker Reporter isn\'t installed.</string>
     <string name="reporter_download">Download from Play Store</string>
     <string name="reporter_footer">The report generation wasn\'t included in stock Boilermaker Toolbox

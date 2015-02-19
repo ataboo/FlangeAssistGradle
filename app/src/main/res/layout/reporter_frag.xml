@@ -38,19 +38,7 @@
         android:scaleType="center"
         android:visibility="gone"
 		android:layout_below="@id/reporterNotFoundText"/>
-
-    <Button
-        android:id="@+id/reportLaunchAppren"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:text="@string/reporter_launch_apprentice"
-        android:textSize="14sp"
-        android:textAllCaps="false"
-        android:layout_below="@id/pb1"
-        android:padding="18dp"
-        android:visibility="gone"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp" />
+    
     <Button
         android:id="@+id/reportLaunchSuper"
         android:layout_width="200dp"
@@ -59,11 +47,37 @@
         android:text="@string/reporter_launch_super"
         android:textSize="14sp"
         android:visibility="gone"
-        android:layout_below="@id/reportLaunchAppren"
+        android:layout_below="@id/pb1"
         android:padding="18dp"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp" />
+    <Button
+        android:id="@+id/reportLaunchAppren"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/reporter_launch_apprentice"
+        android:textSize="14sp"
+        android:textAllCaps="false"
+        android:layout_below="@id/reportLaunchSuper"
+        android:padding="18dp"
+        android:visibility="gone"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+    <Button
+        android:id="@+id/reportLaunchSteward"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/reporter_launch_steward"
+        android:textSize="14sp"
+        android:textAllCaps="false"
+        android:layout_below="@id/reportLaunchAppren"
+        android:padding="18dp"
+        android:visibility="gone"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
+
 
     <TextView
         android:id="@+id/footerText"

@@ -17,11 +17,12 @@ import com.atasoft.flangeassist.*;
 public class ReporterFragment extends Fragment implements View.OnClickListener {
 
     //TODO: switch to reporter when published
-    public static final String packageName = "com.atasoft.flangeassist";
+    //public static final String packageName = "com.atasoft.flangeassist";
 
     public static final String bmReportPackage = "com.atasoft.boilermakerreporter";
     public static final int SUPER = 0;
     public static final int APPRENTICE = 1;
+    public static final int STEWARD = 2;
 
     View thisFragView;
     Context context;
@@ -46,7 +47,7 @@ public class ReporterFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.report_play_launch:
-                launchPlayStore(packageName);
+                launchPlayStore(bmReportPackage);
                 break;
             case R.id.reportLaunchAppren:
                 launchReporter(APPRENTICE);
@@ -54,11 +55,14 @@ public class ReporterFragment extends Fragment implements View.OnClickListener {
             case R.id.reportLaunchSuper:
                 launchReporter(SUPER);
                 break;
+            case R.id.reportLaunchSteward:
+                launchReporter(STEWARD);
         }
     }
 
     Button launchApprenticeButton;
     Button launchSuperButton;
+    Button launchStewardButton;
     ImageView notInstallImage;
     TextView notInstallText;
     private void setupViews(){
@@ -66,6 +70,9 @@ public class ReporterFragment extends Fragment implements View.OnClickListener {
         launchApprenticeButton.setOnClickListener(this);
         this.launchSuperButton = (Button) thisFragView.findViewById(R.id.reportLaunchSuper);
         launchSuperButton.setOnClickListener(this);
+        this.launchStewardButton = (Button) thisFragView.findViewById(R.id.reportLaunchSteward);
+        launchStewardButton.setOnClickListener(this);
+        
         this.notInstallText = (TextView) thisFragView.findViewById(R.id.reporterNotFoundText);
         this.notInstallImage = (ImageView) thisFragView.findViewById(R.id.report_play_launch);
         notInstallImage.setOnClickListener(this);
@@ -78,9 +85,10 @@ public class ReporterFragment extends Fragment implements View.OnClickListener {
             Log.e("ReporterFragment", "checkIfInstalled called before views setup.");
             return;
         }
-        boolean alreadyInstalled = isPackageInstalled("com.atasoft.boilermakerreporter", context);
+        boolean alreadyInstalled = isPackageInstalled(bmReportPackage, context);
         launchApprenticeButton.setVisibility((alreadyInstalled) ? View.VISIBLE: View.GONE);
         launchSuperButton.setVisibility((alreadyInstalled) ? View.VISIBLE: View.GONE);
+        launchStewardButton.setVisibility((alreadyInstalled) ? View.VISIBLE: View.GONE);
         notInstallText.setVisibility((alreadyInstalled) ? View.GONE: View.VISIBLE);
         notInstallImage.setVisibility((alreadyInstalled) ? View.GONE: View.VISIBLE);
     }
@@ -100,8 +108,8 @@ public class ReporterFragment extends Fragment implements View.OnClickListener {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
         } catch (android.content.ActivityNotFoundException anfe){
             Log.w("ReporterFragment", "Playstore not found, launching URI.");
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id="
-                    + packageName)));
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
+                    "https://play.google.com/store/apps/details?id=" + packageName)));
         }
     }
 

@@ -28,6 +28,10 @@ http://atasoft.altervista.org
 Feel free to send feedback or suggestions to bmtoolbox@gmail.com
 
 ###Changes:
+####V0.24 (02/19/15):
+-Fixed (hopefully) crash in Paycheque Calculator
+-PayCalc will now wipe settings if province is invalid
+
 ####V0.23 (02/19/15):
 - Added BMToolbox Reporter launcher
     - Generate Apprentice Report PDFs

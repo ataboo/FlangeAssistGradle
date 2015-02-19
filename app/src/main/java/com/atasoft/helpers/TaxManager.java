@@ -1,6 +1,7 @@
 package com.atasoft.helpers;
 
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.math.BigDecimal;
@@ -32,7 +33,7 @@ public class TaxManager {
 
     public static final String[] provinceNames = {"British Columbia", "Alberta", "Saskatchewan",
             "Manitoba", "Ontario", "Quebec", "New Brunswick", "Nova Scotia", "Prince Edward Island",
-            "Newfoundland"};
+            "Newfoundland", "Federal"};
 
     public static final String[] yearStrings = {"2013", "2014", "2015"};
 
@@ -437,12 +438,19 @@ public class TaxManager {
                 return abStats;
             case PROV_MB:
                 return mbStats;
+            default:
+                return null;
         }
-        return null;
     }
 
     private static TaxStats getStatType(String province){
-        return getStatType(getProvinceIndexFromName(province));
+        TaxStats provinceStats = getStatType(getProvinceIndexFromName(province));
+        if(provinceStats == null){
+            Log.e("TaxManager", "getStatType received invalid province string.  Returned default AB.");
+            return getStatType(PROV_AB);
+        }
+        
+        return provinceStats;
     }
 
     public static int getYearIndexFromName(String yearName){
@@ -456,6 +464,22 @@ public class TaxManager {
         for(int i=0; i<provinceNames.length; i++){
             if(provName.matches(provinceNames[i])) return i;
         }
-        return FED;
+        return -1;
+    }
+    
+    public static boolean validatePrefs(SharedPreferences prefs){
+        boolean provFlag = false;
+        boolean yearFlag = false;
+        String provWage = prefs.getString("list_provWageNew", "fail");
+        String year = prefs.getString("list_taxYearNew", "fail");
+        for(int i=0; i<activeProvinces.length; i++){
+            if(provWage.matches(provinceNames[activeProvinces[i]])) provFlag = true;
+        }
+        for(int i=0; i<yearStrings.length; i++){
+            if(year.matches(yearStrings[i])) yearFlag = true;
+        }
+        if(!provFlag) Log.e("TaxManager", "SharedPreference list_provWageNew was malformed as: " + provWage);
+        if(!yearFlag) Log.e("TaxManager", "SharedPreference list_taxYearNew was malformed as: " + year);
+        return (provFlag && yearFlag);
     }
 }

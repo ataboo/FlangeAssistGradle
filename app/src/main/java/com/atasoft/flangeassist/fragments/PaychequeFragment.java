@@ -106,7 +106,7 @@ import java.util.HashMap;
 		friHol.setOnClickListener(this);
 	
 		prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-		
+
 		setupSpinners();
         return v;
     }
@@ -129,7 +129,7 @@ import java.util.HashMap;
 		if(custDayCheck) {
 		    if(customDay != custDayCheck || !verifyCustDays()) updateDaySpinners(custDayCheck);
 		}
-		String provWage = prefs.getString("list_provwage", TaxManager.provinceNames[1]);
+		String provWage = prefs.getString("list_provWageNew", TaxManager.provinceNames[1]);
 		if(!provWage.equals(oldProvWage)) setupWageSpinner(provWage);
 		pushBootan();
 		
@@ -167,7 +167,6 @@ import java.util.HashMap;
 	private ToggleButton nightToggle;
 	private ToggleButton travelToggle;
 	private ToggleButton dayTravelToggle;
-    private HashMap<String, ArrayAdapter<String>> wageAdaptMap;
 	private void setupSpinners() {
         sTimeText = (TextView) thisFrag.findViewById(R.id.sing_val);
 		hTimeText = (TextView) thisFrag.findViewById(R.id.half_val);
@@ -203,17 +202,7 @@ import java.util.HashMap;
         loaSpin.setAdapter(weekCount);
         mealSpin.setAdapter(weekCount);
 
-        if(wageAdaptMap == null) {
-            wageAdaptMap = new HashMap<String, ArrayAdapter<String>>();
-            String[] provinceNames = TaxManager.getActiveProvinceStrings();
-            for (String name: provinceNames) {
-                ArrayAdapter<String> wageAdapt = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-                        android.R.layout.simple_spinner_item, TaxManager.getWageNames(name));
-                wageAdaptMap.put(name, wageAdapt);
-            }
-        }
-
-        oldProvWage = prefs.getString("list_provwage", TaxManager.provinceNames[1]);
+        oldProvWage = prefs.getString("list_provWageNew", TaxManager.provinceNames[1]);
 		setupWageSpinner(oldProvWage);
 		
 		sunSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -331,13 +320,20 @@ import java.util.HashMap;
 	}
 	
 	private void setupWageSpinner(String provWage) {
-
+        if(!TaxManager.validatePrefs(prefs)){
+            Log.e("PaychequeFragment", "Province or Year prefs were malformed... Resetting them");
+            prefs.edit().clear().commit();
+            provWage = TaxManager.provinceNames[TaxManager.PROV_AB]; //Best Province
+        }
+        
 		this.vacationPay = taxManager.getVacationRate(provWage);
 		this.wageRates = taxManager.getWageRates(provWage);
 		
 		String[] wageNames = taxManager.getWageNames(provWage);
+        ArrayAdapter<String> wageAdapt = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+                android.R.layout.simple_spinner_item, wageNames);
 
-        wageSpin.setAdapter(wageAdaptMap.get(provWage));
+        wageSpin.setAdapter(wageAdapt);
         int defaultWage = (int) wageRates[wageRates.length-1];
         defaultWage = AtaMathUtils.bracketInt(defaultWage, 0, wageSpin.getAdapter().getCount()-1);
         wageSpin.refreshDrawableState();
@@ -489,8 +485,8 @@ import java.util.HashMap;
 		
 		double[] deductions = new double[]{0,0,0,0,0,0};  //[fed tax, prov tax, cpp, ei, working dues, monthly dues]
 		
-		String yearString = prefs.getString("list_taxYear", TaxManager.yearStrings[TaxManager.yearStrings.length-1]);
-		String provString = prefs.getString("list_provwage", TaxManager.provinceNames[1]);
+		String yearString = prefs.getString("list_taxYearNew", TaxManager.yearStrings[TaxManager.yearStrings.length-1]);
+		String provString = prefs.getString("list_provWageNew", TaxManager.provinceNames[1]);
 		
 		double[] taxReturns = taxManager.getTaxes(grossVac, yearString, provString);
 		

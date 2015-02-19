@@ -15,11 +15,11 @@
 			android:selectAllOnFocus="true"
             android:defaultValue="40" />
 		<ListPreference
-			android:key="list_provwage"
+			android:key="list_provWageNew"
             android:title="Provincial Rates"
             android:summary="Change the wages, vacation rate and taxes by province."/>
 		<ListPreference
-			android:key="list_taxYear"
+			android:key="list_taxYearNew"
             android:title="Tax Year"
             android:summary="Change the tax year."/>
 		<EditTextPreference

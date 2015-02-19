@@ -44,14 +44,16 @@ public class PreferenceMenu extends PreferenceActivity {
 
             });
 
-            ListPreference provListPref = (ListPreference) findPreference("list_provwage");
+            ListPreference provListPref = (ListPreference) findPreference("list_provWageNew");
             provListPref.setEntries(TaxManager.getActiveProvinceStrings());
             provListPref.setEntryValues(TaxManager.getActiveProvinceStrings());
+            provListPref.setValueIndex(TaxManager.PROV_AB);
             provListPref.setDefaultValue(TaxManager.getActiveProvinceStrings()[1]);  //best province
 
-            ListPreference yearListPref = (ListPreference) findPreference("list_taxYear");
+            ListPreference yearListPref = (ListPreference) findPreference("list_taxYearNew");
             yearListPref.setEntries(TaxManager.yearStrings);
             yearListPref.setEntryValues(TaxManager.yearStrings);
+            yearListPref.setValueIndex(TaxManager.yearStrings.length - 1);
             yearListPref.setDefaultValue(TaxManager.yearStrings[TaxManager.yearStrings.length-1]);
         }
     }

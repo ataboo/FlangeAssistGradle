@@ -590,15 +590,18 @@ import java.util.HashMap;
 	
 	private double[] getCustomDayPrefs(String itemStr) {
 		String[] splitPref = new String[3];
-		double[] retDoub = new double[3];
+		double[] retDoub = {0d,0d,0d};
 		
 		if(itemStr.contains("A")) splitPref = prefs.getString("custom_dayA", "0,0,0").split(",");
 		if(itemStr.contains("B")) splitPref = prefs.getString("custom_dayB", "0,0,0").split(",");
 		if(itemStr.contains("C")) splitPref = prefs.getString("custom_dayC", "0,0,0").split(",");
 		
-		for(int i = 0; i < splitPref.length; i++) {
-			retDoub[i] = Double.parseDouble(splitPref[i]);
-			
+		for(int i=0; i<splitPref.length; i++) {
+            try{
+                retDoub[i] = Double.parseDouble(splitPref[i]);
+            } catch(NumberFormatException nfe){
+                Log.e("PaychequeFragment", itemStr + " item " + splitPref[i] + " NumberFormatException.");
+            }
 		}
 		return retDoub;
 	}

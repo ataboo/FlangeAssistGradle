@@ -5,7 +5,7 @@ Boilermaker Toolbox is a FREE reference tool designed to help Boilermakers in Ca
 Tell your jealous friends with IPhones about the JavaScript (cross-device) rewrite at
 http://atasoft.altervista.org
 
-###Main features so far (v0.23):
+###Main features so far (v0.24):
 - NEW BMToolbox Reporter Launcher (Apprentice Reports)
 - NEW Gross Tax Calculator
 - Rigging Calculator: finds load on slings, nylon sling table.

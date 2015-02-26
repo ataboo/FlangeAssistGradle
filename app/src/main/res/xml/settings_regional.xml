@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Pay Calculator Regional Settings"
+        android:key="category_wages">
+		<ListPreference
+			android:key="list_provWageNew"
+            android:title="Provincial Rates"
+            android:summary="Change the wages, vacation rate and taxes by province."/>
+		<ListPreference
+			android:key="list_taxYearNew"
+            android:title="Tax Year"
+            android:summary="Change the tax year."/>
+	</PreferenceCategory>
+</PreferenceScreen>

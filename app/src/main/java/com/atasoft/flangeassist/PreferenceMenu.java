@@ -1,25 +1,67 @@
 package com.atasoft.flangeassist;
 
-import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.support.v7.widget.Toolbar;
 
+import com.atasoft.flangeassist.fragments.SettingsCustomDays;
+import com.atasoft.flangeassist.fragments.SettingsRates;
+import com.atasoft.flangeassist.fragments.SettingsRegional;
+import com.atasoft.flangeassist.fragments.SettingsReset;
 import com.atasoft.helpers.TaxManager;
+
+import java.util.List;
 
 public class PreferenceMenu extends PreferenceActivity {
     @Override
-	public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+        setupToolBar();
+    }
 
-		super.onCreate(savedInstanceState);       
-		getFragmentManager().beginTransaction().replace(android.R.id.content, new PrefsFragment()).commit();
-		}
+    @Override
+    public void onBuildHeaders(List<Header> target) {
+        loadHeadersFromResource(R.xml.setting_headers, target);
+    }
+    
+    private void setupToolBar(){
+        ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
+        LinearLayout content = (LinearLayout) root.getChildAt(0);
+        LinearLayout toolbarContainer = (LinearLayout) View.inflate(this, R.layout.settings_layout, null);
+        root.removeAllViews();
+        toolbarContainer.addView(content);
+        root.addView(toolbarContainer);
+        
+        Toolbar toolbar = (Toolbar) toolbarContainer.findViewById(R.id.toolbar);
+        toolbar.setTitle("Toolbox Settings");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    private static final String[] fragNames = {
+            SettingsRegional.class.getName(),
+            SettingsRates.class.getName(),
+            SettingsCustomDays.class.getName(),
+            SettingsReset.class.getName()};
+    
+    @Override
+    protected boolean isValidFragment(String fragmentName) {
+        for(String fragName: fragNames){
+                if(fragName.equals(fragmentName)) return true;
+            }
+        return false;
+    }
+    
+    /*
     
     public static class PrefsFragment extends PreferenceFragment {
     	 
@@ -57,6 +99,8 @@ public class PreferenceMenu extends PreferenceActivity {
             yearListPref.setDefaultValue(TaxManager.yearStrings[TaxManager.yearStrings.length-1]);
         }
     }
+    
+    */
 }
 
     

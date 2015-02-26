@@ -4,6 +4,7 @@
 import android.content.*;
 import android.os.*;
 import android.preference.*;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.*;
 import android.view.View.*;
@@ -12,8 +13,6 @@ import android.util.Log;
 
 import com.atasoft.flangeassist.*;
 import com.atasoft.helpers.*;
-
-import java.util.HashMap;
 
 
  public class PaychequeFragment extends Fragment implements OnClickListener
@@ -29,29 +28,8 @@ import java.util.HashMap;
 	public static final String NAME = "Paycheque Calculator";
 	private double[] wageRates;
 	private double vacationPay;
-    private View thisFrag;
-	private Spinner sunSpin;
-	private Spinner monSpin;
-	private Spinner tueSpin;
-	private Spinner wedSpin;
-	private Spinner thuSpin;
-	private Spinner friSpin;
-	private Spinner satSpin;
-	
-	private Spinner mealSpin;
-	private Spinner loaSpin;
-	private Spinner wageSpin;
-	
-	private CheckBox taxVal;
-	private CheckBox cppVal;
-	private CheckBox duesVal;
-	private CheckBox monthlyDuesVal;
-	
-	private CheckBox monHol;
-	private CheckBox tueHol;
-	private CheckBox wedHol;
-	private CheckBox thuHol;
-	private CheckBox friHol;
+    private View thisFragView;
+
 	
 	private SharedPreferences prefs;
 	private Context context;
@@ -64,54 +42,22 @@ import java.util.HashMap;
 							 Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.paycalc, container, false);
-        thisFrag = v;
+        thisFragView = v;
 		context = getActivity().getApplicationContext();
-		this.taxManager = new TaxManager();
-
-        Button bClr = (Button) v.findViewById(R.id.clr_but);
-        Button bTens = (Button) v.findViewById(R.id.tens_but);
-		Button bTwelves = (Button) v.findViewById(R.id.twelves_but);
-		ToggleButton bFour = (ToggleButton) v.findViewById(R.id.four_but);
-		ToggleButton bNight = (ToggleButton) v.findViewById(R.id.night_but);
-		ToggleButton bTravel = (ToggleButton) v.findViewById(R.id.travel_but);
-		ToggleButton bDayTravel = (ToggleButton) v.findViewById(R.id.travelday_but);
-		taxVal = (CheckBox) v.findViewById(R.id.tax_val);
-		cppVal = (CheckBox) v.findViewById(R.id.cpp_val);
-		duesVal = (CheckBox) v.findViewById(R.id.dues_val);
-		monthlyDuesVal = (CheckBox) v.findViewById(R.id.monthlydues_val);
 		
-		monHol = (CheckBox) v.findViewById(R.id.hol_mon);
-		tueHol = (CheckBox) v.findViewById(R.id.hol_tue);
-		wedHol = (CheckBox) v.findViewById(R.id.hol_wed);
-		thuHol = (CheckBox) v.findViewById(R.id.hol_thu);
-		friHol = (CheckBox) v.findViewById(R.id.hol_fri);
-
-		
-		
-		bClr.setOnClickListener(this);
-		bTens.setOnClickListener(this);
-		bTwelves.setOnClickListener(this);
-		bFour.setOnClickListener(this);
-		bNight.setOnClickListener(this);
-		bTravel.setOnClickListener(this);
-		bDayTravel.setOnClickListener(this);
-		taxVal.setOnClickListener(this);
-		cppVal.setOnClickListener(this);
-		duesVal.setOnClickListener(this);
-		monthlyDuesVal.setOnClickListener(this);
-		monHol.setOnClickListener(this);
-		tueHol.setOnClickListener(this);
-		wedHol.setOnClickListener(this);
-		thuHol.setOnClickListener(this);
-		friHol.setOnClickListener(this);
-	
-		prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-
-		setupSpinners();
         return v;
     }
-	
-	@Override
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.thisFragView = getView();
+        this.context = thisFragView.getContext();
+        setupViews();
+        
+    }
+
+    @Override
 	public void onResume() {
 		redoSpinners();
         loadState();
@@ -127,10 +73,13 @@ import java.util.HashMap;
     private void redoSpinners(){
 		Boolean custDayCheck = prefs.getBoolean("custom_daycheck", false);
 		if(custDayCheck) {
-		    if(customDay != custDayCheck || !verifyCustDays()) updateDaySpinners(custDayCheck);
+            if(customDay != custDayCheck) updateDaySpinners(custDayCheck);
 		}
 		String provWage = prefs.getString("list_provWageNew", TaxManager.provinceNames[1]);
-		if(!provWage.equals(oldProvWage)) setupWageSpinner(provWage);
+		if(!provWage.equals(oldProvWage)){
+            
+            setupWageSpinner(provWage);
+        }
 		pushBootan();
 		
 		
@@ -153,52 +102,117 @@ import java.util.HashMap;
 				break;
         }
     }
-	
-	private TextView sTimeText;
-	private TextView hTimeText;
-	private TextView dTimeText;
-	private TextView wageRateVal;
-	private TextView vacationVal;
-	private TextView grossVal;
-	private TextView exemptVal;
-	private TextView dedVal;
-	private TextView netVal;
-	private ToggleButton fourToggle;
-	private ToggleButton nightToggle;
-	private ToggleButton travelToggle;
-	private ToggleButton dayTravelToggle;
-	private void setupSpinners() {
-        sTimeText = (TextView) thisFrag.findViewById(R.id.sing_val);
-		hTimeText = (TextView) thisFrag.findViewById(R.id.half_val);
-		dTimeText = (TextView) thisFrag.findViewById(R.id.doub_val);
-		wageRateVal = (TextView) thisFrag.findViewById(R.id.wageRate_val);
-		vacationVal = (TextView) thisFrag.findViewById(R.id.vacation_val);
-		grossVal = (TextView) thisFrag.findViewById(R.id.gross_val);
-		exemptVal = (TextView) thisFrag.findViewById(R.id.exempt_val);
-		dedVal = (TextView) thisFrag.findViewById(R.id.deduct_val);
-		netVal = (TextView) thisFrag.findViewById(R.id.net_val);
-		fourToggle = (ToggleButton) thisFrag.findViewById(R.id.four_but);
-		nightToggle = (ToggleButton) thisFrag.findViewById(R.id.night_but);
-		travelToggle = (ToggleButton) thisFrag.findViewById(R.id.travel_but);
-		dayTravelToggle = (ToggleButton) thisFrag.findViewById(R.id.travelday_but);
-		
-		sunSpin = (Spinner) thisFrag.findViewById(R.id.sunSpin);
-		monSpin = (Spinner) thisFrag.findViewById(R.id.monSpin);
-		tueSpin = (Spinner) thisFrag.findViewById(R.id.tueSpin);
-		wedSpin = (Spinner) thisFrag.findViewById(R.id.wedSpin);
-		thuSpin = (Spinner) thisFrag.findViewById(R.id.thuSpin);
-		friSpin = (Spinner) thisFrag.findViewById(R.id.friSpin);
-		satSpin = (Spinner) thisFrag.findViewById(R.id.satSpin);
 
-		mealSpin = (Spinner) thisFrag.findViewById(R.id.meals_spin);
-		loaSpin = (Spinner) thisFrag.findViewById(R.id.loa_spin);
-		wageSpin = (Spinner) thisFrag.findViewById(R.id.wageSpin);
+    private Spinner sunSpin;
+    private Spinner monSpin;
+    private Spinner tueSpin;
+    private Spinner wedSpin;
+    private Spinner thuSpin;
+    private Spinner friSpin;
+    private Spinner satSpin;
+    private Spinner mealSpin;
+    private Spinner loaSpin;
+    private Spinner wageSpin;
+    private CheckBox taxVal;
+    private CheckBox cppVal;
+    private CheckBox duesVal;
+    private CheckBox monthlyDuesVal;
+    private CheckBox monHol;
+    private CheckBox tueHol;
+    private CheckBox wedHol;
+    private CheckBox thuHol;
+    private CheckBox friHol;
+    private TextView sTimeText;
+    private TextView hTimeText;
+    private TextView dTimeText;
+    private TextView wageRateVal;
+    private TextView vacationVal;
+    private TextView grossVal;
+    private TextView exemptVal;
+    private TextView dedVal;
+    private TextView netVal;
+    private ToggleButton fourToggle;
+    private ToggleButton nightToggle;
+    private ToggleButton travelToggle;
+    private ToggleButton dayTravelToggle;
+    private void setupViews(){
+        if(taxManager == null){
+            this.taxManager = new TaxManager();
+            this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        }
+
+        Button bClr = (Button) thisFragView.findViewById(R.id.clr_but);
+        Button bTens = (Button) thisFragView.findViewById(R.id.tens_but);
+        Button bTwelves = (Button) thisFragView.findViewById(R.id.twelves_but);
+        ToggleButton bFour = (ToggleButton) thisFragView.findViewById(R.id.four_but);
+        ToggleButton bNight = (ToggleButton) thisFragView.findViewById(R.id.night_but);
+        ToggleButton bTravel = (ToggleButton) thisFragView.findViewById(R.id.travel_but);
+        ToggleButton bDayTravel = (ToggleButton) thisFragView.findViewById(R.id.travelday_but);
+        taxVal = (CheckBox) thisFragView.findViewById(R.id.tax_val);
+        cppVal = (CheckBox) thisFragView.findViewById(R.id.cpp_val);
+        duesVal = (CheckBox) thisFragView.findViewById(R.id.dues_val);
+        monthlyDuesVal = (CheckBox) thisFragView.findViewById(R.id.monthlydues_val);
+
+        monHol = (CheckBox) thisFragView.findViewById(R.id.hol_mon);
+        tueHol = (CheckBox) thisFragView.findViewById(R.id.hol_tue);
+        wedHol = (CheckBox) thisFragView.findViewById(R.id.hol_wed);
+        thuHol = (CheckBox) thisFragView.findViewById(R.id.hol_thu);
+        friHol = (CheckBox) thisFragView.findViewById(R.id.hol_fri);
+
+        bClr.setOnClickListener(this);
+        bTens.setOnClickListener(this);
+        bTwelves.setOnClickListener(this);
+        bFour.setOnClickListener(this);
+        bNight.setOnClickListener(this);
+        bTravel.setOnClickListener(this);
+        bDayTravel.setOnClickListener(this);
+        taxVal.setOnClickListener(this);
+        cppVal.setOnClickListener(this);
+        duesVal.setOnClickListener(this);
+        monthlyDuesVal.setOnClickListener(this);
+        monHol.setOnClickListener(this);
+        tueHol.setOnClickListener(this);
+        wedHol.setOnClickListener(this);
+        thuHol.setOnClickListener(this);
+        friHol.setOnClickListener(this);
+        
+        sTimeText = (TextView) thisFragView.findViewById(R.id.sing_val);
+        hTimeText = (TextView) thisFragView.findViewById(R.id.half_val);
+        dTimeText = (TextView) thisFragView.findViewById(R.id.doub_val);
+        wageRateVal = (TextView) thisFragView.findViewById(R.id.wageRate_val);
+        vacationVal = (TextView) thisFragView.findViewById(R.id.vacation_val);
+        grossVal = (TextView) thisFragView.findViewById(R.id.gross_val);
+        exemptVal = (TextView) thisFragView.findViewById(R.id.exempt_val);
+        dedVal = (TextView) thisFragView.findViewById(R.id.deduct_val);
+        netVal = (TextView) thisFragView.findViewById(R.id.net_val);
+        fourToggle = (ToggleButton) thisFragView.findViewById(R.id.four_but);
+        nightToggle = (ToggleButton) thisFragView.findViewById(R.id.night_but);
+        travelToggle = (ToggleButton) thisFragView.findViewById(R.id.travel_but);
+        dayTravelToggle = (ToggleButton) thisFragView.findViewById(R.id.travelday_but);
+        
+        setupSpinners();
+    }
+	
+	
+	private void setupSpinners() {
+		sunSpin = (Spinner) thisFragView.findViewById(R.id.sunSpin);
+		monSpin = (Spinner) thisFragView.findViewById(R.id.monSpin);
+		tueSpin = (Spinner) thisFragView.findViewById(R.id.tueSpin);
+		wedSpin = (Spinner) thisFragView.findViewById(R.id.wedSpin);
+		thuSpin = (Spinner) thisFragView.findViewById(R.id.thuSpin);
+		friSpin = (Spinner) thisFragView.findViewById(R.id.friSpin);
+		satSpin = (Spinner) thisFragView.findViewById(R.id.satSpin);
+
+		mealSpin = (Spinner) thisFragView.findViewById(R.id.meals_spin);
+		loaSpin = (Spinner) thisFragView.findViewById(R.id.loa_spin);
+		wageSpin = (Spinner) thisFragView.findViewById(R.id.wageSpin);
 
 
 		updateDaySpinners(prefs.getBoolean("custom_daycheck",false));
 
-        ArrayAdapter<String> weekCount = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, 
-																  new String[]{"0","1","2","3","4","5","6","7"});
+        ArrayAdapter<String> weekCount = new ArrayAdapter<String>(getActivity().getApplicationContext(), 
+                android.R.layout.simple_spinner_item, 
+				new String[]{"0","1","2","3","4","5","6","7"});
         loaSpin.setAdapter(weekCount);
         mealSpin.setAdapter(weekCount);
 
@@ -295,7 +309,8 @@ import java.util.HashMap;
 		String[] workHrs;
 		
 		customDay = custDayCheck;
-		if(customDay && verifyCustDays()) {
+        verifyCustDays();
+		if(customDay) {
 			workHrs = new String[] {"0","8","10","12","13","A","B","C"};
 		} else {
 		    workHrs = new String[] {"0","8","10","12","13"};
@@ -334,70 +349,55 @@ import java.util.HashMap;
                 android.R.layout.simple_spinner_item, wageNames);
 
         wageSpin.setAdapter(wageAdapt);
-        int defaultWage = (int) wageRates[wageRates.length-1];
-        defaultWage = AtaMathUtils.bracketInt(defaultWage, 0, wageSpin.getAdapter().getCount()-1);
-        wageSpin.refreshDrawableState();
-        //TODO: tried everything but the setSelection is Bugged.  Try again later?
-		wageSpin.setSelection(defaultWage);
-        /*
-        String itemAtDefault = wageSpin.getAdapter().getItem(defaultWage).toString();
-        Log.w("Paycheque Fragment", "setSelection to " + defaultWage + " item at default is " + itemAtDefault);
-        Log.w("Paycheque Fragment", "Selection is actually " + wageSpin.getSelectedItemPosition() + " what a load of crap.");
-		*/
+        
+        //TODO Cleanup serializing this
+        int defaultWage = AtaMathUtils.bracketInt((int)wageRates[wageRates.length - 1], 0, wageSpin.getAdapter().getCount()-1);
+        String[] mealSpinnerVals = prefs.getString("payCalc_wageMealSpinners", "5,0,0,").split(",");
+        mealSpinnerVals[0] = Integer.toString(defaultWage);
+        StringBuilder builder = new StringBuilder();
+        for(int i=0; i<mealSpinnerVals.length; i++){
+            builder.append(mealSpinnerVals[i]);
+            builder.append(",");
+        }
+        prefs.edit().putString("payCalc_wageMealSpinners", builder.toString()).commit();
+        Log.w("PaychequeFragment", "wageMeaSpinner is: " + prefs.getString("payCalc_wageMealSpinners", "Failed"));
         oldProvWage = provWage;
     }
-	
-	private Boolean verifyCustDays() {
-		String[] dayKeys = {"custom_dayA", "custom_dayB", "custom_dayC"};
-		String[] dayNames = {" Day A", " Day B", " Day C"};
-		String[] dayBad = {"", "", ""};
+    
+    private static final String[] custDayKeys = {"custom_a", "custom_b", "custom_c"};
+    private static final String[] custDaySuffix = {"_straight", "_overtime", "_double"};
+    private static final String[] custDayNames = {"Day A", "Day B", "Day C"};
+	private void verifyCustDays() {
+		
 		int errCount = 0;
 		String toastStr = "The custom schedule";
-		for(int i = 0; i < dayKeys.length; i++) {   
-			if(!verifyDay(prefs.getString(dayKeys[i], ""))){
-				dayBad[errCount] = dayNames[i];
-				errCount++;
-			}
-		}
-		switch (errCount) {
-		    case 0:
-		        return true;
-			case 1:
-			    toastStr = toastStr + dayBad[0] +
-				    " was ";
-				break;
-			case 2:
-			    toastStr = toastStr + "s" + dayBad[0] + " and" +
-				    dayBad[1] + " were ";
-				break;
-			case 3:
-			    toastStr = toastStr + "s" + dayBad[0] + "," +
-				    dayBad[1] + ", and" + 
-					dayBad[2] + " were ";
-				break;
+		for(int i = 0; i < custDayKeys.length; i++) {
+            for(int j=0; j< custDaySuffix.length; j++){
+                double[] parsedDay = parseDay(prefs.getString(custDayKeys[i] + custDaySuffix[j], "0"));
+                if(parsedDay[1] == 0){
+                    SharedPreferences.Editor pEdit = prefs.edit();
+                    pEdit.putString(custDayKeys[i] + custDaySuffix[j], "0").commit();
+                    Toast.makeText(context, custDayNames[i] + custDaySuffix[j].replace("_", " ") +
+                            " was invalid... resetting",Toast.LENGTH_SHORT).show();
+                }
+            }
 		}
 		
-		toastStr = toastStr + "not entered properly. Please format as (1x,1.5x,2x) ex. \"8.5,2,1.5\"";
-		Toast.makeText(context, toastStr, Toast.LENGTH_LONG).show();
-		return false;
+		return;
 	}
 	
-	private Boolean verifyDay(String testStr) {
-		String[] splitStr = testStr.split(",");
-		double[] strParse = new double[3];
-		
-		if(splitStr.length != 3) return false;
-		for(int i = 0; i < 3; i++) {
-			try{
-				strParse[i] = Double.parseDouble(splitStr[i]);
-			}
-			catch(NumberFormatException e) {
-				return false;
-			}		
-			if(strParse[i] < 0) return false;
-		}
-
-        return strParse[0] + strParse[1] + strParse[2] <= 24;
+    //second value is fail check
+	private double[] parseDay(String testStr) {
+        double[] strParse = {0d, 0d};
+        try{
+            strParse[0] = Double.parseDouble(testStr);
+        }
+        catch(NumberFormatException e) {
+            return strParse;
+        }
+        double bracketedParse = AtaMathUtils.bracketDouble(strParse[0], 0, 24);
+        if(strParse[0] == bracketedParse) strParse[1] = 1d;
+        return new double[]{bracketedParse, strParse[1]};
     }
 
 	private void pushBootan() {
@@ -422,7 +422,7 @@ import java.util.HashMap;
 		if(wageSpin.getSelectedItem().toString().contains("Custom")) {
 		    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
-            float wageFloat = AtaMathUtils.bracketFloat(prefs.getString("custom wage", "20"), 0f, 1000000000f);
+            float wageFloat = AtaMathUtils.bracketFloat(prefs.getString("custom_wage", "20"), 0f, 1000000000f);
 			wageRate = (double) wageFloat;
 		} else {
 			wageRate = wageRates[wageSpin.getSelectedItemPosition()];
@@ -589,18 +589,19 @@ import java.util.HashMap;
     }
 	
 	private double[] getCustomDayPrefs(String itemStr) {
-		String[] splitPref = new String[3];
-		double[] retDoub = {0d,0d,0d};
+		String[] splitPref = new String[custDaySuffix.length];
+        String prefName = "";
+		double[] retDoub = new double[custDaySuffix.length];
 		
-		if(itemStr.contains("A")) splitPref = prefs.getString("custom_dayA", "0,0,0").split(",");
-		if(itemStr.contains("B")) splitPref = prefs.getString("custom_dayB", "0,0,0").split(",");
-		if(itemStr.contains("C")) splitPref = prefs.getString("custom_dayC", "0,0,0").split(",");
-		
-		for(int i=0; i<splitPref.length; i++) {
+		if(itemStr.contains("A")) prefName = custDayKeys[0];
+		if(itemStr.contains("B")) prefName = custDayKeys[1];
+		if(itemStr.contains("C")) prefName = custDayKeys[2];
+		for(int i=0; i<custDaySuffix.length; i++) {
             try{
-                retDoub[i] = Double.parseDouble(splitPref[i]);
+                retDoub[i] = Double.parseDouble(prefs.getString(prefName + custDaySuffix[i], "0"));
             } catch(NumberFormatException nfe){
                 Log.e("PaychequeFragment", itemStr + " item " + splitPref[i] + " NumberFormatException.");
+                retDoub[i] = 0d;
             }
 		}
 		return retDoub;
@@ -697,7 +698,7 @@ import java.util.HashMap;
         for(int i=0; i<saveChecks.length; i++){
             saveChecks[i].setChecked(saveChecksIndices[i].equals("1"));
         }
-        String[] wageMealIndices = prefs.getString("wageMealSpinners", "5,0,0,").split(",");
+        String[] wageMealIndices = prefs.getString("payCalc_wageMealSpinners", "5,0,0,").split(",");
         //Incase number of items in wage spinner has changed with province between saves
         wageMealSpinners[0].setSelection(AtaMathUtils.bracketInt(
                 wageMealIndices[0], 0, wageMealSpinners[0].getAdapter().getCount() - 1));

@@ -18,9 +18,6 @@ import android.widget.*;
 import com.atasoft.adapters.NavDrawerAdaptor;
 import com.atasoft.flangeassist.fragments.NavigationDrawerFragment;
 
-//TODO: switch view setups over to onViewCreated() instead of onCreateView()
-//TODO: Use dialogue to set custom days
-//TODO: Fix custom wage
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {

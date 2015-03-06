@@ -6,7 +6,7 @@ import android.util.Log;
 
 import java.math.BigDecimal;
 
-//TODO: transition to BigDecimal, Lose static Integers for String calls, use functions for brackets
+//TODO: transition to BigDecimal, Lose static Integers for String calls
 
 //----Tax Manager holds tax and wage values by province and year---------
 public class TaxManager {
@@ -37,13 +37,14 @@ public class TaxManager {
 
     public static final String[] yearStrings = {"2013", "2014", "2015"};
 
+    private static final int bdPrecision = 5;
+    private static final int bdRounding = BigDecimal.ROUND_HALF_EVEN;
 	
 	//Used as a container for tables for each type of tax
 	public static class TaxStats{  
 		public double[][] rates;
 		public double[][] brackets;
 		public double[][] constK;
-		public double[] taxCred;
 		public double[][] taxReduction;
 		public double[][] healthPrem;
 		public double[][] surtax;
@@ -52,7 +53,8 @@ public class TaxManager {
         public String surName;
 		public double defaultWageIndex;  //tacked on end of wageRates inplace of custom value
 		public double vacRate;
-        
+        public double[] claimAmount;
+
         public TaxStats(int type) {
             switch(type) {
                 //=====================================FED====================================
@@ -71,7 +73,8 @@ public class TaxManager {
                             {0, 3077, 6593, 10681},
                             {0, 3129, 6705, 10863}};
                     //(cpp max + ei max) * .15 [K2] + tax cred * .15 [K4]
-                    this.taxCred = new double[]{2310.35, 2340.63, 2382.53};
+                    //claim amount + canada employment credit
+                    this.claimAmount = new double[]{11038 + 1117, 11138 + 1127, 11327 + 1146};
                     break;
                 //=====================================BC====================================
                 case PROV_BC:
@@ -90,7 +93,8 @@ public class TaxManager {
                             {0, 1000, 3120, 4677, 7222, 10394}};
 
                     //(cpp max + ei max + BC1 amount) * .0506
-                    this.taxCred = new double[]{684.28, 668.33, 675.44};
+                    this.claimAmount = new double[]{10276, 9869, 9938};
+
                     this.taxReduction = new double[][]{
                             {18181, 409, 0.032},  //under 18181 gets 409 over gets 409 - difference * %3.2
                             {18200, 409, 0.032},
@@ -114,7 +118,7 @@ public class TaxManager {
                     this.rates = new double[][]{{0.10}, {0.10}, {0.10}};
 
                     //(cpp max + ei max + AB1) * 0.1
-                    this.taxCred = new double[]{2084.03, 2112.62, 2162.46};
+                    this.claimAmount = new double[]{17593, 17787, 18214};
                     //----------------------------------Wages AB---------------------------------
                     //Updated November 2014
                     this.wageRates = new double[]{
@@ -145,10 +149,7 @@ public class TaxManager {
                             {0, 605, 3720},
                             {0, 605, 3720}};
                     //(TD1MB amount + CPP max + EI max) * lowest bracket
-                    //[2013] (8884 + 2356.2 + 891.12) * .1080 = 1310.18
-                    //[2014] (9134 + 2425.5 + 913.68) * .1080 = 1347.10
-                    //[2015] (9134 + 2479.95 + 930.60) * .1080 = 1354.81
-                    this.taxCred = new double[]{1310.18, 1347.10, 1354.81};
+                    this.claimAmount = new double[]{8884, 9134, 9134};
 
                     //-------------------------------Wage Rates---------------------------------
                     this.wageRates = new double[]{
@@ -179,7 +180,8 @@ public class TaxManager {
                             {0, 1629, 3226, 13406},
                             {0, 1645, 3258, 13540},
                             {0, 1678, 3323, 4823, 7023}};
-                    this.taxCred = new double[]{647.48, 656.96, 670.31};
+
+                    this.claimAmount = new double[]{9574, 9670, 9863};
                     this.taxReduction = new double[][]{
                             {221},  //basic personal amount
                             {223},
@@ -209,7 +211,7 @@ public class TaxManager {
             }
         }
 	}
-	
+
 	private static final TaxStats fedStats = new TaxStats(FED);
 	private static final TaxStats bcStats = new TaxStats(PROV_BC);
 	private static final TaxStats abStats = new TaxStats(PROV_AB);
@@ -217,11 +219,11 @@ public class TaxManager {
 	private static final TaxStats onStats = new TaxStats(PROV_ON);
 
 	private static final double[][] cppEi = {
-        {0.0495, 3500, 0.0188},
-        {0.0495, 3500, 0.0188},
-        {0.0495, 3500, 0.0188}
+        {0.0495, 3500, 0.0188, 2356.20, 891.12},
+        {0.0495, 3500, 0.0188, 2425.50, 913.68},
+        {0.0495, 3500, 0.0188, 2479.95, 930.60}
         };
-	
+
 	public static String[] getWageNames(String province) {
 		TaxStats stats = getStatType(province);
 
@@ -234,7 +236,7 @@ public class TaxManager {
 		retString[retString.length-1] = "Custom";
 		return retString;
 	}
-	
+
 	public static double[] getWageRates(String province){
         TaxStats activeRate = getStatType(province);  //returns ex: bcStats
 
@@ -247,8 +249,6 @@ public class TaxManager {
 		return retDoub;
 	}
 
-
-
     public static String[] getActiveProvinceStrings(){
         String[] retArr = new String[activeProvinces.length];
         for(int i=0; i<activeProvinces.length; i++){
@@ -257,35 +257,51 @@ public class TaxManager {
         return retArr;
     }
 
-	
+
 	//Returns [fed, prov, cpp, ei]
 	public static double[] getTaxes(double gross, int year, int province) {
-		double provTax = 0;
+		BigDecimal provTax;
 		double anGross = gross * 52;
-		double fedTax = getFedTax(anGross, year);
-		switch(province){
-			case PROV_BC:
-				provTax = getBCTax(anGross, year);
-				break;
-			case PROV_AB:
-				provTax = getABTax(anGross, year);
-				break;
-			case PROV_ON:
-				provTax = getONTax(anGross, year);
-				break;
+
+        //double fedTax = getFedTax(anGross, year);
+
+        BigDecimal anGrossDec = new BigDecimal(gross)
+                .setScale(bdPrecision, bdRounding)
+                .multiply(new BigDecimal(52));
+        switch(province){
+            case PROV_BC:
+                provTax = getBCTax(anGrossDec, year);
+                break;
+            case PROV_AB:
+                provTax = getABTax(anGrossDec, year);
+                break;
+            case PROV_ON:
+                provTax = getONTax(anGrossDec, year);
+                break;
             case PROV_MB:
-                provTax = getMBTax(anGross, year);
+                provTax = getMBTax(anGrossDec, year);
                 break;
-            case FED:  //No Provincial Tax
-                provTax = 0d;
+            default:  //No Provincial Tax (FED)
+                provTax = BigDecimal.ZERO;
                 break;
-		}
+        }
 
-		double[] cppEi = getCppEi(anGross, year);
-		provTax = (provTax > 0) ? provTax:0;
-		fedTax = (fedTax > 0) ? fedTax:0;
+        BigDecimal[] cppEiDec = getCppEi(anGrossDec, year);
+        BigDecimal fiftyTwo = new BigDecimal(52);
 
-        return AtaMathUtils.roundDoubles(new double[]{fedTax/52, provTax/52, cppEi[0]/52, cppEi[1]/52});
+        BigDecimal fedTaxDec = getFedTax(anGrossDec, year);
+        Log.w("TaxManager", "Fed Tax is: " + fedTaxDec.toString());
+        Log.w("TaxManager", "Prov Tax is: " + provTax.toString());
+        // x.compare(y) ==  -1:(x<y), 0:(x==y), 1:(x>y)
+        if(fedTaxDec.compareTo(BigDecimal.ZERO) < 0) fedTaxDec = BigDecimal.ZERO;
+        if(provTax.compareTo(BigDecimal.ZERO) < 0) provTax = BigDecimal.ZERO;
+
+        double fedTax = fedTaxDec.divide(fiftyTwo, 2, bdRounding).doubleValue();
+        double provTaxDoub = provTax.divide(fiftyTwo, 2, bdRounding).doubleValue();
+        double cppDoub = cppEiDec[0].divide(fiftyTwo, 2, bdRounding).doubleValue();
+        double eiDoub = cppEiDec[1].divide(fiftyTwo, 2, bdRounding).doubleValue();
+
+        return new double[]{fedTax, provTaxDoub, cppDoub, eiDoub};
 	}
 
     public static double[] getTaxes(double gross, String year, String province){
@@ -299,38 +315,46 @@ public class TaxManager {
         return stats.vacRate;
     }
 
-
-
-	private static double[] getCppEi(double anGross, int year){
+	private static BigDecimal[] getCppEi(BigDecimal anGross, int year){
 		//[cpp rate, exemption, ei rate]
 		double cppRate = cppEi[year][0];
 		double cppExempt = cppEi[year][1];
 		double eiRate = cppEi[year][2];
 
-		double cppRet = (anGross - cppExempt) * cppRate;
-		double eiRet = anGross * eiRate;
-		cppRet = (cppRet > 0) ? cppRet:0;
-		return new double[]{cppRet, eiRet};
+        BigDecimal cppRet = anGross.subtract(new BigDecimal(cppExempt)).
+                multiply(new BigDecimal(cppRate)).setScale(bdPrecision, bdRounding);
+        if(cppRet.compareTo(BigDecimal.ZERO) < 0) cppRet = BigDecimal.ZERO;
+
+        BigDecimal eiRet = anGross.multiply(new BigDecimal(eiRate)).
+                setScale(bdPrecision, bdRounding);
+		return new BigDecimal[]{cppRet, eiRet};
 	}
 
-	private static double getFedTax(double anGross, int year){
-		double[] bracket = fedStats.brackets[year];
-		int taxIndex = (anGross<bracket[1]) ? 0:
-			(anGross<bracket[2] ? 1 :
-			(anGross<bracket[3] ? 2 : 3));
-		double rate = fedStats.rates[year][taxIndex];
-		double constK = fedStats.constK[year][taxIndex];
-		return anGross * rate - constK - fedStats.taxCred[year];
-	}
+    private static BigDecimal getFedTax(BigDecimal anGross, int year){
+        double[] bracket = fedStats.brackets[year];
+        double anGrossDouble = anGross.doubleValue();
+        int taxIndex = bracketGrossIndex(anGrossDouble, bracket);
+        Log.w("TaxManager", "taxIndex: " + taxIndex + " rate is: " + fedStats.rates[year][taxIndex]);
 
-	private static double getBCTax(double anGross, int year){
+        return anGross.multiply(BigDecimal.valueOf(fedStats.rates[year][taxIndex])).
+                subtract(getTaxCredit(fedStats, anGross, year)).
+                subtract(BigDecimal.valueOf(fedStats.constK[year][taxIndex]));
+    }
+
+	private static BigDecimal getBCTax(BigDecimal anGrossDec, int year){
 		double[] bracket = bcStats.brackets[year];
-		int taxIndex = (anGross<bracket[1]) ? 0:
+		double anGross = anGrossDec.doubleValue();
+        int taxIndex = bracketGrossIndex(anGross, bracket);
+
+        /*
+        int taxIndex = (anGross<bracket[1]) ? 0:
 			(anGross<bracket[2] ? 1 :
 			(anGross<bracket[3] ? 2 :
 			(anGross<bracket[4] ? 3 :
 			(anGross<bracket[5] ? 4 : 5))));
-		double rate = bcStats.rates[year][taxIndex];  //Rate and constant will share same index
+	    */
+
+        double rate = bcStats.rates[year][taxIndex];  //Rate and constant will share same index
 		double constK = bcStats.constK[year][taxIndex];
 
         //BC Tax Reduction
@@ -339,20 +363,24 @@ public class TaxManager {
         double taxRed = (diff < 0) ? redTable[1] : redTable[1] - redTable[2] * diff;
         if(taxRed < 0) taxRed = 0;
 
-		return rate * anGross - constK - bcStats.taxCred[year] - taxRed;
+        return anGrossDec.multiply(BigDecimal.valueOf(rate))
+                .subtract(BigDecimal.valueOf(constK))
+                .subtract(getTaxCredit(bcStats, anGrossDec, year))
+                .subtract(BigDecimal.valueOf(taxRed));
+    }
+
+	private static BigDecimal getABTax(BigDecimal anGross, int year){
+        return anGross.multiply(BigDecimal.valueOf(abStats.rates[year][0]))
+                .subtract(getTaxCredit(abStats, anGross, year));
 	}
 
-	private static double getABTax(double anGross, int year){
-        BigDecimal provTax = new BigDecimal(anGross);
-        provTax = provTax.setScale(3, BigDecimal.ROUND_HALF_EVEN);
-        provTax = provTax.multiply(BigDecimal.valueOf(abStats.rates[year][0]));
-        provTax = provTax.subtract(BigDecimal.valueOf(abStats.taxCred[year]));
-        return provTax.doubleValue();
-	}
+	private static BigDecimal getONTax(BigDecimal anGrossDec, int year){
 
-	private static double getONTax(double anGross, int year){
-		double[] bracket = onStats.brackets[year];
-        int taxIndex;
+        double anGross = anGrossDec.doubleValue();
+        double[] bracket = onStats.brackets[year];
+        int taxIndex = bracketGrossIndex(anGross, bracket);
+
+        /*
         if(year == TY_2013 || year == TY_2014) {
             taxIndex = (anGross < bracket[1]) ? 0 :
                     (anGross < bracket[2] ? 1 :
@@ -363,11 +391,18 @@ public class TaxManager {
                             (anGross < bracket[3] ? 2 :
                                     (anGross < bracket[4]) ? 3 : 4));
         }
+        */
+
 		double rate = onStats.rates[year][taxIndex];  //Rate and constant will share same index
 		double constK = onStats.constK[year][taxIndex];
-		double taxTotal = rate * anGross - constK - onStats.taxCred[year];
+        BigDecimal taxPayable = anGrossDec.multiply(BigDecimal.valueOf(rate))
+                .subtract(BigDecimal.valueOf(constK))
+                .subtract(getTaxCredit(onStats, anGrossDec, year));
+		double taxTotal = taxPayable.doubleValue();
+
+        //TODO: wade into ontarioSpecific to convert to BigDecimal
 		taxTotal = ontarioSpecific(anGross, year, taxTotal);	//includes health premium, surcharge
-		return taxTotal;
+		return BigDecimal.valueOf(taxTotal);
 	}
 
     //Your tax law is terrible.
@@ -402,27 +437,26 @@ public class TaxManager {
 		return taxPayable;
 	}
 
-    private static double getMBTax(double anGross, int year){
+    private static BigDecimal getMBTax(BigDecimal anGrossDec, int year){
+        double anGross = anGrossDec.doubleValue();
+
         //get annual tax from bracket chart
         int brackIndex = bracketGrossIndex(anGross, mbStats.brackets[year]);
-        double anTax = anGross * mbStats.rates[year][brackIndex];
-        //subtract constant k
-        anTax -= mbStats.constK[year][brackIndex];
-        //subtrace tax credit
-        anTax -= mbStats.taxCred[year];
-        return anTax;
+
+        return anGrossDec.multiply(BigDecimal.valueOf(mbStats.rates[year][brackIndex]))
+                .subtract(BigDecimal.valueOf(mbStats.constK[year][brackIndex]))
+                .subtract(getTaxCredit(mbStats, anGrossDec, year));
     }
 
     //Should have set up earlier
     private static int bracketGrossIndex(double gross, double[] brackets){
         gross = gross < 0 ? 0d: gross; //you never know
 
-        int count = brackets.length;
-        for(int i=count; i>0;i--){
-            if(gross > brackets[i-1]){
+        for(int i=brackets.length - 1; i>0;i--){
+            if(gross > brackets[i]){
                 //Log.w("TaxManager", String.format("Gross: %.2f is greater than the [%d] Bracket: %.2f",
                         //gross, i-1, brackets[i-1]));
-                return i-1;
+                return i;
             }
         }
         return 0; //if gross is 0
@@ -481,5 +515,26 @@ public class TaxManager {
         if(!provFlag) Log.e("TaxManager", "SharedPreference list_provWageNew was malformed as: " + provWage);
         if(!yearFlag) Log.e("TaxManager", "SharedPreference list_taxYearNew was malformed as: " + year);
         return (provFlag && yearFlag);
+    }
+
+    private static BigDecimal getTaxCredit(TaxStats stats, BigDecimal anGross, int year) {
+        //taxCred == (cpp contribution + ei contribution + claimAmount) / lowest bracket
+
+        //T4032 example doesn't account for cpp exemption but CRA calculator does.
+        BigDecimal[] cppEiDec = getCppEi(anGross, year);
+
+        Log.w("TaxManager", "Cpp before is: " + cppEiDec[0].toString() + " EI before is: " + cppEiDec[1].toString());
+        for(int i=0; i<cppEiDec.length; i++) {
+            if (cppEiDec[i].compareTo(BigDecimal.valueOf(cppEi[year][i + 3])) > 0) {
+                cppEiDec[i] = BigDecimal.valueOf(cppEi[year][i+3]);
+            }
+        }
+        BigDecimal result =  BigDecimal.valueOf(stats.claimAmount[year])
+                .add(cppEiDec[0])
+                .add(cppEiDec[1])
+                .multiply(BigDecimal.valueOf(stats.rates[year][0]));
+        Log.w("TaxManager", "cpp is: " + cppEiDec[0].toString() + " ei is: "+ cppEiDec[1].toString()
+                +" Tax credit is: " + result.toString());
+        return result;
     }
 }

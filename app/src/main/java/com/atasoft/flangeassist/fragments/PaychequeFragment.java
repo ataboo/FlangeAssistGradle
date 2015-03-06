@@ -349,8 +349,7 @@ import com.atasoft.helpers.*;
                 android.R.layout.simple_spinner_item, wageNames);
 
         wageSpin.setAdapter(wageAdapt);
-        
-        //TODO Cleanup serializing this
+
         int defaultWage = AtaMathUtils.bracketInt((int)wageRates[wageRates.length - 1], 0, wageSpin.getAdapter().getCount()-1);
         String[] mealSpinnerVals = prefs.getString("payCalc_wageMealSpinners", "5,0,0,").split(",");
         mealSpinnerVals[0] = Integer.toString(defaultWage);

@@ -326,19 +326,18 @@ public class CashCounter extends Fragment implements OnClickListener {
 		boolean isFriday = false;
 		boolean isWeekend = false;
 		boolean isHoliday = false;
+        boolean beforeMidnight = floatNow > floatStart;
 
-        //TODO add friday
-		
-		//during shift now is checked before
-		// if shift doesn't stradle midnight and its saturday or sunday now...
-	    if(floatNow > floatStart && (timeNow.weekDay == Time.SATURDAY || timeNow.weekDay == Time.SUNDAY)){
-			isWeekend = true;
-		}
-		// if nightshift and after midnight sunday is sat shift and monday is sun shift
-		if(floatNow < floatStart && (timeNow.weekDay == Time.SUNDAY || timeNow.weekDay == Time.MONDAY)){
-			isWeekend = true;
-		}
-		if(holidayToggle.isChecked()) isHoliday = true;
+        isWeekend =
+                // if shift doesn't stradle midnight and its saturday or sunday now...
+                (beforeMidnight && (timeNow.weekDay == Time.SATURDAY || timeNow.weekDay == Time.SUNDAY)) ||
+                // if nightshift and after midnight sunday is sat shift and monday is sun shift
+                (!beforeMidnight && (timeNow.weekDay == Time.SUNDAY || timeNow.weekDay == Time.MONDAY));
+
+        isFriday = (beforeMidnight && timeNow.weekDay == Time.FRIDAY) ||
+                (!beforeMidnight && timeNow.weekDay == Time.SATURDAY);
+
+        if(holidayToggle.isChecked()) isHoliday = true;
 		double[] hours = new double[3];  //single, ot, double
 		if(fourTenToggle.isActivated()){
 			hours[2] = AtaMathUtils.bracketDouble(hoursIntoShift - 10, 0, 24);

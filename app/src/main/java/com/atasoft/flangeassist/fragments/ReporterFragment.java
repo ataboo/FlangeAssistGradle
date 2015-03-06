@@ -16,9 +16,6 @@ import com.atasoft.flangeassist.*;
 
 public class ReporterFragment extends Fragment implements View.OnClickListener {
 
-    //TODO: switch to reporter when published
-    //public static final String packageName = "com.atasoft.flangeassist";
-
     public static final String bmReportPackage = "com.atasoft.boilermakerreporter";
     public static final int SUPER = 0;
     public static final int APPRENTICE = 1;

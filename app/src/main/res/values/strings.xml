@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="version_info">Boilermaker Toolbox v0.24
-		\nLast updated February 19, 2015
+    <string name="version_info">Boilermaker Toolbox v0.25
+		\nLast updated March 6, 2015
 		\nAB Wages updated: Nov 2/14</string>
 
     <!-- Main Menu -->

@@ -605,6 +605,7 @@ import java.text.NumberFormat;
                 retDoub[i] = 0d;
             }
 		}
+        Log.w("PaychequeFragment", String.format("Retdoub = %.2f, %.2f, %.2f", retDoub[0], retDoub[1], retDoub[2]));
 		return retDoub;
 	}
 

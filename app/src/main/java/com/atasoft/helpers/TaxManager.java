@@ -245,7 +245,7 @@ public class TaxManager {
 		double[] retDoub = new double[wageRates.length + 1];
         System.arraycopy(wageRates, 0, retDoub, 0, wageRates.length);
 		retDoub[retDoub.length-1] = custVal;
-        Log.w("TaxManager", "Packaged " + custVal + " as custVal");
+       // Log.w("TaxManager", "Packaged " + custVal + " as custVal");
 		return retDoub;
 	}
 
@@ -290,8 +290,8 @@ public class TaxManager {
         BigDecimal fiftyTwo = new BigDecimal(52);
 
         BigDecimal fedTaxDec = getFedTax(anGrossDec, year);
-        Log.w("TaxManager", "Fed Tax is: " + fedTaxDec.toString());
-        Log.w("TaxManager", "Prov Tax is: " + provTax.toString());
+        //Log.w("TaxManager", "Fed Tax is: " + fedTaxDec.toString());
+        //Log.w("TaxManager", "Prov Tax is: " + provTax.toString());
         // x.compare(y) ==  -1:(x<y), 0:(x==y), 1:(x>y)
         if(fedTaxDec.compareTo(BigDecimal.ZERO) < 0) fedTaxDec = BigDecimal.ZERO;
         if(provTax.compareTo(BigDecimal.ZERO) < 0) provTax = BigDecimal.ZERO;
@@ -334,7 +334,7 @@ public class TaxManager {
         double[] bracket = fedStats.brackets[year];
         double anGrossDouble = anGross.doubleValue();
         int taxIndex = bracketGrossIndex(anGrossDouble, bracket);
-        Log.w("TaxManager", "taxIndex: " + taxIndex + " rate is: " + fedStats.rates[year][taxIndex]);
+        //Log.w("TaxManager", "taxIndex: " + taxIndex + " rate is: " + fedStats.rates[year][taxIndex]);
 
         return anGross.multiply(BigDecimal.valueOf(fedStats.rates[year][taxIndex])).
                 subtract(getTaxCredit(fedStats, anGross, year)).
@@ -523,7 +523,7 @@ public class TaxManager {
         //T4032 example doesn't account for cpp exemption but CRA calculator does.
         BigDecimal[] cppEiDec = getCppEi(anGross, year);
 
-        Log.w("TaxManager", "Cpp before is: " + cppEiDec[0].toString() + " EI before is: " + cppEiDec[1].toString());
+        //Log.w("TaxManager", "Cpp before is: " + cppEiDec[0].toString() + " EI before is: " + cppEiDec[1].toString());
         for(int i=0; i<cppEiDec.length; i++) {
             if (cppEiDec[i].compareTo(BigDecimal.valueOf(cppEi[year][i + 3])) > 0) {
                 cppEiDec[i] = BigDecimal.valueOf(cppEi[year][i+3]);
@@ -533,8 +533,8 @@ public class TaxManager {
                 .add(cppEiDec[0])
                 .add(cppEiDec[1])
                 .multiply(BigDecimal.valueOf(stats.rates[year][0]));
-        Log.w("TaxManager", "cpp is: " + cppEiDec[0].toString() + " ei is: "+ cppEiDec[1].toString()
-                +" Tax credit is: " + result.toString());
+        //Log.w("TaxManager", "cpp is: " + cppEiDec[0].toString() + " ei is: "+ cppEiDec[1].toString()
+               // +" Tax credit is: " + result.toString());
         return result;
     }
 }

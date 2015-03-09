@@ -14,6 +14,9 @@ import android.util.Log;
 import com.atasoft.flangeassist.*;
 import com.atasoft.helpers.*;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 
  public class PaychequeFragment extends Fragment implements OnClickListener
 {
@@ -404,7 +407,7 @@ import com.atasoft.helpers.*;
 		double splitArr[] = new double[3];
 		boolean fourTens = fourToggle.isChecked();
 
-		int timeSum[] = {0,0,0};
+		double timeSum[] = {0,0,0};
 
 		int loaCount = Integer.parseInt(loaSpin.getSelectedItem().toString());
 		int mealCount = Integer.parseInt(mealSpin.getSelectedItem().toString());
@@ -520,9 +523,9 @@ import com.atasoft.helpers.*;
 		monthlyDuesVal.setText("Monthly Dues: " + String.format("%.2f", deductions[5]) + "$");
 		dedVal.setText("Deductions: " + String.format("%.2f", deductionsSum) + "$");
 		netVal.setText("Takehome: " + String.format("%.2f", netPay) + "$");
-		sTimeText.setText("1.0x: " + Integer.toString(timeSum[0]));
-		hTimeText.setText("1.5x: " + Integer.toString(timeSum[1]));
-		dTimeText.setText("2.0x: " + Integer.toString(timeSum[2]));
+		sTimeText.setText("1.0x: " + twoPrecision(timeSum[0]));
+		hTimeText.setText("1.5x: " + twoPrecision(timeSum[1]));
+		dTimeText.setText("2.0x: " + twoPrecision(timeSum[2]));
 		
 		if(addTax == 0) {
 			taxVal.setText("Tax: " + String.format("%.2f", deductions[0] + deductions[1]) + "$");
@@ -588,7 +591,6 @@ import com.atasoft.helpers.*;
     }
 	
 	private double[] getCustomDayPrefs(String itemStr) {
-		String[] splitPref = new String[custDaySuffix.length];
         String prefName = "";
 		double[] retDoub = new double[custDaySuffix.length];
 		
@@ -599,7 +601,7 @@ import com.atasoft.helpers.*;
             try{
                 retDoub[i] = Double.parseDouble(prefs.getString(prefName + custDaySuffix[i], "0"));
             } catch(NumberFormatException nfe){
-                Log.e("PaychequeFragment", itemStr + " item " + splitPref[i] + " NumberFormatException.");
+                Log.e("PaychequeFragment", itemStr + ", suffix " + custDaySuffix[i] + " NumberFormatException.");
                 retDoub[i] = 0d;
             }
 		}
@@ -703,5 +705,10 @@ import com.atasoft.helpers.*;
                 wageMealIndices[0], 0, wageMealSpinners[0].getAdapter().getCount() - 1));
         wageMealSpinners[1].setSelection(AtaMathUtils.bracketInt(wageMealIndices[1], 0, 6));
         wageMealSpinners[2].setSelection(AtaMathUtils.bracketInt(wageMealIndices[2], 0, 6));
+    }
+
+    public static String twoPrecision (double d){
+        NumberFormat nf = new DecimalFormat("###.##");
+        return nf.format(d).toString();
     }
 }

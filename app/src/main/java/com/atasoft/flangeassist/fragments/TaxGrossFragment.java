@@ -29,6 +29,7 @@ public class TaxGrossFragment extends Fragment implements OnClickListener {
     private View thisFragView;
     private Context context;
     private SharedPreferences prefs;
+    private TaxManager taxMan;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tax_gross_layout, container, false);
@@ -116,7 +117,11 @@ public class TaxGrossFragment extends Fragment implements OnClickListener {
             yearName = "";
         }
         //=====================================Calc Taxes===========================================
-        double[] taxVals = TaxManager.getTaxes(weekGross, yearName, provName);
+        if(taxMan == null){
+            taxMan = new TaxManager(provName);
+        }
+
+        double[] taxVals = taxMan.getTaxes(weekGross, yearName, provName);
         double taxSum = 0d;
         for(double d: taxVals) taxSum+=d;
 

@@ -5,9 +5,9 @@ Boilermaker Toolbox is a FREE reference tool designed to help Boilermakers in Ca
 Tell your jealous friends with IPhones about the JavaScript (cross-device) rewrite at
 http://atasoft.altervista.org
 
-###Main features so far (v0.24):
-- NEW BMToolbox Reporter Launcher (Apprentice Reports)
-- NEW Gross Tax Calculator
+###Main features so far (v0.25):
+- BMToolbox Reporter Launcher (Apprentice Reports)
+- Gross Tax Calculator
 - Rigging Calculator: finds load on slings, nylon sling table.
 - Shape Calculator: finds volume/surface area.
 - Welding Electrode Reference: gives information based on AWS code.
@@ -28,9 +28,20 @@ http://atasoft.altervista.org
 Feel free to send feedback or suggestions to bmtoolbox@gmail.com
 
 ###Changes:
+####V0.26b (04/03/15):
+-Added NS, NB, PEI tax rates
+-Added wages for each and Cape Breton
+-Fixed vacation rate rounding
+
+####V0.26a beta (03/09/15):
+-Custom Days rounding fix
+
 ####V0.25 (03/05/15):
 -Fixed crash caused by bad handling of invalid custom day setting
--
+-Fixed custom wage
+-Reorganized settings menu
+-Converted most tax calculation to BigDecimal
+-Fixed tax credit for wages that wouldn't max CPP/EI
 
 ####V0.24 (02/19/15):
 -Fixed (hopefully) crash in Paycheque Calculator

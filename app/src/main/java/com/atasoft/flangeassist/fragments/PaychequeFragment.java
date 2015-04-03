@@ -30,7 +30,7 @@ import java.text.NumberFormat;
 
 	public static final String NAME = "Paycheque Calculator";
 	private double[] wageRates;
-	private double vacationPay;
+    private double[] vacRates;
     private View thisFragView;
 
 	
@@ -140,8 +140,9 @@ import java.text.NumberFormat;
     private ToggleButton dayTravelToggle;
     private void setupViews(){
         if(taxManager == null){
-            this.taxManager = new TaxManager();
             this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            String provName = prefs.getString("list_provWageNew", TaxManager.provinceNames[1]);
+            this.taxManager = new TaxManager(provName);
         }
 
         Button bClr = (Button) thisFragView.findViewById(R.id.clr_but);
@@ -344,7 +345,7 @@ import java.text.NumberFormat;
             provWage = TaxManager.provinceNames[TaxManager.PROV_AB]; //Best Province
         }
         
-		this.vacationPay = taxManager.getVacationRate(provWage);
+		this.vacRates = taxManager.getVacationRate(provWage);
 		this.wageRates = taxManager.getWageRates(provWage);
 		
 		String[] wageNames = taxManager.getWageNames(provWage);
@@ -420,14 +421,21 @@ import java.text.NumberFormat;
 		double loaRate = checkPrefDoub("custom_loa", "195", "LOA Rate");
 		double monthlyDues = checkPrefDoub("custom_monthly_dues", "37.90", "Monthly Dues");
 		double workingDuesRate = checkPrefDoub("custom_working_dues", ".0375", "Working Dues");
-		
+
+        double vacRate = vacRates[0];
+
 		if(wageSpin.getSelectedItem().toString().contains("Custom")) {
 		    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
             float wageFloat = AtaMathUtils.bracketFloat(prefs.getString("custom_wage", "20"), 0f, 1000000000f);
 			wageRate = (double) wageFloat;
 		} else {
-			wageRate = wageRates[wageSpin.getSelectedItemPosition()];
+			int selectedWageIndex = wageSpin.getSelectedItemPosition();
+            wageRate = wageRates[selectedWageIndex];
+            if(vacRates.length == wageRates.length-1) {
+                vacRate = vacRates[selectedWageIndex]; //Some provinces have graduated vacation rates
+            }
+
 		}
 		int dayCount = 0;
 		Spinner[] spinArr = {sunSpin, monSpin, tueSpin, wedSpin, thuSpin, friSpin, satSpin};
@@ -460,7 +468,9 @@ import java.text.NumberFormat;
 
 		if(nightToggle.isChecked()) grossPay += (timeSum[0] + timeSum[1] + timeSum[2]) * 3;
 
-		double grossVac = grossPay * (vacationPay + 1);
+
+
+		double grossVac = grossPay * (vacRate + 1);
 		double exempt = loaCount * loaRate;
 		if(travelToggle.isChecked()) {
 			if(!prefs.getBoolean("taxable_weektravel", false)){
@@ -515,7 +525,7 @@ import java.text.NumberFormat;
 		double netPay = grossVac - deductionsSum + exempt;
 		
 		wageRateVal.setText("Wage: " + String.format("%.2f", wageRate) + "$");
-		vacationVal.setText(String.format("Vac\\Hol (%.0f%%): %.2f$", vacationPay * 100, grossVac - grossPay));
+		vacationVal.setText(String.format("Vac\\Hol (%.2f%%): %.2f$", vacRate * 100d, grossVac - grossPay));
 		grossVal.setText("Gross: " + String.format("%.2f", grossVac + exempt) + "$");
 		exemptVal.setText("Tax Exempt: " + String.format("%.2f", exempt) + "$");
 		cppVal.setText(String.format("EI/CPP: %.2f$ + %.2f$", deductions[3], deductions[2]));

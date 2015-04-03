@@ -24,15 +24,16 @@ public class TaxManager {
     public static final int PROV_QC = 5;
     public static final int PROV_NB = 6;
     public static final int PROV_NS = 7;
-    public static final int PROV_PE = 8;
-    public static final int PROV_NL = 9;
-    public static final int FED = 10;
+    public static final int PROV_CB = 8;  //Cape Breton has different wage agreement
+    public static final int PROV_PE = 9;
+    public static final int PROV_NL = 10;
+    public static final int FED = 11;
 
     //can order outputs too
-    public static final int[] activeProvinces = {PROV_BC, PROV_AB, PROV_MB, PROV_ON};
+    public static final int[] activeProvinces = {PROV_BC, PROV_AB, PROV_MB, PROV_ON, PROV_NB, PROV_NS, PROV_CB, PROV_PE};
 
     public static final String[] provinceNames = {"British Columbia", "Alberta", "Saskatchewan",
-            "Manitoba", "Ontario", "Quebec", "New Brunswick", "Nova Scotia", "Prince Edward Island",
+            "Manitoba", "Ontario", "Quebec", "New Brunswick", "Nova Scotia (Mainland)", "Nova Scotia (Cape Breton)", "Prince Edward Island",
             "Newfoundland", "Federal"};
 
     public static final String[] yearStrings = {"2013", "2014", "2015"};
@@ -52,7 +53,7 @@ public class TaxManager {
 		public String[] wageNames;
         public String surName;
 		public double defaultWageIndex;  //tacked on end of wageRates inplace of custom value
-		public double vacRate;
+		public double[] vacRate;
         public double[] claimAmount;
 
         public TaxStats(int type) {
@@ -109,7 +110,7 @@ public class TaxManager {
                             "Fifth Term", "Sixth Term", "Journeyman", "Foreman", "GF"
                     };
                     this.defaultWageIndex = 7d; //Journeyman
-                    this.vacRate = 0.12d;
+                    this.vacRate = new double[]{0.12d};
 
                     break;
                 //=====================================AB====================================
@@ -129,7 +130,7 @@ public class TaxManager {
                             "Journeyman (N)", "Lead Hand", "Foreman", "GF"
                     };
                     this.defaultWageIndex = 5d; //Journeyman (N)
-                    this.vacRate = 0.10d;
+                    this.vacRate = new double[]{0.10d};
                     break;
                 //=====================================MB====================================
                 case PROV_MB:
@@ -148,7 +149,7 @@ public class TaxManager {
                             {0, 605, 3720},
                             {0, 605, 3720},
                             {0, 605, 3720}};
-                    //(TD1MB amount + CPP max + EI max) * lowest bracket
+
                     this.claimAmount = new double[]{8884, 9134, 9134};
 
                     //-------------------------------Wage Rates---------------------------------
@@ -160,7 +161,7 @@ public class TaxManager {
                             "Ass't Foreman", "Foreman", "GF"
                     };
                     this.defaultWageIndex = 4d;
-                    this.vacRate = 0.105d;
+                    this.vacRate = new double[]{0.105d};
                     break;
 
 
@@ -206,17 +207,139 @@ public class TaxManager {
                             "Ass't Foreman", "Foreman", "GF"
                     };
                     this.defaultWageIndex = 5d;
-                    this.vacRate = 0.12d;
+                    this.vacRate = new double[]{0.12d};
+                    break;
+
+                //=====================================NB===========================================
+                case PROV_NB:
+                    this.surName = "NB - ";
+                    this.brackets = new double[][]{
+                            {0, 38954, 77908, 126662},
+                            {0, 39305, 78609, 127802},
+                            {0, 39973, 79946, 129975}};
+                    this.rates = new double[][]{
+                            {0.0910, 0.1210, 0.1240, 0.1430},
+                            {0.0968, 0.1482, 0.1652, 0.1784},
+                            {0.0968, 0.1482, 0.1652, 0.1784}};
+                    this.constK = new double[][]{
+                            {0, 1169, 1402, 3809},
+                            {0, 2020, 3357, 5044},
+                            {0, 2055, 3414, 5129}};
+
+                    //Claim code 1
+                    this.claimAmount = new double[]{9388, 9472, 9633};
+
+                    //---------------------------------Wages NB-------------------------------------
+                    this.wageRates = new double[]{
+                            25.51, 19.83, 25.51, 31.18, 34.97, 36.17, 39.72, 41.47
+                    };
+                    this.vacRate = new double[] {
+                            0.0230+0.0077, 0.0178+0.0059, 0.0230+0.0077, 0.0281+0.0094, 0.0315+0.0105,
+                            0.0326+0.0109, 0.0357+0.0119, 0.0373+0.0124};
+                    this.wageNames = new String[]{
+                            "Helper", "1st Year", "2nd Year", "3rd Year", "Journeyman",
+                            "Ass't Foreman", "Foreman", "GF"
+                    };
+                    this.defaultWageIndex = 4d;
+
+                    break;
+
+                //=====================================NS (Mainland)================================
+                case PROV_NS: //The tax that time forgot
+                    this.surName = "NS - ";
+                    this.brackets = new double[][]{
+                            {0, 29590, 59180, 93000, 150000},
+                            {0, 29590, 59180, 93000, 150000},
+                            {0, 29590, 59180, 93000, 150000}};
+                    this.rates = new double[][]{
+                            {0.0879, 0.1495, 0.1667, 0.1750, 0.2100},
+                            {0.0879, 0.1495, 0.1667, 0.1750, 0.2100},
+                            {0.0879, 0.1495, 0.1667, 0.1750, 0.2100}};
+                    this.constK = new double[][]{
+                            {0, 1823, 2841, 3613, 8863},
+                            {0, 1823, 2841, 3613, 8863},
+                            {0, 1823, 2841, 3613, 8863}};
+
+                    //Claim code 1
+                    this.claimAmount = new double[]{8481, 8481, 8481};
+
+                    //---------------------------------Wages NS Mainland----------------------------
+                    this.wageRates = new double[]{
+                            24.60, 19.10, 24.60, 30.10, 33.76, 34.96, 37.01, 39.26
+                    };
+                    this.vacRate = new double[] {
+                            0.0221+0.0074, 0.0172+0.0057, 0.0221+0.0074, 0.0271+0.0090, 0.0304+0.0101,
+                            0.0315+0.0105, 0.0333+0.0111, 0.0353+0.0118};
+                    this.wageNames = new String[]{
+                            "Helper", "1st Year", "2nd Year", "3rd Year", "Journeyman",
+                            "Ass't Foreman", "Foreman", "GF"
+                    };
+                    this.defaultWageIndex = 4d;
+
+                    break;
+                //===================================NS (Cape Breton)===============================
+                case PROV_CB:
+                    this.surName = "CB - ";
+
+                    //Tax always goes to NS function
+
+                    //---------------------------------Wages NS Cape Breton-------------------------
+                    this.wageRates = new double[]{
+                            26.63, 20.73, 26.63, 32.53, 36.47, 37.67, 39.47, 41.22
+                    };
+                    this.vacRate = new double[] {
+                            0.0240+.008, 0.0187+0.0062, 0.0240+.008, 0.0293+0.0098, 0.0328+0.0109,
+                            0.0339+0.0113, 0.0355+0.0118, 0.0371+0.0124};
+                    this.wageNames = new String[]{
+                            "Helper", "1st Year", "2nd Year", "3rd Year", "Journeyman",
+                            "Ass't Foreman", "Foreman", "GF"
+                    };
+                    this.defaultWageIndex = 4d;
+                    break;
+
+                //=====================================PEI==========================================
+                case PROV_PE:  //Another one forgotten by time
+                    this.surName = "PEI - ";
+                    this.brackets = new double[][]{
+                            {0, 31984, 63969},
+                            {0, 31984, 63969},
+                            {0, 31984, 63969}};
+                    this.rates = new double[][]{
+                            {0.0980, 0.1380, 0.1670},
+                            {0.0980, 0.1380, 0.1670},
+                            {0.0980, 0.1380, 0.1670}};
+                    this.constK = new double[][]{
+                            {0, 1279, 3134},
+                            {0, 1279, 3134},
+                            {0, 1279, 3134}};
+
+                    //Claim code 1
+                    this.claimAmount = new double[]{7708, 7708, 7708};
+
+                    //any prov tax over 12500, 10% added
+                    this.surtax = new double[][]{
+                            {12500, 0.10},
+                            {12500, 0.10},
+                            {12500, 0.10}
+                    };
+
+                    //-------------------------Wages PEI (Mainland NS)----------------------
+                    this.wageRates = new double[]{
+                            24.60, 19.10, 24.60, 30.10, 33.76, 34.96, 37.01, 39.26
+                    };
+                    this.vacRate = new double[] {
+                            0.0221+0.0074, 0.0172+0.0057, 0.0221+0.0074, 0.0271+0.0090, 0.0304+0.0101,
+                            0.0315+0.0105, 0.0333+0.0111, 0.0353+0.0118};
+                    this.wageNames = new String[]{
+                            "Helper", "1st Year", "2nd Year", "3rd Year", "Journeyman",
+                            "Ass't Foreman", "Foreman", "GF"
+                    };
+                    this.defaultWageIndex = 4d;
+
                     break;
             }
         }
 	}
-
-	private static final TaxStats fedStats = new TaxStats(FED);
-	private static final TaxStats bcStats = new TaxStats(PROV_BC);
-	private static final TaxStats abStats = new TaxStats(PROV_AB);
-    private static final TaxStats mbStats = new TaxStats(PROV_MB);
-	private static final TaxStats onStats = new TaxStats(PROV_ON);
 
 	private static final double[][] cppEi = {
         {0.0495, 3500, 0.0188, 2356.20, 891.12},
@@ -224,7 +347,12 @@ public class TaxManager {
         {0.0495, 3500, 0.0188, 2479.95, 930.60}
         };
 
-	public static String[] getWageNames(String province) {
+    public TaxManager(String provinceName) {
+        int provIndex = getProvinceIndexFromName(provinceName);
+        getStatType(provIndex); //generates taxStatsHold for province
+    }
+
+	public String[] getWageNames(String province) {
 		TaxStats stats = getStatType(province);
 
         String[] wageNames = stats.wageNames;
@@ -237,7 +365,7 @@ public class TaxManager {
 		return retString;
 	}
 
-	public static double[] getWageRates(String province){
+	public double[] getWageRates(String province){
         TaxStats activeRate = getStatType(province);  //returns ex: bcStats
 
         double[] wageRates = activeRate.wageRates;
@@ -259,7 +387,7 @@ public class TaxManager {
 
 
 	//Returns [fed, prov, cpp, ei]
-	public static double[] getTaxes(double gross, int year, int province) {
+	public double[] getTaxes(double gross, int year, int province) {
 		BigDecimal provTax;
 		double anGross = gross * 52;
 
@@ -280,6 +408,18 @@ public class TaxManager {
                 break;
             case PROV_MB:
                 provTax = getMBTax(anGrossDec, year);
+                break;
+            case PROV_NB:
+                provTax = getNBTax(anGrossDec, year);
+                break;
+            case PROV_NS:
+                provTax = getNSTax(anGrossDec, year);
+                break;
+            case PROV_CB:
+                provTax = getNSTax(anGrossDec, year);
+                break;
+            case PROV_PE:
+                provTax = getPEITax(anGrossDec, year);
                 break;
             default:  //No Provincial Tax (FED)
                 provTax = BigDecimal.ZERO;
@@ -304,18 +444,19 @@ public class TaxManager {
         return new double[]{fedTax, provTaxDoub, cppDoub, eiDoub};
 	}
 
-    public static double[] getTaxes(double gross, String year, String province){
+    public double[] getTaxes(double gross, String year, String province){
         return getTaxes(gross,
                 getYearIndexFromName(year),
                 getProvinceIndexFromName(province));
     }
 
-    public static double getVacationRate(String province){
+    public double[] getVacationRate(String province){
         TaxStats stats = getStatType(province);
+
         return stats.vacRate;
     }
 
-	private static BigDecimal[] getCppEi(BigDecimal anGross, int year){
+	private BigDecimal[] getCppEi(BigDecimal anGross, int year){
 		//[cpp rate, exemption, ei rate]
 		double cppRate = cppEi[year][0];
 		double cppExempt = cppEi[year][1];
@@ -330,7 +471,7 @@ public class TaxManager {
 		return new BigDecimal[]{cppRet, eiRet};
 	}
 
-    private static BigDecimal getFedTax(BigDecimal anGross, int year){
+    private BigDecimal getFedTax(BigDecimal anGross, int year){
         double[] bracket = fedStats.brackets[year];
         double anGrossDouble = anGross.doubleValue();
         int taxIndex = bracketGrossIndex(anGrossDouble, bracket);
@@ -341,40 +482,30 @@ public class TaxManager {
                 subtract(BigDecimal.valueOf(fedStats.constK[year][taxIndex]));
     }
 
-	private static BigDecimal getBCTax(BigDecimal anGrossDec, int year){
-		double[] bracket = bcStats.brackets[year];
-		double anGross = anGrossDec.doubleValue();
-        int taxIndex = bracketGrossIndex(anGross, bracket);
+	private  BigDecimal getBCTax(BigDecimal anGrossDec, int year){
+		TaxStats bcStats = getStatType(PROV_BC);
 
-        /*
-        int taxIndex = (anGross<bracket[1]) ? 0:
-			(anGross<bracket[2] ? 1 :
-			(anGross<bracket[3] ? 2 :
-			(anGross<bracket[4] ? 3 :
-			(anGross<bracket[5] ? 4 : 5))));
-	    */
-
-        double rate = bcStats.rates[year][taxIndex];  //Rate and constant will share same index
-		double constK = bcStats.constK[year][taxIndex];
+        BigDecimal taxDec = getStandardProvincialTax(anGrossDec, year, bcStats);
 
         //BC Tax Reduction
         double[] redTable = bcStats.taxReduction[year];	//[bracket, credit, drop rate]
-        double diff = anGross - redTable[0];
+        double diff = anGrossDec.doubleValue() - redTable[0];
         double taxRed = (diff < 0) ? redTable[1] : redTable[1] - redTable[2] * diff;
         if(taxRed < 0) taxRed = 0;
 
-        return anGrossDec.multiply(BigDecimal.valueOf(rate))
-                .subtract(BigDecimal.valueOf(constK))
-                .subtract(getTaxCredit(bcStats, anGrossDec, year))
-                .subtract(BigDecimal.valueOf(taxRed));
+        return taxDec.subtract(BigDecimal.valueOf(taxRed));
     }
 
-	private static BigDecimal getABTax(BigDecimal anGross, int year){
-        return anGross.multiply(BigDecimal.valueOf(abStats.rates[year][0]))
+	private BigDecimal getABTax(BigDecimal anGross, int year){
+        TaxStats abStats = getStatType(PROV_AB);
+
+        BigDecimal taxDec =  anGross.multiply(BigDecimal.valueOf(abStats.rates[year][0]))
                 .subtract(getTaxCredit(abStats, anGross, year));
+        return taxDec;
 	}
 
-	private static BigDecimal getONTax(BigDecimal anGrossDec, int year){
+	private BigDecimal getONTax(BigDecimal anGrossDec, int year){
+        TaxStats onStats = getStatType(PROV_ON);
 
         double anGross = anGrossDec.doubleValue();
         double[] bracket = onStats.brackets[year];
@@ -401,12 +532,12 @@ public class TaxManager {
 		double taxTotal = taxPayable.doubleValue();
 
         //TODO: wade into ontarioSpecific to convert to BigDecimal
-		taxTotal = ontarioSpecific(anGross, year, taxTotal);	//includes health premium, surcharge
+		taxTotal = ontarioSpecific(anGross, year, taxTotal, onStats);	//includes health premium, surcharge
 		return BigDecimal.valueOf(taxTotal);
 	}
 
     //Your tax law is terrible.
-	private static double ontarioSpecific(double anGross, int year, double taxPayable){
+	private static double ontarioSpecific(double anGross, int year, double taxPayable, TaxStats onStats){
 		//apply surtax
 		double[] surBracket = {onStats.surtax[year][0], onStats.surtax[year][1]};
 		double[] surRate = {onStats.surtax[year][2], onStats.surtax[year][3]};
@@ -437,15 +568,41 @@ public class TaxManager {
 		return taxPayable;
 	}
 
-    private static BigDecimal getMBTax(BigDecimal anGrossDec, int year){
-        double anGross = anGrossDec.doubleValue();
+    private BigDecimal getNBTax(BigDecimal anGrossDec, int year) {
+        return getStandardProvincialTax(anGrossDec, year, getStatType(PROV_NB));
+    }
 
-        //get annual tax from bracket chart
-        int brackIndex = bracketGrossIndex(anGross, mbStats.brackets[year]);
+    private BigDecimal getMBTax(BigDecimal anGrossDec, int year){
+        return getStandardProvincialTax(anGrossDec, year, getStatType(PROV_MB));
+    }
 
-        return anGrossDec.multiply(BigDecimal.valueOf(mbStats.rates[year][brackIndex]))
-                .subtract(BigDecimal.valueOf(mbStats.constK[year][brackIndex]))
-                .subtract(getTaxCredit(mbStats, anGrossDec, year));
+    private BigDecimal getNSTax(BigDecimal anGrossDec, int year) {
+        return getStandardProvincialTax(anGrossDec, year, getStatType(PROV_NS));
+    }
+
+    private BigDecimal getPEITax(BigDecimal anGrossDec, int year) {
+        TaxStats peStats = getStatType(PROV_PE);
+        BigDecimal taxDec = getStandardProvincialTax(anGrossDec, year, peStats);
+
+        //Surtax adds additional 10% to provtax over 12500
+        double[] surtaxVals = peStats.surtax[year]; //[cap (12500), rate (0.10)]
+        if(taxDec.compareTo(BigDecimal.ZERO.valueOf(surtaxVals[0])) > 0) {
+            BigDecimal surDec = taxDec.subtract(BigDecimal.valueOf(surtaxVals[0]));
+            surDec = surDec.multiply(BigDecimal.valueOf(surtaxVals[1]));
+            taxDec = taxDec.add(surDec);
+        }
+
+        return taxDec;
+    }
+
+    private BigDecimal getStandardProvincialTax(BigDecimal anGrossDec, int year, TaxStats provStats) {
+        //get tax rate from bracket chart
+        int brackIndex = bracketGrossIndex(anGrossDec.doubleValue(), provStats.brackets[year]);
+
+        BigDecimal taxDec = anGrossDec.multiply((BigDecimal.valueOf((provStats.rates[year][brackIndex]))));
+        taxDec = taxDec.subtract((BigDecimal.valueOf(provStats.constK[year][brackIndex])));
+        taxDec = taxDec.subtract(getTaxCredit(provStats, anGrossDec, year));
+        return taxDec;
     }
 
     //Should have set up earlier
@@ -462,22 +619,49 @@ public class TaxManager {
         return 0; //if gross is 0
     }
 
-    private static TaxStats getStatType(int province){
+    private static final TaxStats fedStats = new TaxStats(FED);
+    private TaxStats bcHoldStats;
+    private TaxStats abHoldStats;
+    private TaxStats mbHoldStats;
+    private TaxStats onHoldStats;
+    private TaxStats nbHoldStats;
+    private TaxStats nsHoldStats;
+    private TaxStats cbHoldStats;
+    private TaxStats peHoldStats;
+    private TaxStats getStatType(int province){
+        TaxStats requestedStats;
+
         switch(province){
             case PROV_BC:
-                return bcStats;
-            case PROV_ON:
-                return onStats;
+                bcHoldStats = (bcHoldStats == null) ? new TaxStats(province) : bcHoldStats;
+                return bcHoldStats;
             case PROV_AB:
-                return abStats;
+                abHoldStats = (abHoldStats == null) ? new TaxStats(province) : abHoldStats;
+                return abHoldStats;
+            case PROV_ON:
+                onHoldStats = (onHoldStats == null) ? new TaxStats(province) : onHoldStats;
+                return onHoldStats;
             case PROV_MB:
-                return mbStats;
+                mbHoldStats = (mbHoldStats == null) ? new TaxStats(province) : mbHoldStats;
+                return mbHoldStats;
+            case PROV_NB:
+                nbHoldStats = (nbHoldStats == null) ? new TaxStats(province) : nbHoldStats;
+                return nbHoldStats;
+            case PROV_NS:
+                nsHoldStats = (nsHoldStats == null) ? new TaxStats(province) : nsHoldStats;
+                return nsHoldStats;
+            case PROV_CB:
+                cbHoldStats = (cbHoldStats == null) ? new TaxStats(province) : cbHoldStats;
+                return cbHoldStats;
+            case PROV_PE:
+                peHoldStats = (peHoldStats == null) ? new TaxStats(province) : peHoldStats;
+                return peHoldStats;
             default:
                 return null;
         }
     }
 
-    private static TaxStats getStatType(String province){
+    private TaxStats getStatType(String province){
         TaxStats provinceStats = getStatType(getProvinceIndexFromName(province));
         if(provinceStats == null){
             Log.e("TaxManager", "getStatType received invalid province string.  Returned default AB.");
@@ -489,14 +673,14 @@ public class TaxManager {
 
     public static int getYearIndexFromName(String yearName){
         for(int i=0; i<yearStrings.length; i++){
-            if(yearName.matches(yearStrings[i])) return i;
+            if(yearName.equals(yearStrings[i])) return i;
         }
         return yearStrings.length - 1;
     }
 
     public static int getProvinceIndexFromName(String provName){
         for(int i=0; i<provinceNames.length; i++){
-            if(provName.matches(provinceNames[i])) return i;
+            if(provName.equals(provinceNames[i])) return i;
         }
         return -1;
     }
@@ -507,17 +691,17 @@ public class TaxManager {
         String provWage = prefs.getString("list_provWageNew", "fail");
         String year = prefs.getString("list_taxYearNew", "fail");
         for(int i=0; i<activeProvinces.length; i++){
-            if(provWage.matches(provinceNames[activeProvinces[i]])) provFlag = true;
+            if(provWage.equals(provinceNames[activeProvinces[i]])) provFlag = true;
         }
         for(int i=0; i<yearStrings.length; i++){
-            if(year.matches(yearStrings[i])) yearFlag = true;
+            if(year.equals(yearStrings[i])) yearFlag = true;
         }
         if(!provFlag) Log.e("TaxManager", "SharedPreference list_provWageNew was malformed as: " + provWage);
         if(!yearFlag) Log.e("TaxManager", "SharedPreference list_taxYearNew was malformed as: " + year);
         return (provFlag && yearFlag);
     }
 
-    private static BigDecimal getTaxCredit(TaxStats stats, BigDecimal anGross, int year) {
+    private BigDecimal getTaxCredit(TaxStats stats, BigDecimal anGross, int year) {
         //taxCred == (cpp contribution + ei contribution + claimAmount) / lowest bracket
 
         //T4032 example doesn't account for cpp exemption but CRA calculator does.

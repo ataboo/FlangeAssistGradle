@@ -17,6 +17,7 @@
 		android:hint="@string/studCount"
 		android:maxLength="50"
 		android:singleLine="true"
+        android:inputType="number"
 		android:layout_below="@id/torque_title" />
 	<Spinner
 		android:id="@+id/patSpin"

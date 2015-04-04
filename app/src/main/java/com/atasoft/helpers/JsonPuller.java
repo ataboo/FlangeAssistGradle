@@ -65,7 +65,7 @@ public class JsonPuller
 		this.fSizesXL = getJSONStringArray(masterXL, "fSizes");
 		this.fRatingsXL = getJSONStringArray(masterXL, "fRatings");
         String[] studSizesXL = getJSONStringArray(masterXL, "studSizeOrdered");
-        HashMap<String, String[]> studStatsXL = makeHash(masterXL, "studSizes", studSizesXL, STUD_ARRAY_LENGTH);
+        //HashMap<String, String[]> studStatsXL = makeHash(masterXL, "studSizes", studSizesXL, STUD_ARRAY_LENGTH);
         HashMap<String, String[]> fStats150XL = makeHash(masterXL, "fStats150", fSizesXL, RATE_ARRAY_LENGTH);
 		fStatHashes.put("150XL", fStats150XL);
         HashMap<String, String[]> fStats400XL = makeHash(masterXL, "fStats400", fSizesXL, RATE_ARRAY_LENGTH);
@@ -78,7 +78,8 @@ public class JsonPuller
 		this.fRatingsXXL = new String[]{"150", "400"};
 		
 	}
-	
+
+    /*
 	public String[] getSizesCombined() {
 		if(fSizes == null || fSizesXL == null) return new String[]{"err"};
 		String[] fSizeReturn = new String[fSizes.length + fSizesXL.length];
@@ -90,6 +91,7 @@ public class JsonPuller
 		}
 		return fSizeReturn;
 	}
+	*/
 	
 	public String[] getSizes(){
 		return fSizes;
@@ -110,10 +112,9 @@ public class JsonPuller
 	public String[] pullFlangeVal(String size, String rating){
 		//Log.w("JSON Puller", "Checking: " + size + " " + rating);
 		//if(failFlag) return null;
-		String[] retString = new String[RATE_ARRAY_LENGTH];
 		HashMap<String, String[]> fStatHash = fStatHashes.get(rating);
-		retString = (String[]) fStatHash.get(size);
-		return retString;
+		return fStatHash.get(size);
+
 	}
 	
 	//Wrench size, Drift pin size, B7M torque val, B7 torque val
@@ -157,7 +158,7 @@ public class JsonPuller
 	}
 	
 	private JSONObject getJObject(String jKey, JSONObject mastObject){
-		JSONObject retObj = null;
+		JSONObject retObj;
 		try{
 			retObj = mastObject.getJSONObject(jKey);
 		} catch(JSONException jE){
@@ -180,15 +181,14 @@ public class JsonPuller
 	}
 		
 	private JSONObject loadJSON(String fileName) {
-		JSONObject jObj = null;		
+		JSONObject jObj;
 		try {
-			String jStr = null;
 			InputStream inStr = pView.getContext().getAssets().open(fileName);
 			int size = inStr.available();
 			byte[] buffer = new byte[size];
 			inStr.read(buffer);
 			inStr.close();
-			jStr = new String(buffer, "UTF-8");
+			String jStr = new String(buffer, "UTF-8");
 
 			jObj = new JSONObject(jStr);			
 			return jObj;

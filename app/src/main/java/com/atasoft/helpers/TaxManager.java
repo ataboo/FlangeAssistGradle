@@ -29,6 +29,7 @@ public class TaxManager {
     public static final int PROV_NL = 10;
     public static final int FED = 11;
 
+
     //can order outputs too
     public static final int[] activeProvinces = {PROV_BC, PROV_AB, PROV_MB, PROV_ON, PROV_NB, PROV_NS, PROV_CB, PROV_PE};
 
@@ -81,7 +82,7 @@ public class TaxManager {
                 case PROV_BC:
                     this.surName = "BC - ";
                     this.brackets = new double[][]{
-                            {0, 37568, 75138, 86268, 104754.01, 150000},
+                            {0, 37568, 75138, 86268, 104754, 150000},
                             {0, 37606, 75213, 86354, 104858, 150000},
                             {0, 37869, 75740, 86958, 105592, 151050}};
                     this.rates = new double[][]{
@@ -348,8 +349,46 @@ public class TaxManager {
         };
 
     public TaxManager(String provinceName) {
+        //lightStatValidation();
+
         int provIndex = getProvinceIndexFromName(provinceName);
         getStatType(provIndex); //generates taxStatsHold for province
+    }
+
+    private void lightStatValidation() {
+        for(int provInt: activeProvinces) {
+            TaxStats provStats = new TaxStats((provInt));
+            Log.w("TaxManager", "Validating " + provinceNames[provInt]);
+
+            int yearCount = yearStrings.length;
+            if(provStats.claimAmount != null) {
+                if (provStats.claimAmount.length != yearCount) {
+                    throw new RuntimeException("TaxStatsError: claimAmount array length mismatch in " + provinceNames[provInt]);
+                }
+            }
+
+
+            for(int i = 0; i<yearCount; i++) {
+                 if(provStats.brackets != null) {
+                     if (provStats.brackets[i].length != provStats.rates[i].length ||
+                             provStats.brackets[i].length != provStats.constK[i].length) {
+                         throw new RuntimeException(String.format(
+                                 "TaxStatsError: Bracket/Rate/ConstK array length mismatch in %s", provinceNames[provInt]));
+                     }
+                 }
+                 if(provStats.wageRates != null) {
+                    if(provStats.wageRates.length != provStats.wageNames.length) {
+                        throw new RuntimeException(String.format(
+                                "TaxStatsError: wageRates/wageNames array length mismatch in %s", provinceNames[provInt]));
+                    }
+                    if(provStats.vacRate.length != 1 && provStats.vacRate.length != provStats.wageRates.length){
+                        throw new RuntimeException("TaxStatsError: vacRate should have a length of 1 or wageRates.length in " + provinceNames[provInt]);
+                    }
+                 }
+
+            }
+        }
+
     }
 
 	public String[] getWageNames(String province) {
@@ -389,9 +428,6 @@ public class TaxManager {
 	//Returns [fed, prov, cpp, ei]
 	public double[] getTaxes(double gross, int year, int province) {
 		BigDecimal provTax;
-		double anGross = gross * 52;
-
-        //double fedTax = getFedTax(anGross, year);
 
         BigDecimal anGrossDec = new BigDecimal(gross)
                 .setScale(bdPrecision, bdRounding)
@@ -430,8 +466,6 @@ public class TaxManager {
         BigDecimal fiftyTwo = new BigDecimal(52);
 
         BigDecimal fedTaxDec = getFedTax(anGrossDec, year);
-        //Log.w("TaxManager", "Fed Tax is: " + fedTaxDec.toString());
-        //Log.w("TaxManager", "Prov Tax is: " + provTax.toString());
         // x.compare(y) ==  -1:(x<y), 0:(x==y), 1:(x>y)
         if(fedTaxDec.compareTo(BigDecimal.ZERO) < 0) fedTaxDec = BigDecimal.ZERO;
         if(provTax.compareTo(BigDecimal.ZERO) < 0) provTax = BigDecimal.ZERO;
@@ -629,8 +663,6 @@ public class TaxManager {
     private TaxStats cbHoldStats;
     private TaxStats peHoldStats;
     private TaxStats getStatType(int province){
-        TaxStats requestedStats;
-
         switch(province){
             case PROV_BC:
                 bcHoldStats = (bcHoldStats == null) ? new TaxStats(province) : bcHoldStats;

@@ -49,7 +49,7 @@ public class ShapeCalcHold
 	public String[] getValues(String typeName, double[] vals){
 		int thisType = shapeHash.get(typeName).type;
 		String[] retStr = new String[2];
-		double[] calcVals = new double[2];
+		double[] calcVals;
 		switch(thisType){
 			case 0:  //Cylinder (r, h)
 				calcVals = solveCylinder(vals[0], vals[1]);

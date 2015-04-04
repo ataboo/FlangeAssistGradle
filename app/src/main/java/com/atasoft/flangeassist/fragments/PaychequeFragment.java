@@ -55,7 +55,8 @@ import java.text.NumberFormat;
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.thisFragView = getView();
-        this.context = thisFragView.getContext();
+        //this.context = thisFragView.getContext();
+        this.context = getActivity().getApplicationContext();
         setupViews();
         
     }
@@ -363,7 +364,7 @@ import java.text.NumberFormat;
             builder.append(",");
         }
         prefs.edit().putString("payCalc_wageMealSpinners", builder.toString()).commit();
-        Log.w("PaychequeFragment", "wageMeaSpinner is: " + prefs.getString("payCalc_wageMealSpinners", "Failed"));
+        //Log.w("PaychequeFragment", "wageMeaSpinner is: " + prefs.getString("payCalc_wageMealSpinners", "Failed"));
         oldProvWage = provWage;
     }
     
@@ -371,9 +372,6 @@ import java.text.NumberFormat;
     private static final String[] custDaySuffix = {"_straight", "_overtime", "_double"};
     private static final String[] custDayNames = {"Day A", "Day B", "Day C"};
 	private void verifyCustDays() {
-		
-		int errCount = 0;
-		String toastStr = "The custom schedule";
 		for(int i = 0; i < custDayKeys.length; i++) {
             for(int j=0; j< custDaySuffix.length; j++){
                 double[] parsedDay = parseDay(prefs.getString(custDayKeys[i] + custDaySuffix[j], "0"));
@@ -385,8 +383,6 @@ import java.text.NumberFormat;
                 }
             }
 		}
-		
-		return;
 	}
 	
     //second value is fail check
@@ -405,7 +401,7 @@ import java.text.NumberFormat;
 
 	private void pushBootan() {
         //Log.w("Paycheque Fragment", "Selection is actually " + wageSpin.getSelectedItemPosition() + " also a load of crap.");
-		double splitArr[] = new double[3];
+		double splitArr[];
 		boolean fourTens = fourToggle.isChecked();
 
 		double timeSum[] = {0,0,0};
@@ -547,7 +543,7 @@ import java.text.NumberFormat;
 	
 	//unnecessary double
 	private double checkPrefDoub(String prefKey, String defaultVal, String toastName) {
-		double retVal = 0d;
+		double retVal;
 		String prefString = prefs.getString(prefKey, defaultVal);
 		try {
 			retVal = Double.parseDouble(prefString);
@@ -615,7 +611,7 @@ import java.text.NumberFormat;
                 retDoub[i] = 0d;
             }
 		}
-        Log.w("PaychequeFragment", String.format("Retdoub = %.2f, %.2f, %.2f", retDoub[0], retDoub[1], retDoub[2]));
+        //Log.w("PaychequeFragment", String.format("Retdoub = %.2f, %.2f, %.2f", retDoub[0], retDoub[1], retDoub[2]));
 		return retDoub;
 	}
 
@@ -720,6 +716,6 @@ import java.text.NumberFormat;
 
     public static String twoPrecision (double d){
         NumberFormat nf = new DecimalFormat("###.##");
-        return nf.format(d).toString();
+        return nf.format(d);
     }
 }

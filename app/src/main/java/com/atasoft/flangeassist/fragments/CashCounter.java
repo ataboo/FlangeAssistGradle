@@ -323,8 +323,8 @@ public class CashCounter extends Fragment implements OnClickListener {
 		double hoursIntoShift = secondsIntoShift / 3600d;
 		double earnings;
 		
-		boolean isFriday = false;
-		boolean isWeekend = false;
+		boolean isFriday;
+		boolean isWeekend;
 		boolean isHoliday = false;
         boolean beforeMidnight = floatNow > floatStart;
 
@@ -548,8 +548,10 @@ public class CashCounter extends Fragment implements OnClickListener {
 	private void testClick(){
 		if(!changeFlag) {
 			updateValues();
-		} else {
+		}
+        /*else {
 			//Toast.makeText(context, "doubleTap", Toast.LENGTH_SHORT).show();
 		}
+		*/
 	}
 }

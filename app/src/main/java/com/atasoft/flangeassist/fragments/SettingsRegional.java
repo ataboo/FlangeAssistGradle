@@ -15,7 +15,7 @@ public class SettingsRegional extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings_regional);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
         ListPreference provListPref = (ListPreference) findPreference("list_provWageNew");
         provListPref.setEntries(TaxManager.getActiveProvinceStrings());

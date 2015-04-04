@@ -67,8 +67,7 @@ public class ConvDataHold
 	
 	public String getUnit(String type, String unit){
 		ConversionType unitType = typeHash.get(type);
-		String retString = unitType.unitMap.get(unit);
-		return retString;
+		return unitType.unitMap.get(unit);
 	}
 	
 	public String makeFraction(double decValue, int denom){

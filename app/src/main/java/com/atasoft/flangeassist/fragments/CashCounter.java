@@ -426,7 +426,7 @@ public class CashCounter extends Fragment implements OnClickListener {
 		int earnLength = valString.length();
 		int[] retVals = new int[]{0,0,0,0,0,0};
 		if (earnLength < 4 || earnLength > 7){
-			Log.e("CashCounter_MakeValseFromDouble", "Earning String out of Range.");
+			Log.e("CashCounter", "Earning String out of Range.");
 			return retVals;
 		}
 		retVals[5] = Character.getNumericValue(valString.charAt(earnLength - 1)); //hundreds

@@ -122,9 +122,9 @@ public class TaxManager {
                     //(cpp max + ei max + AB1) * 0.1
                     this.claimAmount = new double[]{17593, 17787, 18214};
                     //----------------------------------Wages AB---------------------------------
-                    //Updated November 2014
+                    //Updated May 3 2015
                     this.wageRates = new double[]{
-                            32.24, 25.25, 32.24, 39.24, 43.15, 43.90, 47.05, 49.40, 51.40
+                            33.15, 26.16, 33.15, 40.15, 44.06, 44.81, 47.96, 50.31, 52.31
                     };
                     this.wageNames = new String[]{
                             "Helper", "1st Year", "2nd Year", "3rd Year", "Journeyman (S)",

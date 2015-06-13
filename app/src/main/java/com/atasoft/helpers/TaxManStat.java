@@ -82,7 +82,7 @@ public class TaxManStat {
 		public double[] vacRate;
         public double[] claimAmount;
 
-        public TaxStats(int type) {
+        public TaxStats(int type, JSONObject masterObj) {
             if(masterObj == null){
                 Log.e(LOG_KEY, "masterObj is null");
                 return;
@@ -91,6 +91,7 @@ public class TaxManStat {
             try {
                 JSONObject provObj = masterObj.getJSONObject(provinceNames[type]);
                 this.brackets = getMultiArray(provObj.getJSONObject(FieldKeys.brackets), yearStrings);
+                Log.w(LOG_KEY, "brackets 1,1 is: " + Double.toString(this.brackets[1][1]));
 
             } catch (Exception e){
                 e.printStackTrace();
@@ -123,13 +124,14 @@ public class TaxManStat {
         //lightStatValidation();
 
         this.masterObj = JsonPuller.loadJSON("TaxVals.json");
+        this.fedStats = new TaxStats(FED, masterObj);
         int provIndex = getProvinceIndexFromName(provinceName);
         getStatType(provIndex); //generates taxStatsHold for province
     }
 
     private void lightStatValidation() {
         for(int provInt: activeProvinces) {
-            TaxStats provStats = new TaxStats((provInt));
+            TaxStats provStats = new TaxStats(provInt, masterObj);
             Log.w("TaxManager", "Validating " + provinceNames[provInt]);
 
             int yearCount = yearStrings.length;
@@ -425,7 +427,7 @@ public class TaxManStat {
         return 0; //if gross is 0
     }
 
-    private TaxStats fedStats = new TaxStats(FED);
+    private TaxStats fedStats;
     private TaxStats bcHoldStats;
     private TaxStats abHoldStats;
     private TaxStats mbHoldStats;
@@ -437,28 +439,28 @@ public class TaxManStat {
     private TaxStats getStatType(int province){
         switch(province){
             case PROV_BC:
-                bcHoldStats = (bcHoldStats == null) ? new TaxStats(province) : bcHoldStats;
+                bcHoldStats = (bcHoldStats == null) ? new TaxStats(province, masterObj) : bcHoldStats;
                 return bcHoldStats;
             case PROV_AB:
-                abHoldStats = (abHoldStats == null) ? new TaxStats(province) : abHoldStats;
+                abHoldStats = (abHoldStats == null) ? new TaxStats(province, masterObj) : abHoldStats;
                 return abHoldStats;
             case PROV_ON:
-                onHoldStats = (onHoldStats == null) ? new TaxStats(province) : onHoldStats;
+                onHoldStats = (onHoldStats == null) ? new TaxStats(province, masterObj) : onHoldStats;
                 return onHoldStats;
             case PROV_MB:
-                mbHoldStats = (mbHoldStats == null) ? new TaxStats(province) : mbHoldStats;
+                mbHoldStats = (mbHoldStats == null) ? new TaxStats(province, masterObj) : mbHoldStats;
                 return mbHoldStats;
             case PROV_NB:
-                nbHoldStats = (nbHoldStats == null) ? new TaxStats(province) : nbHoldStats;
+                nbHoldStats = (nbHoldStats == null) ? new TaxStats(province, masterObj) : nbHoldStats;
                 return nbHoldStats;
             case PROV_NS:
-                nsHoldStats = (nsHoldStats == null) ? new TaxStats(province) : nsHoldStats;
+                nsHoldStats = (nsHoldStats == null) ? new TaxStats(province, masterObj) : nsHoldStats;
                 return nsHoldStats;
             case PROV_CB:
-                cbHoldStats = (cbHoldStats == null) ? new TaxStats(province) : cbHoldStats;
+                cbHoldStats = (cbHoldStats == null) ? new TaxStats(province, masterObj) : cbHoldStats;
                 return cbHoldStats;
             case PROV_PE:
-                peHoldStats = (peHoldStats == null) ? new TaxStats(province) : peHoldStats;
+                peHoldStats = (peHoldStats == null) ? new TaxStats(province, masterObj) : peHoldStats;
                 return peHoldStats;
             default:
                 return null;

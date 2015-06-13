@@ -144,6 +144,7 @@ import java.text.NumberFormat;
             this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
             String provName = prefs.getString("list_provWageNew", TaxManager.provinceNames[1]);
             this.taxManager = new TaxManager(provName);
+			new TaxManStat(provName);
         }
 
         Button bClr = (Button) thisFragView.findViewById(R.id.clr_but);

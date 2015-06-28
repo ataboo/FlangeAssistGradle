@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="version_info">Boilermaker Toolbox v0.26b
-		\nLast updated April 3, 2015
-		\nAB Wages updated: Nov 2/14</string>
+    <string name="version_info">Boilermaker Toolbox v0.27
+		\nLast updated June 28, 2015
+		\nAB Wages updated: June 28, 2015</string>
 
     <!-- Main Menu -->
     <string name="action_settings">Settings</string>

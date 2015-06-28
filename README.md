@@ -5,7 +5,7 @@ Boilermaker Toolbox is a FREE reference tool designed to help Boilermakers in Ca
 Tell your jealous friends with IPhones about the JavaScript (cross-device) rewrite at
 http://atasoft.altervista.org
 
-###Main features so far (v0.25):
+###Main features so far (v0.27):
 - BMToolbox Reporter Launcher (Apprentice Reports)
 - Gross Tax Calculator
 - Rigging Calculator: finds load on slings, nylon sling table.
@@ -28,6 +28,10 @@ http://atasoft.altervista.org
 Feel free to send feedback or suggestions to bmtoolbox@gmail.com
 
 ###Changes:
+####V0.27 (04/03/15):
+-Updated wage rates
+-Started converting tax values to json
+
 ####V0.26b (04/03/15):
 -Added NS, NB, PEI tax rates
 -Added wages for each and Cape Breton

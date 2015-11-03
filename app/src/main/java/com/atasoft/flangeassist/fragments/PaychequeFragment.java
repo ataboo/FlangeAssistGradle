@@ -33,13 +33,13 @@ import java.text.NumberFormat;
     private double[] vacRates;
     private View thisFragView;
 
-	
+
 	private SharedPreferences prefs;
 	private Context context;
 	private Boolean customDay;
 	private String oldProvWage;
 	private TaxManager taxManager;
-	
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ import java.text.NumberFormat;
         View v = inflater.inflate(R.layout.paycalc, container, false);
         thisFragView = v;
 		context = getActivity().getApplicationContext();
-		
+
         return v;
     }
 
@@ -58,7 +58,7 @@ import java.text.NumberFormat;
         //this.context = thisFragView.getContext();
         this.context = getActivity().getApplicationContext();
         setupViews();
-        
+
     }
 
     @Override
@@ -79,16 +79,14 @@ import java.text.NumberFormat;
 		if(custDayCheck) {
             if(customDay != custDayCheck) updateDaySpinners(custDayCheck);
 		}
-		String provWage = prefs.getString("list_provWageNew", TaxManager.provinceNames[1]);
+		String provWage = prefs.getString("list_provWageNew",  TaxManager.Prov.AB.getName());
 		if(!provWage.equals(oldProvWage)){
             oldProvWage = provWage;
             setupViewsForProvince();
         }
 		pushBootan();
-		
-		
 	}
-	
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -144,9 +142,9 @@ import java.text.NumberFormat;
     private void setupViews(){
         if(taxManager == null){
             this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            String provName = prefs.getString("list_provWageNew", TaxManager.provinceNames[1]);
+            String provName = prefs.getString("list_provWageNew", TaxManager.Prov.AB.getName());
             this.taxManager = new TaxManager(provName);
-            TaxStatHolder statHolder = new TaxStatHolder(TaxManager.PROV_NB);  //int don't do nuttin yet.
+            TaxStatHolder statHolder = new TaxStatHolder(TaxManager.Prov.NB);
             Log.w("PaychequeFrag", statHolder.surName);
 			//new TaxManStat(provName);
         }
@@ -185,7 +183,7 @@ import java.text.NumberFormat;
         wedHol.setOnClickListener(this);
         thuHol.setOnClickListener(this);
         friHol.setOnClickListener(this);
-        
+
         sTimeText = (TextView) thisFragView.findViewById(R.id.sing_val);
         hTimeText = (TextView) thisFragView.findViewById(R.id.half_val);
         dTimeText = (TextView) thisFragView.findViewById(R.id.doub_val);
@@ -195,11 +193,11 @@ import java.text.NumberFormat;
         exemptVal = (TextView) thisFragView.findViewById(R.id.exempt_val);
         dedVal = (TextView) thisFragView.findViewById(R.id.deduct_val);
         netVal = (TextView) thisFragView.findViewById(R.id.net_val);
-        
+
         setupSpinners();
     }
-	
-	
+
+
 	private void setupSpinners() {
 		sunSpin = (Spinner) thisFragView.findViewById(R.id.sunSpin);
 		monSpin = (Spinner) thisFragView.findViewById(R.id.monSpin);
@@ -217,8 +215,8 @@ import java.text.NumberFormat;
         //If Custom Day is active then they are added to the spinners
 		updateDaySpinners(prefs.getBoolean("custom_daycheck", false));
 
-        ArrayAdapter<String> weekCount = new ArrayAdapter<String>(getActivity().getApplicationContext(), 
-                android.R.layout.simple_spinner_item, 
+        ArrayAdapter<String> weekCount = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+                android.R.layout.simple_spinner_item,
 				new String[]{"0","1","2","3","4","5","6","7"});
         loaSpin.setAdapter(weekCount);
         mealSpin.setAdapter(weekCount);
@@ -249,10 +247,10 @@ import java.text.NumberFormat;
             }
         });
     }
-	
+
 	private void updateDaySpinners(Boolean custDayCheck){
 		String[] workHrs;
-		
+
 		customDay = custDayCheck;
         verifyCustDays();
 		if(customDay) {
@@ -266,10 +264,10 @@ import java.text.NumberFormat;
 		ArrayAdapter<String> weekAd = new ArrayAdapter<String>(getActivity().getApplicationContext(),
 															   android.R.layout.simple_spinner_item, workHrs);
 		*/
-		
+
 		ArrayAdapter<String> weekAd = new ArrayAdapter<String>(getActivity().getApplicationContext(),
 			R.layout.spinner_layout, workHrs);
-		
+
 		monSpin.setAdapter(weekAd);
         tueSpin.setAdapter(weekAd);
         wedSpin.setAdapter(weekAd);
@@ -278,15 +276,15 @@ import java.text.NumberFormat;
         satSpin.setAdapter(weekAd);
         sunSpin.setAdapter(weekAd);
 	}
-	
+
 	private void setupViewsForProvince() {
-        oldProvWage = prefs.getString("list_provWageNew", TaxManager.provinceNames[1]);
+        oldProvWage = prefs.getString("list_provWageNew", TaxManager.Prov.AB.getName());
 
         if(!TaxManager.validatePrefs(prefs)){
             Log.e("PaychequeFragment", "Province or Year prefs were malformed... Resetting them");
             prefs.edit().clear().apply();
 
-            oldProvWage = TaxManager.provinceNames[TaxManager.PROV_AB]; //Best Province
+            oldProvWage = TaxManager.Prov.AB.getName(); //Best Province
 
             SharedPreferences.Editor prefEdit =  prefs.edit();
             prefEdit.putString("list_provWageNew", oldProvWage);
@@ -294,10 +292,10 @@ import java.text.NumberFormat;
                     TaxManager.yearStrings[TaxManager.yearStrings.length - 1]);
             prefEdit.apply();
         }
-        
+
 		this.vacRates = taxManager.getVacationRate(oldProvWage);
 		this.wageRates = taxManager.getWageRates(oldProvWage);
-		
+
 		String[] wageNames = taxManager.getWageNames(oldProvWage);
         ArrayAdapter<String> wageAdapt = new ArrayAdapter<String>(getActivity().getApplicationContext(),
                 android.R.layout.simple_spinner_item, wageNames);
@@ -315,7 +313,7 @@ import java.text.NumberFormat;
         prefs.edit().putString("payCalc_wageMealSpinners", builder.toString()).commit();
         //Log.w("PaychequeFragment", "wageMeaSpinner is: " + prefs.getString("payCalc_wageMealSpinners", "Failed"));
     }
-    
+
     private static final String[] custDayKeys = {"custom_a", "custom_b", "custom_c"};
     private static final String[] custDaySuffix = {"_straight", "_overtime", "_double"};
     private static final String[] custDayNames = {"Day A", "Day B", "Day C"};
@@ -332,7 +330,7 @@ import java.text.NumberFormat;
             }
 		}
 	}
-	
+
     //second value is fail check
 	private double[] parseDay(String testStr) {
         double[] strParse = {0d, 0d};
@@ -405,11 +403,11 @@ import java.text.NumberFormat;
 					splitArr = hrsSplit(Double.parseDouble(spinArr[i].getSelectedItem().toString()), dayTypeSet);
 				}
 				if(splitArr[0] + splitArr[1] + splitArr[2] > 0) dayCount++;
-				
+
 				timeSum[0] += splitArr[0];
 				timeSum[1] += splitArr[1];
 				timeSum[2] += splitArr[2];
-			}				
+			}
 		double grossPay = wageRate * (timeSum[0] + (1.5 * timeSum[1]) + (2 * timeSum[2]));
 
 		if(nightToggle.isChecked()) grossPay += (timeSum[0] + timeSum[1] + timeSum[2]) * 3;
@@ -425,7 +423,7 @@ import java.text.NumberFormat;
 				grossVac += weekTravel;
 			}
 		}
-		
+
 		if(dayTravelToggle.isChecked()) {
 			if(!prefs.getBoolean("taxable_daytravel", true)){
 				exempt += dayTravel * dayCount;
@@ -434,27 +432,27 @@ import java.text.NumberFormat;
 			}
 			//Toast.makeText(getActivity().getApplicationContext(), "banana", Toast.LENGTH_SHORT).show();
 		}
-		
+
 		if(prefs.getBoolean("taxable_meals", true)){
-			grossVac += mealCount * mealRate; 
+			grossVac += mealCount * mealRate;
 		} else {
 			exempt += mealCount * mealRate;
 		}
-		
+
 		double[] deductions = new double[]{0,0,0,0,0,0};  //[fed tax, prov tax, cpp, ei, working dues, monthly dues]
-		
+
 		String yearString = prefs.getString("list_taxYearNew", TaxManager.yearStrings[TaxManager.yearStrings.length-1]);
-		String provString = prefs.getString("list_provWageNew", TaxManager.provinceNames[1]);
-		
-		double[] taxReturns = taxManager.getTaxes(grossVac, yearString, provString);
-		
+		String provString = prefs.getString("list_provWageNew", TaxManager.Prov.AB.getName());
+
+		double[] taxReturns = taxManager.getTaxes((float)grossVac, yearString, provString);
+
 		boolean cppChecked = cppVal.isChecked();
 		if(taxVal.isChecked()){
 			deductions[0] = taxReturns[0];
 			deductions[1] = taxReturns[1];
 		}
 		//Log.w("paycheckFrag", String.format("Fed Tax is: %.2f, Prov tax is: %.2f", deductions[0], deductions[1]));
-		
+
 		if(cppChecked) {
 			deductions[2] = taxReturns[2];
 			deductions[3] = taxReturns[3];
@@ -462,14 +460,14 @@ import java.text.NumberFormat;
 		deductions[0] += addTax;
 		deductions[4] = duesVal.isChecked() ? calcDues(grossPay, workingDuesRate): 0;
 		deductions[5] = monthlyDuesVal.isChecked() ? monthlyDues : 0;
-		
+
 		double deductionsSum = 0;
 		for(double i: deductions) {
 			deductionsSum += i;
 		}
-		
+
 		double netPay = grossVac - deductionsSum + exempt;
-		
+
 		wageRateVal.setText("Wage: " + String.format("%.2f", wageRate) + "$");
 		vacationVal.setText(String.format("Vac\\Hol (%.2f%%): %.2f$", vacRate * 100d, grossVac - grossPay));
 		grossVal.setText("Gross: " + String.format("%.2f", grossVac + exempt) + "$");
@@ -482,7 +480,7 @@ import java.text.NumberFormat;
 		sTimeText.setText("1.0x: " + twoPrecision(timeSum[0]));
 		hTimeText.setText("1.5x: " + twoPrecision(timeSum[1]));
 		dTimeText.setText("2.0x: " + twoPrecision(timeSum[2]));
-		
+
 		if(addTax == 0) {
 			taxVal.setText("Tax: " + String.format("%.2f", deductions[0] + deductions[1]) + "$");
 		} else {
@@ -490,7 +488,7 @@ import java.text.NumberFormat;
 				String.format("%.2f", addTax) + "$");
 		}
 	}
-	
+
 	//unnecessary double
 	private double checkPrefDouble(String preferenceKey, double defaultVal, String toastName) {
 		double retVal;
@@ -511,13 +509,13 @@ import java.text.NumberFormat;
 		}
 		return retVal;
 	}
-	
+
 	void setPrefDefault(String prefKey, String defaultVal){
 		SharedPreferences.Editor prefEdit = prefs.edit();
 		prefEdit.putString(prefKey, defaultVal);
 		prefEdit.commit();
     }
-	
+
 	private void preSets(int index){
 		if(index == 0) {
         	sunSpin.setSelection(0, false);
@@ -540,17 +538,17 @@ import java.text.NumberFormat;
         	friSpin.setSelection(index, false);
         	satSpin.setSelection(index, false);
         	mealSpin.setSelection(0, false);
-        	loaSpin.setSelection(0, false);        	
+        	loaSpin.setSelection(0, false);
         }
         if(index == 3) {
         	mealSpin.setSelection(7, false);
         }
     }
-	
+
 	private double[] getCustomDayPrefs(String itemStr) {
         String prefName = "";
 		double[] retDoub = new double[custDaySuffix.length];
-		
+
 		if(itemStr.contains("A")) prefName = custDayKeys[0];
 		if(itemStr.contains("B")) prefName = custDayKeys[1];
 		if(itemStr.contains("C")) prefName = custDayKeys[2];
@@ -566,7 +564,7 @@ import java.text.NumberFormat;
 		return retDoub;
 	}
 
-	private double[] hrsSplit(double hrs, DayType day) { 
+	private double[] hrsSplit(double hrs, DayType day) {
 	//day 0 = 5-8s, 1 = 4-10s mon-thu, 2 = 4-10s fri, 3 = weekend
 		double sTime = 0;
 		double hTime = 0;
@@ -597,10 +595,10 @@ import java.text.NumberFormat;
 				dTime = hrs;
 				break;
 		}
-		return new double[]{sTime, hTime, dTime};	
+		return new double[]{sTime, hTime, dTime};
 	}
-	
-	private double calcDues(double grossNoVac, double duesRate) {		
+
+	private double calcDues(double grossNoVac, double duesRate) {
 		return grossNoVac * duesRate;
 	}
 

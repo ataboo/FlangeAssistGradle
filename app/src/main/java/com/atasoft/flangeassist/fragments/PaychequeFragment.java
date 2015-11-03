@@ -146,6 +146,8 @@ import java.text.NumberFormat;
             this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
             String provName = prefs.getString("list_provWageNew", TaxManager.provinceNames[1]);
             this.taxManager = new TaxManager(provName);
+            TaxStatHolder statHolder = new TaxStatHolder(TaxManager.PROV_NB);  //int don't do nuttin yet.
+            Log.w("PaychequeFrag", statHolder.surName);
 			//new TaxManStat(provName);
         }
 

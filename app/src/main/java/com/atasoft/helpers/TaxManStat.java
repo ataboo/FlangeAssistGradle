@@ -1,5 +1,7 @@
 package com.atasoft.helpers;
 
+//Forked from taxManager for possible JSON Integration
+
 
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -78,7 +80,7 @@ public class TaxManStat {
 		public double[] wageRates;
 		public String[] wageNames;
         public String surName;
-		public double defaultWageIndex;  //tacked on end of wageRates inplace of custom value
+		public double defaultWageIndex;  //tacked on end of wageRates in place of custom value
 		public double[] vacRate;
         public double[] claimAmount;
 

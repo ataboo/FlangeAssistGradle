@@ -5,7 +5,7 @@ Boilermaker Toolbox is a FREE reference tool designed to help Boilermakers in Ca
 Tell your jealous friends with IPhones about the JavaScript (cross-device) rewrite at
 http://atasoft.altervista.org
 
-###Main features so far (v0.25):
+###Main features so far (v0.27):
 - BMToolbox Reporter Launcher (Apprentice Reports)
 - Gross Tax Calculator
 - Rigging Calculator: finds load on slings, nylon sling table.
@@ -28,28 +28,33 @@ http://atasoft.altervista.org
 Feel free to send feedback or suggestions to bmtoolbox@gmail.com
 
 ###Changes:
+####V0.27 (04/03/15):
+- Updated wage rates
+- Started converting tax values to json
+
 ####V0.26b (04/03/15):
--Added NS, NB, PEI tax rates
--Added wages for each and Cape Breton
--Fixed vacation rate rounding
+- Added NS, NB, PEI tax rates
+- Added wages for each and Cape Breton
+- Fixed vacation rate rounding
 
 ####V0.26a beta (03/09/15):
--Custom Days rounding fix
+- Custom Days rounding fix
 
 ####V0.25 (03/05/15):
--Fixed crash caused by bad handling of invalid custom day setting
--Fixed custom wage
--Reorganized settings menu
--Converted most tax calculation to BigDecimal
--Fixed tax credit for wages that wouldn't max CPP/EI
+- Fixed crash caused by bad handling of invalid custom day setting
+- Fixed custom wage
+- Reorganized settings menu
+- Converted most tax calculation to BigDecimal
+- Fixed tax credit for wages that wouldn't max CPP/EI
 
 ####V0.24 (02/19/15):
--Fixed (hopefully) crash in Paycheque Calculator
--PayCalc will now wipe settings if province is invalid
+- Fixed (hopefully) crash in Paycheque Calculator
+- PayCalc will now wipe settings if province is invalid
 
 ####V0.23 (02/19/15):
+
 - Added BMToolbox Reporter launcher
-    - Generate Apprentice Report PDFs
+- Generate Apprentice Report PDFs
 - Added Manitoba wages and taxes
 - Added Gross Tax Calculator
 

@@ -24,8 +24,10 @@ public class MainActivity extends ActionBarActivity
 
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
+    public static MainActivity staticRef;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+        this.staticRef = this;
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 

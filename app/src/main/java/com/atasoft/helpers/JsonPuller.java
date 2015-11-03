@@ -2,6 +2,9 @@ package com.atasoft.helpers;
 
 import android.util.*;
 import android.view.*;
+
+import com.atasoft.flangeassist.MainActivity;
+
 import java.io.*;
 import java.util.*;
 import org.json.*;
@@ -180,10 +183,10 @@ public class JsonPuller
 		return retHash;
 	}
 		
-	private JSONObject loadJSON(String fileName) {
+	public static JSONObject loadJSON(String fileName) {
 		JSONObject jObj;
 		try {
-			InputStream inStr = pView.getContext().getAssets().open(fileName);
+			InputStream inStr = MainActivity.staticRef.getAssets().open(fileName);
 			int size = inStr.available();
 			byte[] buffer = new byte[size];
 			inStr.read(buffer);

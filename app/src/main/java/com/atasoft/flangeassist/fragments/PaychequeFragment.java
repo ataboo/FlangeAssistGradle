@@ -81,8 +81,8 @@ import java.text.NumberFormat;
 		}
 		String provWage = prefs.getString("list_provWageNew", TaxManager.provinceNames[1]);
 		if(!provWage.equals(oldProvWage)){
-            
-            setupWageSpinner(provWage);
+            oldProvWage = provWage;
+            setupViewsForProvince();
         }
 		pushBootan();
 		
@@ -139,6 +139,8 @@ import java.text.NumberFormat;
     private ToggleButton nightToggle;
     private ToggleButton travelToggle;
     private ToggleButton dayTravelToggle;
+
+
     private void setupViews(){
         if(taxManager == null){
             this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -150,10 +152,10 @@ import java.text.NumberFormat;
         Button bClr = (Button) thisFragView.findViewById(R.id.clr_but);
         Button bTens = (Button) thisFragView.findViewById(R.id.tens_but);
         Button bTwelves = (Button) thisFragView.findViewById(R.id.twelves_but);
-        ToggleButton bFour = (ToggleButton) thisFragView.findViewById(R.id.four_but);
-        ToggleButton bNight = (ToggleButton) thisFragView.findViewById(R.id.night_but);
-        ToggleButton bTravel = (ToggleButton) thisFragView.findViewById(R.id.travel_but);
-        ToggleButton bDayTravel = (ToggleButton) thisFragView.findViewById(R.id.travelday_but);
+        fourToggle = (ToggleButton) thisFragView.findViewById(R.id.four_but);
+        nightToggle = (ToggleButton) thisFragView.findViewById(R.id.night_but);
+        travelToggle = (ToggleButton) thisFragView.findViewById(R.id.travel_but);
+        dayTravelToggle = (ToggleButton) thisFragView.findViewById(R.id.travelday_but);
         taxVal = (CheckBox) thisFragView.findViewById(R.id.tax_val);
         cppVal = (CheckBox) thisFragView.findViewById(R.id.cpp_val);
         duesVal = (CheckBox) thisFragView.findViewById(R.id.dues_val);
@@ -168,10 +170,10 @@ import java.text.NumberFormat;
         bClr.setOnClickListener(this);
         bTens.setOnClickListener(this);
         bTwelves.setOnClickListener(this);
-        bFour.setOnClickListener(this);
-        bNight.setOnClickListener(this);
-        bTravel.setOnClickListener(this);
-        bDayTravel.setOnClickListener(this);
+        fourToggle.setOnClickListener(this);
+        nightToggle.setOnClickListener(this);
+        travelToggle.setOnClickListener(this);
+        dayTravelToggle.setOnClickListener(this);
         taxVal.setOnClickListener(this);
         cppVal.setOnClickListener(this);
         duesVal.setOnClickListener(this);
@@ -191,10 +193,6 @@ import java.text.NumberFormat;
         exemptVal = (TextView) thisFragView.findViewById(R.id.exempt_val);
         dedVal = (TextView) thisFragView.findViewById(R.id.deduct_val);
         netVal = (TextView) thisFragView.findViewById(R.id.net_val);
-        fourToggle = (ToggleButton) thisFragView.findViewById(R.id.four_but);
-        nightToggle = (ToggleButton) thisFragView.findViewById(R.id.night_but);
-        travelToggle = (ToggleButton) thisFragView.findViewById(R.id.travel_but);
-        dayTravelToggle = (ToggleButton) thisFragView.findViewById(R.id.travelday_but);
         
         setupSpinners();
     }
@@ -214,7 +212,8 @@ import java.text.NumberFormat;
 		wageSpin = (Spinner) thisFragView.findViewById(R.id.wageSpin);
 
 
-		updateDaySpinners(prefs.getBoolean("custom_daycheck",false));
+        //If Custom Day is active then they are added to the spinners
+		updateDaySpinners(prefs.getBoolean("custom_daycheck", false));
 
         ArrayAdapter<String> weekCount = new ArrayAdapter<String>(getActivity().getApplicationContext(), 
                 android.R.layout.simple_spinner_item, 
@@ -222,94 +221,32 @@ import java.text.NumberFormat;
         loaSpin.setAdapter(weekCount);
         mealSpin.setAdapter(weekCount);
 
-        oldProvWage = prefs.getString("list_provWageNew", TaxManager.provinceNames[1]);
-		setupWageSpinner(oldProvWage);
-		
-		sunSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-				public void onItemSelected(AdapterView<?> parent, View view,
-										   int pos, long id) {
-					pushBootan();
-				}
-				public void onNothingSelected(AdapterView<?> parent) {
-				}
-			});
-		monSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-				public void onItemSelected(AdapterView<?> parent, View view,
-										   int pos, long id) {
-					pushBootan();
-				}
-				public void onNothingSelected(AdapterView<?> parent) {
-				}
-			});
-		tueSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-				public void onItemSelected(AdapterView<?> parent, View view,
-										   int pos, long id) {
-					pushBootan();
-				}
-				public void onNothingSelected(AdapterView<?> parent) {
-				}
-			});
-		wedSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-				public void onItemSelected(AdapterView<?> parent, View view,
-										   int pos, long id) {
-					pushBootan();
-				}
-				public void onNothingSelected(AdapterView<?> parent) {
-				}
-			});
-		thuSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-				public void onItemSelected(AdapterView<?> parent, View view,
-										   int pos, long id) {
-					pushBootan();
-				}
-				public void onNothingSelected(AdapterView<?> parent) {
-				}
-			});
-		friSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-				public void onItemSelected(AdapterView<?> parent, View view,
-										   int pos, long id) {
-					pushBootan();
-				}
-				public void onNothingSelected(AdapterView<?> parent) {
-				}
-			});
-		satSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-				public void onItemSelected(AdapterView<?> parent, View view,
-										   int pos, long id) {
-					pushBootan();
-				}
-				public void onNothingSelected(AdapterView<?> parent) {
-				}
-			});
-		loaSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-				public void onItemSelected(AdapterView<?> parent, View view,
-										   int pos, long id) {
-					pushBootan();
-				}
-				public void onNothingSelected(AdapterView<?> parent) {
-				}
-			});
-		mealSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-				public void onItemSelected(AdapterView<?> parent, View view,
-										   int pos, long id) {
-					pushBootan();
-				}
-				public void onNothingSelected(AdapterView<?> parent) {
-				}
-			});
-		wageSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-				public void onItemSelected(AdapterView<?> parent, View view,
-										   int pos, long id) {
-					pushBootan();
-				}
-				public void onNothingSelected(AdapterView<?> parent) {
-				}
-			});
+		setupViewsForProvince();
 
-
+        addListenerToSpinner(monSpin);
+        addListenerToSpinner(tueSpin);
+        addListenerToSpinner(wedSpin);
+        addListenerToSpinner(thuSpin);
+        addListenerToSpinner(friSpin);
+        addListenerToSpinner(satSpin);
+        addListenerToSpinner(sunSpin);
+        addListenerToSpinner(loaSpin);
+        addListenerToSpinner(mealSpin);
+        addListenerToSpinner(wageSpin);
 
 		pushBootan();
 	}
+
+    private void addListenerToSpinner(Spinner spinner){
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                pushBootan();
+            }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
 	
 	private void updateDaySpinners(Boolean custDayCheck){
 		String[] workHrs;
@@ -340,17 +277,26 @@ import java.text.NumberFormat;
         sunSpin.setAdapter(weekAd);
 	}
 	
-	private void setupWageSpinner(String provWage) {
+	private void setupViewsForProvince() {
+        oldProvWage = prefs.getString("list_provWageNew", TaxManager.provinceNames[1]);
+
         if(!TaxManager.validatePrefs(prefs)){
             Log.e("PaychequeFragment", "Province or Year prefs were malformed... Resetting them");
-            prefs.edit().clear().commit();
-            provWage = TaxManager.provinceNames[TaxManager.PROV_AB]; //Best Province
+            prefs.edit().clear().apply();
+
+            oldProvWage = TaxManager.provinceNames[TaxManager.PROV_AB]; //Best Province
+
+            SharedPreferences.Editor prefEdit =  prefs.edit();
+            prefEdit.putString("list_provWageNew", oldProvWage);
+            prefEdit.putString("list_taxYearNew",
+                    TaxManager.yearStrings[TaxManager.yearStrings.length - 1]);
+            prefEdit.apply();
         }
         
-		this.vacRates = taxManager.getVacationRate(provWage);
-		this.wageRates = taxManager.getWageRates(provWage);
+		this.vacRates = taxManager.getVacationRate(oldProvWage);
+		this.wageRates = taxManager.getWageRates(oldProvWage);
 		
-		String[] wageNames = taxManager.getWageNames(provWage);
+		String[] wageNames = taxManager.getWageNames(oldProvWage);
         ArrayAdapter<String> wageAdapt = new ArrayAdapter<String>(getActivity().getApplicationContext(),
                 android.R.layout.simple_spinner_item, wageNames);
 
@@ -366,7 +312,6 @@ import java.text.NumberFormat;
         }
         prefs.edit().putString("payCalc_wageMealSpinners", builder.toString()).commit();
         //Log.w("PaychequeFragment", "wageMeaSpinner is: " + prefs.getString("payCalc_wageMealSpinners", "Failed"));
-        oldProvWage = provWage;
     }
     
     private static final String[] custDayKeys = {"custom_a", "custom_b", "custom_c"};
@@ -411,15 +356,17 @@ import java.text.NumberFormat;
 		int mealCount = Integer.parseInt(mealSpin.getSelectedItem().toString());
 		double wageRate;
 		boolean[] weekHolidays = {true, monHol.isChecked(), tueHol.isChecked(), wedHol.isChecked(),thuHol.isChecked(),friHol.isChecked(), true};  //sat and sun count as holidays
-		double addTax = checkPrefDoub("custom_addtax", "0", "Addtax Rate");
-		double mealRate = checkPrefDoub("custom_mealrate", "40", "Meal Rate");
-		double weekTravel = checkPrefDoub("custom_weektravel", "216", "Weekly Travel Rate");
-		double dayTravel = checkPrefDoub("custom_daytravel", "20", "Daily Travel");
-		double loaRate = checkPrefDoub("custom_loa", "195", "LOA Rate");
-		double monthlyDues = checkPrefDoub("custom_monthly_dues", "37.90", "Monthly Dues");
-		double workingDuesRate = checkPrefDoub("custom_working_dues", ".0375", "Working Dues");
+		double addTax = checkPrefDouble("custom_addtax", 0, "Addtax Rate");
+		double mealRate = checkPrefDouble("custom_mealrate", 40, "Meal Rate");
+		double weekTravel = checkPrefDouble("custom_weektravel", 216, "Weekly Travel Rate");
+		double dayTravel = checkPrefDouble("custom_daytravel", 20, "Daily Travel");
+		double loaRate = checkPrefDouble("custom_loa", 195, "LOA Rate");
+		double monthlyDues = checkPrefDouble("custom_monthly_dues", 37.90, "Monthly Dues");
+		double workingDuesRate = checkPrefDouble("custom_working_dues", .0375, "Working Dues");
+        double customVac = checkPrefDouble("custom_vac_rate", 10.5, "Custom Vac Rate") / 100f;
 
-        double vacRate = vacRates[0];
+        boolean vacIsCustom = prefs.getBoolean("custom_vac_check", false);
+        double vacRate = vacIsCustom ? customVac : vacRates[0];
 
 		if(wageSpin.getSelectedItem().toString().contains("Custom")) {
 		    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
@@ -429,7 +376,7 @@ import java.text.NumberFormat;
 		} else {
 			int selectedWageIndex = wageSpin.getSelectedItemPosition();
             wageRate = wageRates[selectedWageIndex];
-            if(vacRates.length == wageRates.length-1) {
+            if(!vacIsCustom && vacRates.length == wageRates.length-1) {
                 vacRate = vacRates[selectedWageIndex]; //Some provinces have graduated vacation rates
             }
 
@@ -543,21 +490,22 @@ import java.text.NumberFormat;
 	}
 	
 	//unnecessary double
-	private double checkPrefDoub(String prefKey, String defaultVal, String toastName) {
+	private double checkPrefDouble(String preferenceKey, double defaultVal, String toastName) {
 		double retVal;
-		String prefString = prefs.getString(prefKey, defaultVal);
+        String defaultString = Double.toString(defaultVal);
+		String prefString = prefs.getString(preferenceKey, defaultString);
 		try {
 			retVal = Double.parseDouble(prefString);
 		}
 		catch (NumberFormatException e) {
-			setPrefDefault(prefKey, defaultVal);
+			setPrefDefault(preferenceKey, defaultString);
 			Toast.makeText(context, toastName + " wasn't a number.", Toast.LENGTH_SHORT).show();
-			return Double.parseDouble(defaultVal);
+			return defaultVal;
 		}
 		if(retVal > 100000 || retVal < 0) {
-			setPrefDefault(prefKey, defaultVal);
+			setPrefDefault(preferenceKey, defaultString);
 			Toast.makeText(context, toastName + " was out of range.", Toast.LENGTH_SHORT).show();
-			return Double.parseDouble(defaultVal);
+			return defaultVal;
 		}
 		return retVal;
 	}

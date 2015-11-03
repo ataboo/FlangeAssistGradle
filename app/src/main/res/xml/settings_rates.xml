@@ -11,7 +11,7 @@
             android:title="Custom Wage" 
             android:summary="Set the rate of the custom wage."
             android:dialogTitle="Custom Wage"
-            android:dialogMessage="Enter a custom wage"  
+            android:dialogMessage="Enter a custom wage."
 			android:selectAllOnFocus="true"
             android:defaultValue="20" />
         <EditTextPreference
@@ -21,13 +21,13 @@
             android:title="Meal Bonus Rate"
             android:summary="Change the Meal Bonus rate."
             android:dialogTitle="Meal Bonus Rate"
-            android:dialogMessage="Set the Meal Bonus Rate"
+            android:dialogMessage="Set the Meal Bonus Rate."
             android:selectAllOnFocus="true"
             android:defaultValue="40" />
         <CheckBoxPreference
             android:key="taxable_meals"
             android:title="Meal Bonus Taxable"
-            android:summary="Set if Meal Bonus is Taxable"
+            android:summary="Set if Meal Bonus is taxable."
             android:defaultValue="true" />
         <EditTextPreference
             android:key="custom_loa"
@@ -39,6 +39,22 @@
             android:dialogMessage="Set the daily LOA rate."
             android:selectAllOnFocus="true"
             android:defaultValue="195" />
+        <CheckBoxPreference
+            android:key="custom_vac_check"
+            android:title="Custom Vacation Rate"
+            android:summary="Defaults to provincial rate when unchecked."
+            android:defaultValue="false" />
+        <EditTextPreference
+            android:key="custom_vac_rate"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:dependency="custom_vac_check"
+            android:title="Vacation Rate"
+            android:summary="Set a custom Vacation Rate."
+            android:dialogTitle="Custom Vacation Rate"
+            android:dialogMessage="Entering &quot;5.6&quot; counts as 5.6%."
+            android:selectAllOnFocus="true"
+            android:defaultValue="10.5" />
 	</PreferenceCategory>
     <PreferenceCategory
         android:title="Pay Calculator Travel Rates"
@@ -50,13 +66,13 @@
         android:title="Weekly Travel Rate"
         android:summary="Change the weekly travel rate."
         android:dialogTitle="Weekly Travel Rate"
-        android:dialogMessage="Set the Weekly Travel Rate"
+        android:dialogMessage="Set the Weekly Travel Rate."
         android:selectAllOnFocus="true"
         android:defaultValue="216" />
         <CheckBoxPreference
             android:key="taxable_weektravel"
             android:title="Weekly Travel Taxable"
-            android:summary="Set if Weekly travel is Taxable"
+            android:summary="Check if Weekly travel is Taxable"
             android:defaultValue="false" />
         <EditTextPreference
             android:key="custom_daytravel"
@@ -71,7 +87,7 @@
         <CheckBoxPreference
             android:key="taxable_daytravel"
             android:title="Daily Travel Taxable"
-            android:summary="Set if Daily travel is Taxable"
+            android:summary="Check if Daily travel is Taxable"
             android:defaultValue="true" />
     </PreferenceCategory>
 	<PreferenceCategory	

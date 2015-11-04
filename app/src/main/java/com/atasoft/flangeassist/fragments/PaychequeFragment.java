@@ -30,7 +30,6 @@ import java.text.NumberFormat;
 
 	public static final String NAME = "Paycheque Calculator";
 	private double[] wageRates;
-    private double[] vacRates;
     private View thisFragView;
 
 
@@ -144,9 +143,6 @@ import java.text.NumberFormat;
             this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
             String provName = prefs.getString("list_provWageNew", TaxManager.Prov.AB.getName());
             this.taxManager = new TaxManager(provName);
-            TaxStatHolder statHolder = new TaxStatHolder(TaxManager.Prov.NB);
-            Log.w("PaychequeFrag", statHolder.surName);
-			//new TaxManStat(provName);
         }
 
         Button bClr = (Button) thisFragView.findViewById(R.id.clr_but);
@@ -292,9 +288,7 @@ import java.text.NumberFormat;
                     TaxManager.yearStrings[TaxManager.yearStrings.length - 1]);
             prefEdit.apply();
         }
-
-		this.vacRates = taxManager.getVacationRate(oldProvWage);
-		this.wageRates = taxManager.getWageRates(oldProvWage);
+		this.wageRates = floatToDoubArr(taxManager.getWageRates(oldProvWage));
 
 		String[] wageNames = taxManager.getWageNames(oldProvWage);
         ArrayAdapter<String> wageAdapt = new ArrayAdapter<String>(getActivity().getApplicationContext(),
@@ -352,99 +346,97 @@ import java.text.NumberFormat;
 
 		double timeSum[] = {0,0,0};
 
-		int loaCount = Integer.parseInt(loaSpin.getSelectedItem().toString());
-		int mealCount = Integer.parseInt(mealSpin.getSelectedItem().toString());
-		double wageRate;
-		boolean[] weekHolidays = {true, monHol.isChecked(), tueHol.isChecked(), wedHol.isChecked(),thuHol.isChecked(),friHol.isChecked(), true};  //sat and sun count as holidays
-		double addTax = checkPrefDouble("custom_addtax", 0, "Addtax Rate");
-		double mealRate = checkPrefDouble("custom_mealrate", 40, "Meal Rate");
-		double weekTravel = checkPrefDouble("custom_weektravel", 216, "Weekly Travel Rate");
-		double dayTravel = checkPrefDouble("custom_daytravel", 20, "Daily Travel");
-		double loaRate = checkPrefDouble("custom_loa", 195, "LOA Rate");
-		double monthlyDues = checkPrefDouble("custom_monthly_dues", 37.90, "Monthly Dues");
-		double workingDuesRate = checkPrefDouble("custom_working_dues", .0375, "Working Dues");
+        int loaCount = Integer.parseInt(loaSpin.getSelectedItem().toString());
+        int mealCount = Integer.parseInt(mealSpin.getSelectedItem().toString());
+        double wageRate;
+        boolean[] weekHolidays = {true, monHol.isChecked(), tueHol.isChecked(), wedHol.isChecked(),thuHol.isChecked(),friHol.isChecked(), true};  //sat and sun count as holidays
+        double addTax = checkPrefDouble("custom_addtax", 0, "Addtax Rate");
+        double mealRate = checkPrefDouble("custom_mealrate", 40, "Meal Rate");
+        double weekTravel = checkPrefDouble("custom_weektravel", 216, "Weekly Travel Rate");
+        double dayTravel = checkPrefDouble("custom_daytravel", 20, "Daily Travel");
+        double loaRate = checkPrefDouble("custom_loa", 195, "LOA Rate");
+        double monthlyDues = checkPrefDouble("custom_monthly_dues", 37.90, "Monthly Dues");
+        double workingDuesRate = checkPrefDouble("custom_working_dues", .0375, "Working Dues");
+        String yearString = prefs.getString("list_taxYearNew", TaxManager.yearStrings[TaxManager.yearStrings.length-1]);
+        String provString = prefs.getString("list_provWageNew", TaxManager.Prov.AB.getName());
+
         double customVac = checkPrefDouble("custom_vac_rate", 10.5, "Custom Vac Rate") / 100f;
-
         boolean vacIsCustom = prefs.getBoolean("custom_vac_check", false);
-        double vacRate = vacIsCustom ? customVac : vacRates[0];
+        double vacRate = vacIsCustom ? customVac : taxManager.getVacationRate(provString);
 
-		if(wageSpin.getSelectedItem().toString().contains("Custom")) {
-		    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        if(wageSpin.getSelectedItem().toString().contains("Custom")) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
             float wageFloat = AtaMathUtils.bracketFloat(prefs.getString("custom_wage", "20"), 0f, 1000000000f);
-			wageRate = (double) wageFloat;
-		} else {
-			int selectedWageIndex = wageSpin.getSelectedItemPosition();
+            wageRate = (double) wageFloat;
+        } else {
+            int selectedWageIndex = wageSpin.getSelectedItemPosition();
             wageRate = wageRates[selectedWageIndex];
-            if(!vacIsCustom && vacRates.length == wageRates.length-1) {
-                vacRate = vacRates[selectedWageIndex]; //Some provinces have graduated vacation rates
+        }
+        int dayCount = 0;
+        Spinner[] spinArr = {sunSpin, monSpin, tueSpin, wedSpin, thuSpin, friSpin, satSpin};
+        for (int i = 0; i < spinArr.length; i++) {
+                String itemStr = (spinArr[i].getSelectedItem().toString());
+                if(itemStr.contains("A") || itemStr.contains("B") || itemStr.contains("C")){
+                    splitArr = getCustomDayPrefs(itemStr);
+                } else {
+                    DayType dayTypeSet;
+                    Boolean weekEnd = weekHolidays[i];
+                    if(fourTens) {
+                        if(i == 5) { //fourtens friday
+                            dayTypeSet = DayType.FOUR_FRI;
+                        } else {
+                            dayTypeSet = DayType.FOUR_WEEK;
+                        }
+                    } else {
+                        dayTypeSet = DayType.FIVE_WEEK;
+                    }
+                    if(weekEnd) dayTypeSet = DayType.FIVE_END;  //works for fourtens too
+                    splitArr = hrsSplit(Double.parseDouble(spinArr[i].getSelectedItem().toString()), dayTypeSet);
+                }
+                if(splitArr[0] + splitArr[1] + splitArr[2] > 0) dayCount++;
+
+                timeSum[0] += splitArr[0];
+                timeSum[1] += splitArr[1];
+                timeSum[2] += splitArr[2];
             }
+        double grossPay = wageRate * (timeSum[0] + (1.5 * timeSum[1]) + (2 * timeSum[2]));
 
-		}
-		int dayCount = 0;
-		Spinner[] spinArr = {sunSpin, monSpin, tueSpin, wedSpin, thuSpin, friSpin, satSpin};
-			for (int i = 0; i < spinArr.length; i++) {
-				String itemStr = (spinArr[i].getSelectedItem().toString());
-				if(itemStr.contains("A") || itemStr.contains("B") || itemStr.contains("C")){
-					splitArr = getCustomDayPrefs(itemStr);
-				} else {
-					DayType dayTypeSet;
-					Boolean weekEnd = weekHolidays[i];
-					if(fourTens) {
-						if(i == 5) { //fourtens friday
-							dayTypeSet = DayType.FOUR_FRI;
-						} else {
-							dayTypeSet = DayType.FOUR_WEEK;
-						}
-					} else {
-						dayTypeSet = DayType.FIVE_WEEK;
-					}
-					if(weekEnd) dayTypeSet = DayType.FIVE_END;  //works for fourtens too
-					splitArr = hrsSplit(Double.parseDouble(spinArr[i].getSelectedItem().toString()), dayTypeSet);
-				}
-				if(splitArr[0] + splitArr[1] + splitArr[2] > 0) dayCount++;
-
-				timeSum[0] += splitArr[0];
-				timeSum[1] += splitArr[1];
-				timeSum[2] += splitArr[2];
-			}
-		double grossPay = wageRate * (timeSum[0] + (1.5 * timeSum[1]) + (2 * timeSum[2]));
-
-		if(nightToggle.isChecked()) grossPay += (timeSum[0] + timeSum[1] + timeSum[2]) * 3;
+        if(nightToggle.isChecked()) grossPay += (timeSum[0] + timeSum[1] + timeSum[2]) * 3;
 
 
 
-		double grossVac = grossPay * (vacRate + 1);
-		double exempt = loaCount * loaRate;
-		if(travelToggle.isChecked()) {
-			if(!prefs.getBoolean("taxable_weektravel", false)){
-				exempt += weekTravel;
-			} else {
-				grossVac += weekTravel;
-			}
-		}
+        double grossVac = grossPay * (vacRate + 1);
+        double exempt = loaCount * loaRate;
+        if(travelToggle.isChecked()) {
+            if(!prefs.getBoolean("taxable_weektravel", false)){
+                exempt += weekTravel;
+            } else {
+                grossVac += weekTravel;
+            }
+        }
 
-		if(dayTravelToggle.isChecked()) {
-			if(!prefs.getBoolean("taxable_daytravel", true)){
-				exempt += dayTravel * dayCount;
-			} else {
-				grossVac += dayTravel * dayCount;
-			}
-			//Toast.makeText(getActivity().getApplicationContext(), "banana", Toast.LENGTH_SHORT).show();
-		}
+        if(dayTravelToggle.isChecked()) {
+            if(!prefs.getBoolean("taxable_daytravel", true)){
+                exempt += dayTravel * dayCount;
+            } else {
+                grossVac += dayTravel * dayCount;
+            }
+            //Toast.makeText(getActivity().getApplicationContext(), "banana", Toast.LENGTH_SHORT).show();
+        }
 
-		if(prefs.getBoolean("taxable_meals", true)){
-			grossVac += mealCount * mealRate;
-		} else {
-			exempt += mealCount * mealRate;
-		}
+        if(prefs.getBoolean("taxable_meals", true)){
+            grossVac += mealCount * mealRate;
+        } else {
+            exempt += mealCount * mealRate;
+        }
 
-		double[] deductions = new double[]{0,0,0,0,0,0};  //[fed tax, prov tax, cpp, ei, working dues, monthly dues]
+        double[] deductions = new double[]{0,0,0,0,0,0};  //[fed tax, prov tax, cpp, ei, working dues, monthly dues]
 
-		String yearString = prefs.getString("list_taxYearNew", TaxManager.yearStrings[TaxManager.yearStrings.length-1]);
-		String provString = prefs.getString("list_provWageNew", TaxManager.Prov.AB.getName());
 
-		double[] taxReturns = taxManager.getTaxes((float)grossVac, yearString, provString);
+
+
+		double[] taxReturns = floatToDoubArr(taxManager.getTaxes((float)grossVac, yearString, provString));
 
 		boolean cppChecked = cppVal.isChecked();
 		if(taxVal.isChecked()){
@@ -666,5 +658,14 @@ import java.text.NumberFormat;
     public static String twoPrecision (double d){
         NumberFormat nf = new DecimalFormat("###.##");
         return nf.format(d);
+    }
+
+    public static double[] floatToDoubArr(float[] fArr){
+        double[] retArr = new double[fArr.length];
+
+        for(int i=0; i<fArr.length; i++){
+            retArr[i] = (double) fArr[i];
+        }
+        return retArr;
     }
 }

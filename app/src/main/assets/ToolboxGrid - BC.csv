@@ -1,0 +1,33 @@
+,Classification,Wage,,
+#wages,GF,48.47,,
+#wages,Foreperson,46.42,,
+#wages,Journeyperson,41.08,,
+#wages,6th Year App,36.97,,
+#wages,5th Year App,34.1,,
+#wages,4th Year App,32.04,,
+#wages,3rd Year App,29.99,,
+#wages,2nd Year App,27.94,,
+#wages,1st Year App,25.88,,
+#wages,Pre-Apprentice,22.6,,
+,,,,
+#vac_rate,0.12,,,
+,,,,
+,,,,
+,,,,
+#brackets,0,38954,77908,126662
+#brackets,0,39305,78609,127802
+#brackets,0,39973,79946,129975
+,,,,
+#rates,0.091,0.121,0.124,0.143
+#rates,0.0968,0.1482,0.1652,0.1784
+#rates,0.0968,0.1482,0.1652,0.1784
+,,,,
+#const_k,0,1169,1402,3809
+#const_k,0,2020,3357,5044
+#const_k,0,2055,3414,5129
+,,,,
+#tax_red,18181,409,0.032,
+#tax_red,18200,409,0.032,
+#tax_red,18327,412,0.032,
+,,,,
+#claim_amount,9388,9472,9633,

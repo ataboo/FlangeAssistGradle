@@ -86,7 +86,7 @@ public class TaxGrossFragment extends Fragment implements OnClickListener {
 
         submitButton.setOnClickListener(this);
         //===================================Populate Spinners=====================================
-        String[] resProv = TaxManager.getActiveProvinceStrings();
+        String[] resProv = TaxManager.Prov.getActiveProvinceNames();
         String[] provArr = new String[resProv.length +1];
         provArr[0] = noProvinceName;
 
@@ -101,7 +101,7 @@ public class TaxGrossFragment extends Fragment implements OnClickListener {
     }
 
     private void goSubmit(){
-        Double weekGross;
+        double weekGross;
         String provName;
         String yearName;
         //===================================Get Inputs=============================================
@@ -117,11 +117,14 @@ public class TaxGrossFragment extends Fragment implements OnClickListener {
             yearName = "";
         }
         //=====================================Calc Taxes===========================================
+        provName = provName.equals(noProvinceName) ? TaxManager.Prov.FED.getName(): provName;
+
         if(taxMan == null){
             taxMan = new TaxManager(provName);
         }
 
-        double[] taxVals = taxMan.getTaxes(weekGross, yearName, provName);
+        double[] taxVals = PaychequeFragment.
+                floatToDoubArr(taxMan.getTaxes((float) weekGross, yearName, provName));
         double taxSum = 0d;
         for(double d: taxVals) taxSum+=d;
 
@@ -149,6 +152,6 @@ public class TaxGrossFragment extends Fragment implements OnClickListener {
             prefEdit.putString("tax_weekGross", grossEdit.getText().toString());
             prefEdit.putInt("tax_yearIndex", taxYearSpinner.getSelectedItemPosition());
             prefEdit.putInt("tax_provIndex", provSpinner.getSelectedItemPosition());
-        prefEdit.commit();
+        prefEdit.apply();
     }
 }

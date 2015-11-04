@@ -9,39 +9,43 @@ import java.util.ArrayList;
 
 //----Tax Manager holds tax and wage values by province and year---------
 public class TaxManager {
+
+    //Display name, surname, is usable to calc, index
     public enum Prov {
-        BC ("British Columbia", true, 0),
-        AB ("Alberta", true, 1),
-        SK ("Saskatchewan", false, 2),
-        MB ("Manitoba", true, 3),
-        ON ("Ontario", true, 4),
-        QC ("Quebec", false, 5),
-        NB ("New Brunswick", true, 6),
-        NS ("Nova Scotia", true, 7),
-        CB ("Cape Breton", true, 8),
-        PE ("Prince Edward Island", true, 9),
-        NL ("Newfoundland", false, 10),
-        FED ("Federal", false, 11);
+        BC ("British Columbia", "BC - ", true, 0),
+        AB ("Alberta", "AB - ", true, 1),
+        SK ("Saskatchewan", "SK - ", false, 2),
+        MB ("Manitoba", "MB - ", true, 3),
+        ON ("Ontario", "ON - ", true, 4),
+        QC ("Quebec", "QC - ", false, 5),
+        NB ("New Brunswick", "NB - ", true, 6),
+        NS ("Nova Scotia", "NS - ", true, 7),
+        CB ("Cape Breton", "CB - ", true, 8),
+        PE ("Prince Edward Island", "PE - ", true, 9),
+        NL ("Newfoundland", "NL - ", false, 10),
+        FED ("Federal", "FED - ", false, 11);
 
         private String displayName;
         private boolean isActive;
         private int index;
-        Prov(String name, boolean active, int index){
+        private String surname;
+        Prov(String name, String surName, boolean active, int index){
             this.displayName = name;
             this.isActive = active;
             this.index = index;
+            this.surname = surName;
         }
 
-        public String getName(){
-            return displayName;
-        }
+        public String getName(){return displayName;}
 
         public int getIndex(){
             return index;
         }
 
-        public String[] getProvinceNames(){
-            ArrayList<String> nameList = new ArrayList<String>();
+        public String getSurname(){return surname;}
+
+        public static String[] getActiveProvinceNames(){
+            ArrayList<String> nameList = new ArrayList<>();
             for(Prov p: Prov.values()){
                 if(p.isActive)
                     nameList.add(p.displayName);
@@ -51,58 +55,50 @@ public class TaxManager {
             return retArr;
         }
     }
+    public enum TaxYear {
+        TY_2013 ("2013", 0),
+        TY_2014 ("2014", 1),
+        TY_2015 ("2015", 2);
 
-    //TODO: Convert to Enum
-    public static final String[] yearStrings = {"2013", "2014", "2015"};
+        private String name;
+        private int index;
+
+        TaxYear(String name, int index){
+            this.name = name;
+            this.index = index;
+        }
+
+        public String getName(){
+            return name;
+        }
+
+        public int getIndex(){
+            return index;
+        }
+
+        public static String[] getYearStrings(){
+            TaxYear[] values = TaxYear.values();
+            String[] yearStrings = new String[values.length];
+
+            for(int i=0; i<values.length; i++){
+                yearStrings[i] = values[i].getName();
+            }
+
+            return yearStrings;
+        }
+    }
+
+    private TaxStatHolder fedStats = new TaxStatHolder(Prov.FED);
+    private TaxStatHolder provStats;
+
+    public static final String[] yearStrings = TaxYear.getYearStrings();
 
     private static final int bdPrecision = 5;
     private static final int bdRounding = BigDecimal.ROUND_HALF_EVEN;
 
-
-
-
-
     public TaxManager(String provName) {
         getStatType(getProvEnumFromName(provName));
     }
-
-    /*
-    private void lightStatValidation() {
-        for(int provInt: activeProvinces) {
-            TaxStatHolder provStats = new TaxStatHolder((provInt));
-            Log.w("TaxManager", "Validating " + provinceNames[provInt]);
-
-            int yearCount = yearStrings.length;
-            if(provStats.claimAmount != null) {
-                if (provStats.claimAmount.length != yearCount) {
-                    throw new RuntimeException("TaxStatHolderError: claimAmount array length mismatch in " + provinceNames[provInt]);
-                }
-            }
-
-
-            for(int i = 0; i<yearCount; i++) {
-                 if(provStats.brackets != null) {
-                     if (provStats.brackets[i].length != provStats.rates[i].length ||
-                             provStats.brackets[i].length != provStats.constK[i].length) {
-                         throw new RuntimeException(String.format(
-                                 "TaxStatHolderError: Bracket/Rate/ConstK array length mismatch in %s", provinceNames[provInt]));
-                     }
-                 }
-                 if(provStats.wageRates != null) {
-                    if(provStats.wageRates.length != provStats.wageNames.length) {
-                        throw new RuntimeException(String.format(
-                                "TaxStatHolderError: wageRates/wageNames array length mismatch in %s", provinceNames[provInt]));
-                    }
-                    if(provStats.vacRate.length != 1 && provStats.vacRate.length != provStats.wageRates.length){
-                        throw new RuntimeException("TaxStatHolderError: vacRate should have a length of 1 or wageRates.length in " + provinceNames[provInt]);
-                    }
-                 }
-
-            }
-        }
-
-    }
-    */
 
 	public String[] getWageNames(String province) {
 		TaxStatHolder stats = getStatType(province);
@@ -119,7 +115,9 @@ public class TaxManager {
 	}
 
 	public float[] getWageRates(String province){
-        TaxStatHolder activeRate = getStatType(province);  //returns ex: bcStats
+        TaxStatHolder activeRate = getStatType(province);
+
+        //Log.w("TaxManager", String.format("getting wage rate for: %s.", province));
 
         float[] wageRates = activeRate.wageRates;
         float custVal = activeRate.defaultWageIndex;
@@ -129,11 +127,6 @@ public class TaxManager {
        // Log.w("TaxManager", "Packaged " + custVal + " as custVal");
 		return retDoub;
 	}
-
-    public String[] getActiveProvinceStrings(){
-        return Prov.FED.getProvinceNames();
-    }
-
 
 	//Returns [fed, prov, cpp, ei]
 	public float[] getTaxes(float gross, int year, Prov prov) {
@@ -159,10 +152,10 @@ public class TaxManager {
                 provTax = getNBTax(anGrossDec, year);
                 break;
             case NS:
-                provTax = getNSTax(anGrossDec, year);
+                provTax = getNSTax(anGrossDec, year, false);
                 break;
             case CB:
-                provTax = getNSTax(anGrossDec, year);
+                provTax = getNSTax(anGrossDec, year, true);
                 break;
             case PE:
                 provTax = getPEITax(anGrossDec, year);
@@ -181,11 +174,11 @@ public class TaxManager {
         if(provTax.compareTo(BigDecimal.ZERO) < 0) provTax = BigDecimal.ZERO;
 
         float fedTax = fedTaxDec.divide(fiftyTwo, 2, bdRounding).floatValue();
-        float provTaxDoub = provTax.divide(fiftyTwo, 2, bdRounding).floatValue();
-        float cppDoub = cppEiDec[0].divide(fiftyTwo, 2, bdRounding).floatValue();
-        float eiDoub = cppEiDec[1].divide(fiftyTwo, 2, bdRounding).floatValue();
+        float provTaxFl = provTax.divide(fiftyTwo, 2, bdRounding).floatValue();
+        float cppFl = cppEiDec[0].divide(fiftyTwo, 2, bdRounding).floatValue();
+        float eiFl = cppEiDec[1].divide(fiftyTwo, 2, bdRounding).floatValue();
 
-        return new float[]{fedTax, provTaxDoub, cppDoub, eiDoub};
+        return new float[]{fedTax, provTaxFl, cppFl, eiFl};
 	}
 
     public float[] getTaxes(float gross, String year, String province){
@@ -194,10 +187,10 @@ public class TaxManager {
                 getProvEnumFromName(province));
     }
 
-    public float[] getVacationRate(String province){
+    public float getVacationRate(String province){
         TaxStatHolder stats = getStatType(province);
 
-        return stats.vacRates;
+        return stats.vacRate;
     }
 
 	private BigDecimal[] getCppEi(BigDecimal anGross, int year){
@@ -227,8 +220,11 @@ public class TaxManager {
     }
 
 	private  BigDecimal getBCTax(BigDecimal anGrossDec, int year){
-		TaxStatHolder bcStats = getStatType(PROV_BC);
-
+		TaxStatHolder bcStats = getStatType(Prov.BC);
+        if(bcStats == null){
+            Log.e("TaxManager", "Failed to get bcStats, received null.");
+            return BigDecimal.ZERO;
+        }
         BigDecimal taxDec = getStandardProvincialTax(anGrossDec, year, bcStats);
 
         //BC Tax Reduction
@@ -241,15 +237,18 @@ public class TaxManager {
     }
 
 	private BigDecimal getABTax(BigDecimal anGross, int year){
-        TaxStatHolder abStats = getStatType(PROV_AB);
-
+        TaxStatHolder abStats = getStatType(Prov.AB);
+        if(abStats == null){
+            Log.e("TaxManager", "Failed to get abStats, received null.");
+            return BigDecimal.ZERO;
+        }
         BigDecimal taxDec =  anGross.multiply(BigDecimal.valueOf(abStats.rates[year][0]))
                 .subtract(getTaxCredit(abStats, anGross, year));
         return taxDec;
 	}
 
 	private BigDecimal getONTax(BigDecimal anGrossDec, int year){
-        TaxStatHolder onStats = getStatType(PROV_ON);
+        TaxStatHolder onStats = getStatType(Prov.ON);
 
         float anGross = anGrossDec.floatValue();
         float[] bracket = onStats.brackets[year];
@@ -293,7 +292,7 @@ public class TaxManager {
 		float[] healthBracket = onStats.healthPrem[0];
 		float[] healthRate = onStats.healthPrem[1];
 		float[] healthConst = onStats.healthPrem[2];
-		float rateAmount = 0d;
+		float rateAmount = 0f;
 		if(anGross > healthBracket[0]) {
 			int healthIndex = anGross < healthBracket[1] ? 0:
 				(anGross < healthBracket[2] ? 1:
@@ -313,24 +312,26 @@ public class TaxManager {
 	}
 
     private BigDecimal getNBTax(BigDecimal anGrossDec, int year) {
-        return getStandardProvincialTax(anGrossDec, year, getStatType(PROV_NB));
+        return getStandardProvincialTax(anGrossDec, year, getStatType(Prov.NB));
     }
 
     private BigDecimal getMBTax(BigDecimal anGrossDec, int year){
-        return getStandardProvincialTax(anGrossDec, year, getStatType(PROV_MB));
+        return getStandardProvincialTax(anGrossDec, year, getStatType(Prov.MB));
     }
 
-    private BigDecimal getNSTax(BigDecimal anGrossDec, int year) {
-        return getStandardProvincialTax(anGrossDec, year, getStatType(PROV_NS));
+    private BigDecimal getNSTax(BigDecimal anGrossDec, int year, boolean cbFlag) {
+        //So it doesn't have to jump between stat types
+        TaxStatHolder provStats = cbFlag ? getStatType(Prov.CB): getStatType(Prov.NS);
+        return getStandardProvincialTax(anGrossDec, year, provStats);
     }
 
     private BigDecimal getPEITax(BigDecimal anGrossDec, int year) {
-        TaxStatHolder peStats = getStatType(PROV_PE);
+        TaxStatHolder peStats = getStatType(Prov.PE);
         BigDecimal taxDec = getStandardProvincialTax(anGrossDec, year, peStats);
 
         //Surtax adds additional 10% to provtax over 12500
         float[] surtaxVals = peStats.surtax[year]; //[cap (12500), rate (0.10)]
-        if(taxDec.compareTo(BigDecimal.ZERO.valueOf(surtaxVals[0])) > 0) {
+        if(taxDec.compareTo(BigDecimal.valueOf(surtaxVals[0])) > 0) {
             BigDecimal surDec = taxDec.subtract(BigDecimal.valueOf(surtaxVals[0]));
             surDec = surDec.multiply(BigDecimal.valueOf(surtaxVals[1]));
             taxDec = taxDec.add(surDec);
@@ -351,7 +352,7 @@ public class TaxManager {
 
 
     private static int bracketGrossIndex(float gross, float[] brackets){
-        gross = gross < 0 ? 0d: gross; //you never know
+        gross = gross < 0 ? 0f: gross; //you never know
 
         for(int i=brackets.length - 1; i>0;i--){
             if(gross > brackets[i]){
@@ -363,54 +364,19 @@ public class TaxManager {
         return 0; //if gross is 0
     }
 
-    private TaxStatHolder fedStats = new TaxStatHolder(Prov.FED);
-    private TaxStatHolder bcHoldStats;
-    private TaxStatHolder abHoldStats;
-    private TaxStatHolder mbHoldStats;
-    private TaxStatHolder onHoldStats;
-    private TaxStatHolder nbHoldStats;
-    private TaxStatHolder nsHoldStats;
-    private TaxStatHolder cbHoldStats;
-    private TaxStatHolder peHoldStats;
+
     private TaxStatHolder getStatType(Prov prov){
-        switch(prov){
-            case BC:
-                bcHoldStats = (bcHoldStats == null) ? new TaxStatHolder(prov) : bcHoldStats;
-                return bcHoldStats;
-            case AB:
-                abHoldStats = (abHoldStats == null) ? new TaxStatHolder(prov) : abHoldStats;
-                return abHoldStats;
-            case ON:
-                onHoldStats = (onHoldStats == null) ? new TaxStatHolder(prov) : onHoldStats;
-                return onHoldStats;
-            case MB:
-                mbHoldStats = (mbHoldStats == null) ? new TaxStatHolder(prov) : mbHoldStats;
-                return mbHoldStats;
-            case NB:
-                nbHoldStats = (nbHoldStats == null) ? new TaxStatHolder(prov) : nbHoldStats;
-                return nbHoldStats;
-            case NS:
-                nsHoldStats = (nsHoldStats == null) ? new TaxStatHolder(prov) : nsHoldStats;
-                return nsHoldStats;
-            case CB:
-                cbHoldStats = (cbHoldStats == null) ? new TaxStatHolder(prov) : cbHoldStats;
-                return cbHoldStats;
-            case PE:
-                peHoldStats = (peHoldStats == null) ? new TaxStatHolder(prov) : peHoldStats;
-                return peHoldStats;
-            default:
-                return null;
+        if(provStats == null){
+            provStats = new TaxStatHolder(prov);
+        } else{
+            if(provStats.prov != prov)
+                provStats = new TaxStatHolder(prov);
         }
+        return provStats;
     }
 
     private TaxStatHolder getStatType(String province){
-        TaxStatHolder provinceStats = getStatType(getProvEnumFromName(province));
-        if(provinceStats == null){
-            Log.e("TaxManager", "getStatType received invalid province string.  Returned default AB.");
-            return getStatType(Prov.AB);
-        }
-        
-        return provinceStats;
+        return getStatType(getProvEnumFromName(province));
     }
 
     public static int getYearIndexFromName(String yearName){
@@ -424,20 +390,28 @@ public class TaxManager {
         for(Prov prov: Prov.values()){
             if(provName.equals(prov.getName())) return prov;
         }
-        Log.e("TaxManager", "Couldn't find province matching: "+ provName);
-        return null;
+        Log.e("TaxManager", "Couldn't find province matching: "+ provName + " returned Fed.");
+        return Prov.FED;
     }
     
     public static boolean validatePrefs(SharedPreferences prefs){
+        String[] activeProvinces = Prov.getActiveProvinceNames();
         boolean provFlag = false;
         boolean yearFlag = false;
         String provWage = prefs.getString("list_provWageNew", "fail");
         String year = prefs.getString("list_taxYearNew", "fail");
+
+        /*
         for(int i=0; i<activeProvinces.length; i++){
-            if(provWage.equals(provinceNames[activeProvinces[i]])) provFlag = true;
+            if(provWage.equals(activeProvinces[i])) provFlag = true;
         }
-        for(int i=0; i<yearStrings.length; i++){
-            if(year.equals(yearStrings[i])) yearFlag = true;
+        */
+
+        for(String provString: activeProvinces){
+            if(provWage.equals(provString)) provFlag = true;
+        }
+        for(String yearString: yearStrings){
+            if(year.equals(yearString)) yearFlag = true;
         }
         if(!provFlag) Log.e("TaxManager", "SharedPreference list_provWageNew was malformed as: " + provWage);
         if(!yearFlag) Log.e("TaxManager", "SharedPreference list_taxYearNew was malformed as: " + year);
@@ -451,11 +425,14 @@ public class TaxManager {
         BigDecimal[] cppEiDec = getCppEi(anGross, year);
 
         //Log.w("TaxManager", "Cpp before is: " + cppEiDec[0].toString() + " EI before is: " + cppEiDec[1].toString());
-        for(int i=0; i<cppEiDec.length; i++) {
-            if (cppEiDec[i].compareTo(BigDecimal.valueOf(cppEi[year][i + 3])) > 0) {
-                cppEiDec[i] = BigDecimal.valueOf(cppEi[year][i+3]);
-            }
-        }
+
+        //cap cpp component at max contribution
+        cppEiDec[0] = (cppEiDec[0].compareTo(BigDecimal.valueOf(fedStats.cppEi[year][3])) > 0) ?
+            BigDecimal.valueOf(fedStats.cppEi[year][3]) : cppEiDec[0];
+        //cap ei component at max contribution
+        cppEiDec[1] = (cppEiDec[1].compareTo(BigDecimal.valueOf(fedStats.cppEi[year][4])) > 0) ?
+                BigDecimal.valueOf(fedStats.cppEi[year][4]) : cppEiDec[1];
+
         BigDecimal result =  BigDecimal.valueOf(stats.claimAmount[year])
                 .add(cppEiDec[0])
                 .add(cppEiDec[1])
@@ -465,14 +442,41 @@ public class TaxManager {
         return result;
     }
 
-    public ArrayList<TaxStatHolder> getTaxStatHolderList(){
-       ArrayList<TaxStatHolder> taxList = new ArrayList<TaxStatHolder>();
-
+     /*
+    private void lightStatValidation() {
         for(int provInt: activeProvinces) {
-            taxList.add(getStatType(provInt));
-            Log.w("TaxManager", "Added " + provinceNames[provInt] + "to taxList");
+            TaxStatHolder provStats = new TaxStatHolder((provInt));
+            Log.w("TaxManager", "Validating " + provinceNames[provInt]);
+
+            int yearCount = yearStrings.length;
+            if(provStats.claimAmount != null) {
+                if (provStats.claimAmount.length != yearCount) {
+                    throw new RuntimeException("TaxStatHolderError: claimAmount array length mismatch in " + provinceNames[provInt]);
+                }
+            }
+
+
+            for(int i = 0; i<yearCount; i++) {
+                 if(provStats.brackets != null) {
+                     if (provStats.brackets[i].length != provStats.rates[i].length ||
+                             provStats.brackets[i].length != provStats.constK[i].length) {
+                         throw new RuntimeException(String.format(
+                                 "TaxStatHolderError: Bracket/Rate/ConstK array length mismatch in %s", provinceNames[provInt]));
+                     }
+                 }
+                 if(provStats.wageRates != null) {
+                    if(provStats.wageRates.length != provStats.wageNames.length) {
+                        throw new RuntimeException(String.format(
+                                "TaxStatHolderError: wageRates/wageNames array length mismatch in %s", provinceNames[provInt]));
+                    }
+                    if(provStats.vacRate.length != 1 && provStats.vacRate.length != provStats.wageRates.length){
+                        throw new RuntimeException("TaxStatHolderError: vacRate should have a length of 1 or wageRates.length in " + provinceNames[provInt]);
+                    }
+                 }
+
+            }
         }
 
-        return taxList;
     }
+    */
 }

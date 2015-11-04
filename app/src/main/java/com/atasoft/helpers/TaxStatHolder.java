@@ -7,45 +7,51 @@ import com.atasoft.flangeassist.MainActivity;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by AtaCompy on 11/3/2015.
  * Fork of TaxManager using CSVs generated from spreadsheets
  */
 public class TaxStatHolder {
-
+    public static final String defaultWageName = "Journeyperson";
+    public static final String fileNameConvention = "ToolboxGrid - %s.csv";
     public static final String csvSeperator = ",";
-    public static final String csvNB = "Toolbox_PaycalcGrid - NB.csv";
 
     //Trending so hard
     public static final String wageTag  = "#wages";
+    public static final String ratesTag = "#rates";
     public static final String bracketsTag = "#brackets";
     public static final String constKTag = "#const_k";
     public static final String taxReductionTag = "#tax_red";
     public static final String healthPremTag = "#health_prem";
     public static final String surtaxTag = "#surtax";
     public static final String claimAmountTag = "#claim_amount";
-    public static final String surNameTag = "#surname";
     public static final String cppEiTag = "#cpp_ei";
+    public static final String vacRateTag = "#vac_rate";
 
+    //TODO: change public stats to getters and add null checks;
+    public TaxManager.Prov prov = TaxManager.Prov.FED;
     public float[][] brackets;
+    public float[][] rates;
     public float[][] constK;
     public float[][] taxReduction;
     public float[][] healthPrem;
     public float[][] surtax;
     public float[] claimAmount;
-    public String[][] wageTable;
     public float[] wageRates;
     public String[] wageNames;
-    public float[] vacRates;
     public float[][] cppEi;
 
-    public String surName;
-    public float defaultWageIndex;  //tacked on end of wageRates inplace of custom value
+    public float vacRate = 0f;
+    public String surName = "fail";
+    public int defaultWageIndex = 0;  //tacked on end of wageRates inplace of custom value
 
     private ArrayList<String[]> wageTableList = new ArrayList<>();
     private ArrayList<String[]> bracketsList = new ArrayList<>();
+    private ArrayList<String[]> rateList = new ArrayList<>();
     private ArrayList<String[]> constKList = new ArrayList<>();
     private ArrayList<String[]> taxReductionList = new ArrayList<>();
     private ArrayList<String[]> healthPremList = new ArrayList<>();
@@ -53,47 +59,95 @@ public class TaxStatHolder {
     private ArrayList<String[]> cppEiList = new ArrayList<>();
 
     public TaxStatHolder(TaxManager.Prov prov){
-        parseFile(csvNB);
-        Collections.reverse(wageTableList);
-        this.wageTable = listToStringArray(wageTableList, "wageTable");
-        parseWageTable();
+        this.prov = prov;
+        this.surName = prov.getSurname();
+
+        /*  Basic check for CSVs expected
+        if(prov == TaxManager.Prov.FED){
+            checkForCSVs();
+        }
+        */
+
+        //Cape Breton holds NB wage info and has no file to parse
+        if(prov == TaxManager.Prov.CB) {
+            capeBretonInit();
+            return;
+        }
+
+        //PEI uses NS wage table but needs to parse its tax info.
+        if(prov == TaxManager.Prov.PE){peiInit();}
+
+        parseFile(getCSVFileName(prov));
+
+        if(wageTableList.size() > 0) parseWageTable(wageTableList);
 
         this.brackets = listToFloatArray(bracketsList, "brackets");
+        this.rates = listToFloatArray(rateList, "rates");
         this.constK = listToFloatArray(constKList, "constK");
         this.taxReduction = listToFloatArray(taxReductionList, "taxReduction");
         this.healthPrem = listToFloatArray(healthPremList, "healthPrem");
         this.surtax = listToFloatArray(surtaxList, "surtaxList");
         this.cppEi = listToFloatArray(cppEiList, "cppEiList");
-
     }
 
-    private void parseWageTable(){
+    private void capeBretonInit(){
+        TaxStatHolder nbStats = new TaxStatHolder(TaxManager.Prov.NB);
+        this.wageRates = nbStats.wageRates;
+        this.wageNames = nbStats.wageNames;
+        this.vacRate = nbStats.vacRate;
+
+        TaxStatHolder nsStats = new TaxStatHolder(TaxManager.Prov.NS);
+        this.brackets = nsStats.brackets;
+        this.rates = nsStats.rates;
+        this.constK = nsStats.constK;
+        this.claimAmount = nsStats.claimAmount;
+        return;
+    }
+
+    private void peiInit(){
+        //parseWageTable won't overwrite because it aborts when there's no table in the csv
+        TaxStatHolder nsStats = new TaxStatHolder(TaxManager.Prov.NS);
+        this.wageRates = nsStats.wageRates;
+        this.wageNames = nsStats.wageNames;
+        this.vacRate = nsStats.vacRate;
+    }
+
+    private void parseWageTable(ArrayList<String[]> wageTableList) {
+        if (wageTableList.size() == 0){
+            Log.w("TaxStatHolder", String.format("statHolder %s has no wage table.", surName));
+            wageTableList.clear();
+        return;
+        }
+
+        Collections.reverse(wageTableList);
+        String[][] wageTable =  listToStringArray(wageTableList, "wageTable");
+
         this.wageRates = new float[wageTable.length];
         this.wageNames = new String[wageTable.length];
-        this.vacRates = new float[wageTable.length];
 
         try {
             for (int i = 0; i < wageTable.length; i++) {
-                if(wageTable[i].length != 4){
+                if(wageTable[i].length != 2){
                     Log.e("TaxStatHolder", surName + " wage table malformed in row: " + i);
                     return;
                 }
                 this.wageNames[i] = wageTable[i][0];
                 this.wageRates[i] = Float.parseFloat(wageTable[i][1]);
-                float vacRate = Float.parseFloat(wageTable[i][2]);
-                float holiday = Float.parseFloat(wageTable[i][3]);
-                this.vacRates[i] = vacRate + holiday;
+                if(wageNames[i].equals(defaultWageName)){
+                    this.defaultWageIndex = i;
+                }
             }
         } catch (NumberFormatException e){
             Log.e("TaxStatHolder", "Failed to parse wage table: " + surName);
             e.printStackTrace();
         }
+        wageTableList.clear();
     }
 
     private String[][] listToStringArray(ArrayList<String[]> list, String errorName) {
-        if(surName == null) this.surName = "No Surname";
         if(list.size() == 0){
-            Log.w("TaxStatHolder", surName + ", " + errorName + " has no list.");
+            //Log.w("TaxStatHolder", surName + ", " + errorName + " has no list.");
+            list.clear();
             return null;
         }
 
@@ -105,13 +159,14 @@ public class TaxStatHolder {
                 Log.w("TaxStatHolder", "Size mismatch on:  " + surName + ", " + errorName);
             }
         }
+        list.clear();
         return retArr;
     }
 
     private float[][] listToFloatArray(ArrayList<String[]> list, String errorName) {
-        if(surName == null) this.surName = "No Surname";
         if(list.size() == 0){
-            Log.w("TaxStatHolder", surName + ", " + errorName + " has no list.");
+            //Log.w("TaxStatHolder", surName + ", " + errorName + " has no list.");
+            list.clear();
             return null;
         }
         float[][] retArr = new float[list.size()][];
@@ -122,6 +177,7 @@ public class TaxStatHolder {
                 Log.w("TaxStatHolder", "Size mismatch on:  " + surName + ", " + errorName);
             }
         }
+        list.clear();
         return retArr;
     }
 
@@ -152,12 +208,26 @@ public class TaxStatHolder {
         
         String lineTag = lineSplit[0];
 
+        if(lineTag.equals(vacRateTag)){
+            try {
+                this.vacRate = Float.parseFloat(lineSplit[1]);
+            } catch (NumberFormatException e){
+                Log.e("TaxStatHolder", "Failed to parse line: " + line + " as vacRate.");
+                e.printStackTrace();
+            }
+            return;
+        }
+
         if(lineTag.equals(wageTag)){
             wageTableList.add(trimArray(lineSplit));
             return;
         }
         if(lineTag.equals(bracketsTag)){
             bracketsList.add(trimArray(lineSplit));
+            return;
+        }
+        if(lineTag.equals(ratesTag)){
+            rateList.add(trimArray(lineSplit));
             return;
         }
         if(lineTag.equals(constKTag)){
@@ -179,14 +249,11 @@ public class TaxStatHolder {
 
         if(lineTag.equals(cppEiTag)){
             cppEiList.add(trimArray(lineSplit));
+            return;
         }
 
         if(lineTag.equals(claimAmountTag)) {
             this.claimAmount = parseFloatArr(trimArray(lineSplit), claimAmountTag);
-            return;
-        }
-        if(lineTag.equals(surNameTag)){
-            this.surName = lineSplit[1];
         }
 
     }
@@ -211,6 +278,25 @@ public class TaxStatHolder {
         return retArr;
     }
 
+    public static String getCSVFileName(TaxManager.Prov prov){
+        return String.format(fileNameConvention, prov.getSurname().split(" ")[0]);
+    }
+
+    public static void checkForCSVs(){
+        List<String> assetFileList;
+        try{
+            assetFileList = Arrays.asList(MainActivity.staticRef.getAssets().list(""));
+        }catch(IOException e){
+            e.printStackTrace();
+            return;
+        }
+
+        for(TaxManager.Prov prov: TaxManager.Prov.values()){
+            if(!assetFileList.contains(getCSVFileName(prov))){
+                Log.w("TaxStatHolder", String.format("Couldn't find file: %s in assets.", getCSVFileName(prov)));
+            }
+        }
+    }
 
 }
 

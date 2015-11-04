@@ -18,9 +18,9 @@ public class SettingsRegional extends PreferenceFragment {
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
         ListPreference provListPref = (ListPreference) findPreference("list_provWageNew");
-        provListPref.setEntries(TaxManager.getActiveProvinceStrings());
-        provListPref.setEntryValues(TaxManager.getActiveProvinceStrings());
-        if(provListPref.getValue() == null) provListPref.setValueIndex(TaxManager.PROV_AB);
+        provListPref.setEntries(TaxManager.Prov.getActiveProvinceNames());
+        provListPref.setEntryValues(TaxManager.Prov.getActiveProvinceNames());
+        if(provListPref.getValue() == null) provListPref.setValueIndex(TaxManager.Prov.AB.getIndex());
         
         ListPreference yearListPref = (ListPreference) findPreference("list_taxYearNew");
         yearListPref.setEntries(TaxManager.yearStrings);

@@ -1,27 +1,21 @@
-,Classification,Wage,
-#wages,GF,45.07,
-#wages,Foreperson,41.32,
-#wages,Lead Hand,37.57,
-#wages,Journeyperson,36.07,
-#wages,3rd Year App,32.32,
-#wages,2nd Year App,26.69,
-#wages,1st Year App,21.06,
-#wages,Helper,26.69,
-,,,
-#vac_rate,0.105,,
-,,,
-,,,
-,,,
+Manitoba,Classification,Wage,
 #brackets,0,31000,67000
 #brackets,0,31000,67000
 #brackets,0,31000,67000
+,,,
 ,,,
 #rates,0.108,0.1275,0.174
 #rates,0.108,0.1275,0.174
 #rates,0.108,0.1275,0.174
 ,,,
+,,,
 #const_k,0,605,3720
 #const_k,0,605,3720
 #const_k,0,605,3720
+,,,
 ,,,
 #claim_amount,8884,9134,9134
+,,,
+,,,
+,,,
+Uses SK Wages,,,

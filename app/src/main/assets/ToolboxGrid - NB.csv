@@ -1,32 +1,36 @@
-,Classification,Wage,,
-#wages,GF,43.76,,
-#wages,Foreperson,42.01,,
-#wages,Lead Hand,38.46,,
-#wages,Journeyperson,37.26,,
-#wages,3rd Year App,33.34,,
-#wages,2nd Year App,27.45,,
-#wages,1st Year App,21.56,,
-#wages,Helper,27.45,,
-,,,,
-#vac_rate,0.12,,,
-,,,,
-,,,,
-,,,,
-#brackets,0,38954,77908,126662
-#brackets,0,39305,78609,127802
-#brackets,0,39973,79946,129975
-,,,,
-#rates,0.091,0.121,0.124,0.143
-#rates,0.0968,0.1482,0.1652,0.1784
-#rates,0.0968,0.1482,0.1652,0.1784
-,,,,
-#const_k,0,1169,1402,3809
-#const_k,0,2020,3357,5044
-#const_k,0,2055,3414,5129
-,,,,
-Claim code 1,,,,
-#claim_amount,9388,9472,9633,
-,,,,
-,,,,
-,,,,
-CB uses this wage table and NS tax,,,,
+,Classification,Wage,,,,
+#wages,GF,43.76,,,,
+#wages,Foreperson,42.01,,,,
+#wages,Lead Hand,38.46,,,,
+#wages,Journeyperson,37.26,,,,
+#wages,3rd Year App,33.34,,,,
+New Brunswick,,,,,,
+#wages,2nd Year App,27.45,,,,
+#wages,1st Year App,21.56,,,,
+#wages,Helper,27.45,,,,
+,,,,,,
+#vac_rate,0.12,,,,,
+#field_dues,0,,,,,
+#month_dues,40.95,,,,,
+#night_ot,TRUE,,,,,
+#double_ot,TRUE,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+#brackets,0,38954,77908,126662,,
+#brackets,0,39305,78609,127802,,
+#brackets,0,39973,79946,129975,150000,250000
+,,,,,,
+,,,,,,
+#rates,0.091,0.121,0.124,0.143,,
+#rates,0.0968,0.1482,0.1652,0.1784,,
+#rates,0.0968,0.1482,0.1652,0.1784,0.2416,0.3366
+,,,,,,
+,,,,,,
+#const_k,0,1169,1402,3809,,
+#const_k,0,2020,3357,5044,,
+#const_k,0,2055,3414,5129,14609,38359
+,,,,,,
+,,,,,,
+Claim code 1,,,,,,
+#claim_amount,9388,9472,9633,,,

@@ -14,7 +14,7 @@ public class TaxManager {
     public enum Prov {
         BC ("British Columbia", "BC - ", true, 0),
         AB ("Alberta", "AB - ", true, 1),
-        SK ("Saskatchewan", "SK - ", false, 2),
+        SK ("Saskatchewan", "SK - ", true, 2),
         MB ("Manitoba", "MB - ", true, 3),
         ON ("Ontario", "ON - ", true, 4),
         QC ("Quebec", "QC - ", false, 5),
@@ -22,7 +22,7 @@ public class TaxManager {
         NS ("Nova Scotia", "NS - ", true, 7),
         CB ("Cape Breton", "CB - ", true, 8),
         PE ("Prince Edward Island", "PE - ", true, 9),
-        NL ("Newfoundland", "NL - ", false, 10),
+        NL ("Newfoundland", "NL - ", true, 10),
         FED ("Federal", "FED - ", false, 11);
 
         private String displayName;
@@ -142,6 +142,9 @@ public class TaxManager {
             case AB:
                 provTax = getABTax(anGrossDec, year);
                 break;
+            case SK:
+                provTax = getSKTax(anGrossDec, year);
+                break;
             case ON:
                 provTax = getONTax(anGrossDec, year);
                 break;
@@ -159,6 +162,9 @@ public class TaxManager {
                 break;
             case PE:
                 provTax = getPEITax(anGrossDec, year);
+                break;
+            case NL:
+                provTax = getNLTax(anGrossDec, year);
                 break;
             default:  //No Provincial Tax (FED)
                 provTax = BigDecimal.ZERO;
@@ -229,8 +235,12 @@ public class TaxManager {
 
         //BC Tax Reduction
         float[] redTable = bcStats.taxReduction[year];	//[bracket, credit, drop rate]
-        float diff = anGrossDec.floatValue() - redTable[0];
-        float taxRed = (diff < 0) ? redTable[1] : redTable[1] - redTable[2] * diff;
+        float taxRedLowerBracker = redTable[0];
+        float taxRedFlatAmount = redTable[2];
+        float taxRedRate = redTable[3];
+        float diff = anGrossDec.floatValue() - taxRedLowerBracker;
+
+        float taxRed = (diff < 0) ? taxRedFlatAmount : taxRedFlatAmount - taxRedRate * diff;
         if(taxRed < 0) taxRed = 0;
 
         return taxDec.subtract(BigDecimal.valueOf(taxRed));
@@ -247,25 +257,17 @@ public class TaxManager {
         return taxDec;
 	}
 
+    private BigDecimal getSKTax(BigDecimal anGrossDec, int year){
+        TaxStatHolder skStats = getStatType(Prov.SK);
+        return getStandardProvincialTax(anGrossDec, year, skStats);
+    }
+
 	private BigDecimal getONTax(BigDecimal anGrossDec, int year){
         TaxStatHolder onStats = getStatType(Prov.ON);
 
         float anGross = anGrossDec.floatValue();
         float[] bracket = onStats.brackets[year];
         int taxIndex = bracketGrossIndex(anGross, bracket);
-
-        /*
-        if(year == TY_2013 || year == TY_2014) {
-            taxIndex = (anGross < bracket[1]) ? 0 :
-                    (anGross < bracket[2] ? 1 :
-                            (anGross < bracket[3] ? 2 : 3));
-        } else { //5th tax bracket in 2015... dicks
-            taxIndex = (anGross < bracket[1]) ? 0 :
-                    (anGross < bracket[2] ? 1 :
-                            (anGross < bracket[3] ? 2 :
-                                    (anGross < bracket[4]) ? 3 : 4));
-        }
-        */
 
 		float rate = onStats.rates[year][taxIndex];  //Rate and constant will share same index
 		float constK = onStats.constK[year][taxIndex];
@@ -289,9 +291,9 @@ public class TaxManager {
 			surRate[0] * (taxPayable - surBracket[0]) + (taxPayable - surBracket[1]) * surRate[1]);
 		taxPayable += surTax;
 		//calc health premium
-		float[] healthBracket = onStats.healthPrem[0];
-		float[] healthRate = onStats.healthPrem[1];
-		float[] healthConst = onStats.healthPrem[2];
+		float[] healthBracket = onStats.healthBracket[year];
+		float[] healthRate = onStats.healthRate[year];
+		float[] healthConst = onStats.healthAmount[year];
 		float rateAmount = 0f;
 		if(anGross > healthBracket[0]) {
 			int healthIndex = anGross < healthBracket[1] ? 0:
@@ -338,6 +340,11 @@ public class TaxManager {
         }
 
         return taxDec;
+    }
+
+    private BigDecimal getNLTax(BigDecimal anGrossDec, int year){
+        TaxStatHolder nlStats = getStatType(Prov.NL);
+        return getStandardProvincialTax(anGrossDec, year, nlStats);
     }
 
     private BigDecimal getStandardProvincialTax(BigDecimal anGrossDec, int year, TaxStatHolder provStats) {

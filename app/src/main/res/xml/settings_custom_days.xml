@@ -3,7 +3,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	
     <CheckBoxPreference
-        android:key="custom_daycheck"
+        android:key="@string/pref_custDaysOn"
         android:title="Use Custom Days"
         android:summary="Add custom daily hours for use in the pay calculator."
         android:defaultValue="false" />
@@ -13,7 +13,7 @@
         android:title="Custom Day A"
         android:key="category_customday_a" >
 		<EditTextPreference
-            android:key="custom_a_straight"
+            android:key="@string/pref_dayA_straight"
 			android:dependency="custom_daycheck"
 			android:ems="10"
 			android:inputType="numberDecimal"
@@ -24,7 +24,7 @@
 			android:selectAllOnFocus="true"
             android:defaultValue="8" />
         <EditTextPreference
-            android:key="custom_a_overtime"
+            android:key="@string/pref_dayA_OT"
             android:dependency="custom_daycheck"
             android:ems="10"
             android:inputType="numberDecimal"
@@ -35,7 +35,7 @@
             android:selectAllOnFocus="true"
             android:defaultValue="2" />
         <EditTextPreference
-            android:key="custom_a_double"
+            android:key="@string/pref_dayA_double"
             android:dependency="custom_daycheck"
             android:ems="10"
             android:inputType="numberDecimal"
@@ -51,7 +51,7 @@
         android:key="category_customday_b" >
         <!--=============================Day B======================================-->
         <EditTextPreference
-            android:key="custom_b_straight"
+            android:key="@string/pref_dayB_straight"
             android:dependency="custom_daycheck"
             android:ems="10"
             android:inputType="numberDecimal"
@@ -62,7 +62,7 @@
             android:selectAllOnFocus="true"
             android:defaultValue="8" />
         <EditTextPreference
-            android:key="custom_b_overtime"
+            android:key="@string/pref_dayB_OT"
             android:dependency="custom_daycheck"
             android:ems="10"
             android:inputType="numberDecimal"
@@ -73,7 +73,7 @@
             android:selectAllOnFocus="true"
             android:defaultValue="2" />
         <EditTextPreference
-            android:key="custom_b_double"
+            android:key="@string/pref_dayB_double"
             android:dependency="custom_daycheck"
             android:ems="10"
             android:inputType="numberDecimal"
@@ -90,7 +90,7 @@
         android:key="category_customday_c" >
         <!--=============================Day C======================================-->
         <EditTextPreference
-            android:key="custom_c_straight"
+            android:key="@string/pref_dayC_straight"
             android:dependency="custom_daycheck"
             android:ems="10"
             android:inputType="numberDecimal"
@@ -101,7 +101,7 @@
             android:selectAllOnFocus="true"
             android:defaultValue="8" />
         <EditTextPreference
-            android:key="custom_c_overtime"
+            android:key="@string/pref_dayC_OT"
             android:dependency="custom_daycheck"
             android:ems="10"
             android:inputType="numberDecimal"
@@ -112,7 +112,7 @@
             android:selectAllOnFocus="true"
             android:defaultValue="2" />
         <EditTextPreference
-            android:key="custom_c_double"
+            android:key="@string/pref_dayC_Double"
             android:dependency="custom_daycheck"
             android:ems="10"
             android:inputType="numberDecimal"

@@ -208,6 +208,28 @@ public class TaxManager {
         return stats.nightPremiumRate;
     }
 
+    public boolean getNightOT(String province){
+        TaxStatHolder stats = getStatType(province);
+
+        return stats.nightOT;
+    }
+
+    public boolean getDoubleOT(String province){
+        TaxStatHolder stats = getStatType(province);
+
+        return stats.doubleOT;
+    }
+
+    public float getMonthlyDues(String province){
+        TaxStatHolder stats = getStatType(province);
+        return stats.monthDuesRate;
+    }
+
+    public float getFieldDues(String province){
+        TaxStatHolder stats = getStatType(province);
+        return stats.fieldDuesRate;
+    }
+
 	private BigDecimal[] getCppEi(BigDecimal anGross, int year){
 		//[cpp rate, exemption, ei rate]
 		float cppRate = fedStats.cppEi[year][0];

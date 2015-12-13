@@ -5,7 +5,7 @@
         android:title="Pay Calculator Custom Rates"
         android:key="category_wages">
         <EditTextPreference
-            android:key="custom_wage"
+            android:key="@string/pref_custom_wage"
 			android:ems="10"
 			android:inputType="numberDecimal"
             android:title="Custom Wage" 
@@ -15,7 +15,7 @@
 			android:selectAllOnFocus="true"
             android:defaultValue="20" />
         <EditTextPreference
-            android:key="custom_mealrate"
+            android:key="@string/pref_customMeal"
             android:ems="10"
             android:inputType="numberDecimal"
             android:title="Meal Bonus Rate"
@@ -25,12 +25,12 @@
             android:selectAllOnFocus="true"
             android:defaultValue="40" />
         <CheckBoxPreference
-            android:key="taxable_meals"
+            android:key="@string/pref_taxableMeals"
             android:title="Meal Bonus Taxable"
             android:summary="Set if Meal Bonus is taxable."
             android:defaultValue="true" />
         <EditTextPreference
-            android:key="custom_loa"
+            android:key="@string/pref_loaRate"
             android:ems="10"
             android:inputType="numberDecimal"
             android:title="LOA Rate"
@@ -40,12 +40,12 @@
             android:selectAllOnFocus="true"
             android:defaultValue="195" />
         <CheckBoxPreference
-            android:key="custom_vac_check"
+            android:key="@string/pref_vacOn"
             android:title="Custom Vacation Rate"
             android:summary="Defaults to provincial rate when unchecked."
             android:defaultValue="false" />
         <EditTextPreference
-            android:key="custom_vac_rate"
+            android:key="@string/pref_vacRate"
             android:ems="10"
             android:inputType="numberDecimal"
             android:dependency="custom_vac_check"
@@ -60,7 +60,7 @@
         android:title="Pay Calculator Travel Rates"
         android:key="settings_travel_category">
         <EditTextPreference
-        android:key="custom_weektravel"
+        android:key="@string/pref_weekTravelRate"
         android:ems="10"
         android:inputType="numberDecimal"
         android:title="Weekly Travel Rate"
@@ -70,12 +70,12 @@
         android:selectAllOnFocus="true"
         android:defaultValue="216" />
         <CheckBoxPreference
-            android:key="taxable_weektravel"
+            android:key="@string/pref_weekTravelTax"
             android:title="Weekly Travel Taxable"
             android:summary="Check if Weekly travel is Taxable"
             android:defaultValue="false" />
         <EditTextPreference
-            android:key="custom_daytravel"
+            android:key="@string/pref_dayTravelRate"
             android:ems="10"
             android:inputType="numberDecimal"
             android:title="Daily Travel Rate"
@@ -85,7 +85,7 @@
             android:selectAllOnFocus="true"
             android:defaultValue="20" />
         <CheckBoxPreference
-            android:key="taxable_daytravel"
+            android:key="@string/pref_dayTravelTax"
             android:title="Daily Travel Taxable"
             android:summary="Check if Daily travel is Taxable"
             android:defaultValue="true" />
@@ -93,28 +93,56 @@
 	<PreferenceCategory	
 		android:title="Pay Calculator Deduction Rates"
 		android:key="category_travel">
+        <CheckBoxPreference
+            android:key="@string/pref_fieldDuesOn"
+            android:title="Custom Field Dues"
+            android:summary="Defaults to provincial rate when unchecked."
+            android:defaultValue="false" />
         <EditTextPreference
-            android:key="custom_working_dues"
+            android:key="@string/pref_fieldDuesRate"
             android:ems="10"
             android:inputType="numberDecimal"
-            android:title="Working Dues"
-            android:summary="Change the hourly working dues rate."
-            android:dialogTitle="Working Dues Rate"
-            android:dialogMessage="Set the hourly working dues rate."
+            android:dependency="@string/pref_fieldDuesOn"
+            android:title="Field Dues Rate"
+            android:summary="Change the hourly field dues rate."
+            android:dialogTitle="Field Dues Hourly Rate"
+            android:dialogMessage="Set the field dues percent (ex 3.75)."
             android:selectAllOnFocus="true"
-            android:defaultValue="0.0375" />
+            android:defaultValue="3.75" />
+        <CheckBoxPreference
+            android:key="@string/pref_monthDuesOn"
+            android:title="Custom Monthly Dues"
+            android:summary="Defaults to provincial rate when unchecked."
+            android:defaultValue="false" />
         <EditTextPreference
-            android:key="custom_monthly_dues"
+            android:key="@string/pref_monthDuesRate"
             android:ems="10"
             android:inputType="numberDecimal"
-            android:title="Monthly Dues"
-            android:summary="Change the Monthly dues rate."
-            android:dialogTitle="Monthly Dues Rate"
+            android:title="Monthly Dues Rate"
+            android:dependency="@string/pref_monthDuesOn"
+            android:summary="Change the custom monthly dues rate."
+            android:dialogTitle="Custom Monthly Dues Rate"
             android:dialogMessage="Set the Monthly dues rate."
             android:selectAllOnFocus="true"
             android:defaultValue="39.30" />
+        <CheckBoxPreference
+            android:key="@string/pref_nightPremOn"
+            android:title="Custom Night Shift On"
+            android:summary="Defaults to provincial rate when unchecked."
+            android:defaultValue="false" />
         <EditTextPreference
-            android:key="custom_addtax"
+            android:key="@string/pref_nightPrem"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:title="Night Shift Rate"
+            android:dependency="@string/pref_nightPremOn"
+            android:summary="Change the custom night shift hourly rate."
+            android:dialogTitle="Custom Night Shift Rate"
+            android:dialogMessage="Set the custom night shift hourly rate."
+            android:selectAllOnFocus="true"
+            android:defaultValue="3" />
+        <EditTextPreference
+            android:key="@string/pref_addTax"
             android:ems="10"
             android:inputType="numberDecimal"
             android:title="Additional Income Tax"

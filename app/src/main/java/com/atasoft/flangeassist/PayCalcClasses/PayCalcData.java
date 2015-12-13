@@ -175,13 +175,16 @@ public class PayCalcData {
             splitHours = splitShiftFiveEights(shiftHours[0]);
         }
 
-        if(nightOTActive){
-            makeStraightOT(splitHours);
+        // All Overtime is Double Time
+        if(otDouble){
+            splitHours = makeOTDouble(splitHours);
         }
 
-        if(otDouble){
-            makeOTDouble(splitHours);
+        // All straight time is Overtime
+        if(nightOTActive){
+            splitHours = makeStraightOT(splitHours);
         }
+
         return splitHours;
     }
 

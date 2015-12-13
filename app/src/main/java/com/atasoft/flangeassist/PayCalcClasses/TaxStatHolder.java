@@ -88,14 +88,7 @@ public class TaxStatHolder {
         }
         */
 
-        //Cape Breton holds NB wage info and has no file to parse
-        if(prov == TaxManager.Prov.CB) {
-            capeBretonInit();
-            return;
-        }
 
-        //PEI uses NS wage table but needs to parse its tax info.
-        if(prov == TaxManager.Prov.PE){peiInit();}
 
         parseFile(getCSVFileName(prov));
 
@@ -111,20 +104,20 @@ public class TaxStatHolder {
 
         this.surtax = listToFloatArray(surtaxList, "surtaxList");
         this.cppEi = listToFloatArray(cppEiList, "cppEiList");
+
+        //Cape Breton has it's own wage info and uses NS Tax
+        if(prov == TaxManager.Prov.CB) {capeBretonInit();}
+
+        //PEI uses NS wage table but needs to parse its tax info.
+        if(prov == TaxManager.Prov.PE){peiInit();}
     }
 
     private void capeBretonInit(){
-        TaxStatHolder nbStats = new TaxStatHolder(TaxManager.Prov.NB);
-        this.wageRates = nbStats.wageRates;
-        this.wageNames = nbStats.wageNames;
-        this.vacRate = nbStats.vacRate;
-
         TaxStatHolder nsStats = new TaxStatHolder(TaxManager.Prov.NS);
         this.brackets = nsStats.brackets;
         this.rates = nsStats.rates;
         this.constK = nsStats.constK;
         this.claimAmount = nsStats.claimAmount;
-        return;
     }
 
     private void peiInit(){
@@ -133,6 +126,10 @@ public class TaxStatHolder {
         this.wageRates = nsStats.wageRates;
         this.wageNames = nsStats.wageNames;
         this.vacRate = nsStats.vacRate;
+        this.fieldDuesRate = nsStats.fieldDuesRate;
+        this.monthDuesRate = nsStats.monthDuesRate;
+        this.nightOT = nsStats.nightOT;
+        this.doubleOT = nsStats.doubleOT;
     }
 
     private void parseWageTable(ArrayList<String[]> wageTableList) {

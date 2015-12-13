@@ -5,11 +5,11 @@
         android:title="Pay Calculator Regional Settings"
         android:key="category_wages">
 		<ListPreference
-			android:key="list_provWageNew"
+			android:key="@string/pref_prov"
             android:title="Provincial Rates"
             android:summary="Change the wages, vacation rate and taxes by province."/>
 		<ListPreference
-			android:key="list_taxYearNew"
+			android:key="@string/pref_taxYear"
             android:title="Tax Year"
             android:summary="Change the tax year."/>
 	</PreferenceCategory>

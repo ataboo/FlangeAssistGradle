@@ -109,4 +109,38 @@
     <string name="tax_total_ded">Total Deductions:</string>
     <string name="tax_netIncome_text">Net Income:</string>
     <string name="tax_submit_button">Submit</string>
+
+    <!-- Keys for Preferences -->
+    <string name="pref_taxYear">list_taxYearNew</string>
+    <string name="pref_prov">list_provWageNew</string>
+    <string name="pref_custom_wage">custom_wage</string>
+    <string name="pref_customMeal">custom_mealrate</string>
+    <string name="pref_taxableMeals">taxable_meals</string>
+    <string name="pref_loaRate">custom_loa</string>
+    <string name="pref_vacOn">custom_vac_check</string>
+    <string name="pref_vacRate">custom_vac_rate</string>
+    <string name="pref_weekTravelRate">custom_weektravel</string>
+    <string name="pref_weekTravelTax">taxable_weektravel</string>
+    <string name="pref_dayTravelRate">custom_daytravel</string>
+    <string name="pref_dayTravelTax">taxable_daytravel</string>
+    <string name="pref_fieldDuesRate">custom_working_dues</string>
+    <string name="pref_monthDuesRate">custom_monthly_dues</string>
+    <string name="pref_addTax">custom_addtax</string>
+    <string name="pref_custDaysOn">custDayCheck</string>
+    <string name="pref_dayA_straight">custom_a_straight</string>
+    <string name="pref_dayA_OT">custom_a_overtime</string>
+    <string name="pref_dayA_double">custom_a_double</string>
+    <string name="pref_dayB_straight">custom_b_straight</string>
+    <string name="pref_dayB_OT">custom_b_overtime</string>
+    <string name="pref_dayB_double">custom_b_double</string>
+    <string name="pref_dayC_straight">custom_c_straight</string>
+    <string name="pref_dayC_OT">custom_c_overtime</string>
+    <string name="pref_dayC_Double">custom_c_double</string>
+    <string name="pref_fieldDuesOn">custom_field_dues_on</string>
+    <string name="pref_monthDuesOn">custom_month_dues_on</string>
+    <string name="pref_nightPremOn">custom_night_prem_on</string>
+    <string name="pref_nightPrem">custom_night_prem</string>
+    <string name="pref_wageMealSpinners">payCalc_wageMealSpinners</string>
+
+
 </resources>

@@ -1,6 +1,5 @@
 package com.atasoft.flangeassist;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.View;
@@ -12,7 +11,6 @@ import com.atasoft.flangeassist.fragments.SettingsCustomDays;
 import com.atasoft.flangeassist.fragments.SettingsRates;
 import com.atasoft.flangeassist.fragments.SettingsRegional;
 import com.atasoft.flangeassist.fragments.SettingsReset;
-import com.atasoft.helpers.TaxManager;
 
 import java.util.List;
 

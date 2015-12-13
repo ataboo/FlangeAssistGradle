@@ -1,4 +1,4 @@
-package com.atasoft.helpers;
+package com.atasoft.flangeassist.PayCalcClasses;
 
 import android.util.Log;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public class TaxStatHolder {
     public static final String defaultWageName = "Journeyperson";
     public static final String fileNameConvention = "ToolboxGrid - %s.csv";
-    public static final String csvSeperator = ",";
+    public static final String csvSeparator = ",";
 
     //Trending so hard
     public static final String wageTag  = "#wages";
@@ -30,9 +30,16 @@ public class TaxStatHolder {
     public static final String claimAmountTag = "#claim_amount";
     public static final String cppEiTag = "#cpp_ei";
     public static final String vacRateTag = "#vac_rate";
-    public static final String healthBrackTag = "#health_brackets";
+    public static final String healthBracketTag = "#health_brackets";
     public static final String healthRateTag = "#health_rates";
     public static final String healthAmountTag = "#health_amounts";
+
+    public static final String fieldDuesTag = "#field_dues";
+    public static final String monthDuesTag = "#month_dues";
+    public static final String nightPremiumTag = "#night_prem";
+    public static final String nightOTTag = "#night_ot";
+    public static final String doubleOTTag = "#double_ot";
+
 
     //TODO: change public stats to getters and add null checks;
     public TaxManager.Prov prov = TaxManager.Prov.FED;
@@ -49,6 +56,12 @@ public class TaxStatHolder {
     public float[] wageRates;
     public String[] wageNames;
     public float[][] cppEi;
+
+    public float fieldDuesRate;
+    public float monthDuesRate;
+    public float nightPremiumRate;
+    public boolean nightOT;
+    public boolean doubleOT;
 
     public float vacRate = 0f;
     public String surName = "fail";
@@ -190,8 +203,7 @@ public class TaxStatHolder {
         list.clear();
         return retArr;
     }
-
-
+    
     private boolean parseFile(String fileName){
         BufferedReader br;
         String line;
@@ -213,7 +225,7 @@ public class TaxStatHolder {
     }
 
     private void processLine(String line){
-        String[] lineSplit = line.split(csvSeperator);
+        String[] lineSplit = line.split(csvSeparator);
         if(lineSplit.length <=1) return;
         
         String lineTag = lineSplit[0];
@@ -228,51 +240,72 @@ public class TaxStatHolder {
             return;
         }
 
+        String[] lineTrim = trimArray(lineSplit);
+
+        // Multi line Arrays
         if(lineTag.equals(wageTag)){
-            wageTableList.add(trimArray(lineSplit));
+            wageTableList.add(lineTrim);
             return;
         }
         if(lineTag.equals(bracketsTag)){
-            bracketsList.add(trimArray(lineSplit));
+            bracketsList.add(lineTrim);
             return;
         }
         if(lineTag.equals(ratesTag)){
-            rateList.add(trimArray(lineSplit));
+            rateList.add(lineTrim);
             return;
         }
         if(lineTag.equals(constKTag)){
-            constKList.add(trimArray(lineSplit));
+            constKList.add(lineTrim);
             return;
         }
         if(lineTag.equals(taxReductionTag)){
-            taxReductionList.add(trimArray(lineSplit));
+            taxReductionList.add(lineTrim);
             return;
         }
-        if(lineTag.equals(healthBrackTag)){
-            healthBrackList.add(trimArray(lineSplit));
+        if(lineTag.equals(healthBracketTag)){
+            healthBrackList.add(lineTrim);
             return;
         }
         if(lineTag.equals(healthRateTag)){
-            healthRateList.add(trimArray(lineSplit));
+            healthRateList.add(lineTrim);
             return;
         }
         if(lineTag.equals(healthAmountTag)){
-            healthAmountList.add(trimArray(lineSplit));
+            healthAmountList.add(lineTrim);
             return;
         }
         if(lineTag.equals(surtaxTag)){
-            surtaxList.add(trimArray(lineSplit));
+            surtaxList.add(lineTrim);
             return;
         }
-
         if(lineTag.equals(cppEiTag)){
-            cppEiList.add(trimArray(lineSplit));
+            cppEiList.add(lineTrim);
             return;
         }
 
+        // Single Row Arrays
         if(lineTag.equals(claimAmountTag)) {
-            this.claimAmount = parseFloatArr(trimArray(lineSplit), claimAmountTag);
+            this.claimAmount = parseFloatArr(lineTrim, claimAmountTag);
         }
+
+        // Single Values
+        if (lineTag.equals(fieldDuesTag)) {
+            this.fieldDuesRate = parseFloatVal(lineTrim, fieldDuesTag);
+        }
+        if (lineTag.equals(monthDuesTag)) {
+            this.monthDuesRate = parseFloatVal(lineTrim, monthDuesTag);
+        }
+        if(lineTag.equals(nightPremiumTag)){
+            this.nightPremiumRate = parseFloatVal(lineTrim, nightPremiumTag);
+        }
+        if(lineTag.equals(nightOTTag)){
+            this.nightOT = parseBoolVal(lineTrim, nightOTTag);
+        }
+        if(lineTag.equals(doubleOTTag)){
+            this.doubleOT = parseBoolVal(lineTrim, doubleOTTag);
+        }
+
 
     }
 
@@ -294,6 +327,25 @@ public class TaxStatHolder {
             e.printStackTrace();
         }
         return retArr;
+    }
+
+    private static float parseFloatVal(String[] arr, String errorName){
+        float[] parsedFloats = parseFloatArr(arr, errorName);
+        if (parsedFloats.length != 1){
+            Log.e("TaxStatHolder", "Failed to parse " + errorName +
+                    " as single float because of size mismatch.");
+            return 0f;
+        }
+        return parsedFloats[0];
+    }
+
+    private static boolean parseBoolVal(String[] lineStrings, String errorName){
+        if (lineStrings.length != 1){
+            Log.e("TaxStatHolder", "Failed to set " + errorName +
+                    " as single boolean because of line size mismatch.");
+            return false;
+        }
+        return lineStrings[0].equals("TRUE");
     }
 
     public static String getCSVFileName(TaxManager.Prov prov){

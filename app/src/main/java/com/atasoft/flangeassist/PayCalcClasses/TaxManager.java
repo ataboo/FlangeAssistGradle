@@ -1,8 +1,10 @@
-package com.atasoft.helpers;
+package com.atasoft.flangeassist.PayCalcClasses;
 
 
 import android.content.SharedPreferences;
 import android.util.Log;
+
+import com.atasoft.flangeassist.PayCalcClasses.TaxStatHolder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -188,6 +190,7 @@ public class TaxManager {
 	}
 
     public float[] getTaxes(float gross, String year, String province){
+        Log.w("TaxManager", "Ran get Taxes... again.");
         return getTaxes(gross,
                 getYearIndexFromName(year),
                 getProvEnumFromName(province));
@@ -197,6 +200,12 @@ public class TaxManager {
         TaxStatHolder stats = getStatType(province);
 
         return stats.vacRate;
+    }
+
+    public float getNightPremium(String province){
+        TaxStatHolder stats = getStatType(province);
+
+        return stats.nightPremiumRate;
     }
 
 	private BigDecimal[] getCppEi(BigDecimal anGross, int year){

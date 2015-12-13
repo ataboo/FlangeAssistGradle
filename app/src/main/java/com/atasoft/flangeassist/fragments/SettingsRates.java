@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
 import com.atasoft.flangeassist.R;
-import com.atasoft.helpers.TaxManager;
 
 public class SettingsRates extends PreferenceFragment {
 

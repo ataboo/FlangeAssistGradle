@@ -1,13 +1,11 @@
 package com.atasoft.flangeassist.fragments;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 
 import com.atasoft.flangeassist.*;
-import com.atasoft.helpers.TaxManager;
+import com.atasoft.flangeassist.PayCalcClasses.TaxManager;
 
 public class SettingsRegional extends PreferenceFragment {
 

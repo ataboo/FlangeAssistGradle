@@ -141,7 +141,11 @@
     <string name="pref_monthDuesOn">custom_month_dues_on</string>
     <string name="pref_nightPremOn">custom_night_prem_on</string>
     <string name="pref_nightPrem">custom_night_prem</string>
-    <string name="pref_wageMealSpinners">payCalc_wageMealSpinners</string>
+    <string name="pref_weekSpinners">payCalc_weekSpinners</string>
+    <string name="pref_saveChecks">payCalc_saveChecks</string>
+    <string name="pref_loaSelectedIndex">loaCountIndex</string>
+    <string name="pref_mealSelectedIndex">mealCountIndex</string>
+    <string name="pref_lastWageName">lastWageName</string>
 
     <string-array name="dummy_day_entries">
         <item>0</item>

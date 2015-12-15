@@ -2,10 +2,9 @@ Boilermaker Toolbox
 ===================
 Boilermaker Toolbox is a FREE reference tool designed to help Boilermakers in Canada.  This tool is still early in development so more features will be added in the future.
 
-Tell your jealous friends with IPhones about the JavaScript (cross-device) rewrite at
-http://atasoft.altervista.org
+Tell your friends with iPhones to search for BoilerMac Toolbox in the IOS Store.
 
-###Main features so far (v0.28):
+###Main features so far (v0.29):
 - BMToolbox Reporter Launcher (Apprentice Reports)
 - Gross Tax Calculator
 - Rigging Calculator: finds load on slings, nylon sling table.
@@ -27,6 +26,19 @@ http://atasoft.altervista.org
 Feel free to send feedback or suggestions to bmtoolbox@gmail.com
 
 ###Changes:
+####V0.29 (12/14/15):
+- Tax and Wage values updated
+- Added SK and NF to Pay Calculator
+- Provinces now have Night Shift Premium, Dues, and Vacation rates as available through BCA
+- Provinces have 1.5 time on night shift as per agreements
+- Provinces have overtime at double rate as per agreements
+- Fixed BC and ON taxes, CB wages
+- TaxManager and PayCalc overhauled...again.
+- Taxes now properly calculated with Union Dues credited
+- Days of the week spinners now resize properly to screen
+- Icon changed to new IOS BoilerMac Toolbox icon.
+- Menu doesn't open on first run
+
 ####V0.28 (11/04/15):
 - Updated wage rates
 - Fixed vacation rates

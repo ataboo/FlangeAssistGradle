@@ -90,6 +90,8 @@ public class TaxManager {
         }
     }
 
+    public static final String defaultWageName = "Journeyperson";
+
     private TaxStatHolder fedStats = new TaxStatHolder(Prov.FED);
     private TaxStatHolder provStats;
 
@@ -190,7 +192,7 @@ public class TaxManager {
 	}
 
     public float[] getTaxes(float gross, String year, String province){
-        Log.w("TaxManager", "Ran get Taxes... again.");
+        //Log.w("TaxManager", "Ran get Taxes... again.");
         return getTaxes(gross,
                 getYearIndexFromName(year),
                 getProvEnumFromName(province));

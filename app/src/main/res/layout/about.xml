@@ -5,27 +5,44 @@
 	android:padding="16dp" >
 	<TextView
 		android:id="@+id/aboutblurb"
-		android:layout_alignParentTop="true"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
 		android:text="@string/about_blurb"
 		android:autoLink="email"
 		android:linksClickable="true"
-		android:textSize="18sp" />
-	<TextView
-		android:id="@+id/versionInfo"
-		android:layout_alignParentBottom="true"
+		android:textSize="16sp"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true" />
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:text="@string/version_info"
-		android:paddingBottom="8dp"
-		android:textSize="18sp" />
-	<ImageView
-		android:id="@+id/about_logo"
-		android:layout_width="80dp"
-		android:layout_height="80dp"
-		android:scaleType="fitCenter"
-		android:src="@drawable/ic_launcherbig"
-		android:layout_alignParentBottom="true" 
-		android:layout_alignParentRight="true"/>
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true">
+
+		<TextView
+            android:id="@+id/versionInfo"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/version_info"
+            android:paddingBottom="8dp"
+            android:textSize="16sp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+			android:layout_gravity="bottom" />
+
+		<ImageView
+            android:id="@+id/about_logo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitEnd"
+            android:src="@mipmap/ic_launcher"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+			android:layout_gravity="right" />
+	</LinearLayout>
 </RelativeLayout>

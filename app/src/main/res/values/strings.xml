@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="version_info">Boilermaker Toolbox v0.28
-		\nLast updated November 4, 2015
-		\nAB Wages updated: November 4, 2015</string>
+    <string name="version_info">Boilermaker Toolbox v#VERSION
+		\nUpdated: 12/15/15
+		\nWages updated: 12/15/15</string>
 
     <!-- Main Menu -->
     <string name="action_settings">Settings</string>
     <string name="app_name">Boilermaker Toolbox</string>
+    <string name="app_name_short">Toolbox</string>
     <string name="default_spinner_value">-</string>
     <!-- Hall Links -->
 
@@ -141,6 +142,12 @@
     <string name="pref_nightPremOn">custom_night_prem_on</string>
     <string name="pref_nightPrem">custom_night_prem</string>
     <string name="pref_wageMealSpinners">payCalc_wageMealSpinners</string>
+
+    <string-array name="dummy_day_entries">
+        <item>0</item>
+        <item>10</item>
+        <item>12</item>
+    </string-array>
 
 
 </resources>

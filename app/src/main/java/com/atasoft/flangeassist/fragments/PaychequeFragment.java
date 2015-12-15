@@ -6,6 +6,7 @@ import android.os.*;
 import android.preference.*;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.*;
 import android.view.View.*;
 import android.widget.*;
@@ -22,24 +23,134 @@ import java.text.NumberFormat;
 
  public class PaychequeFragment extends Fragment implements OnClickListener
 {
-    public enum DayType {
-		FIVE_WEEK,
-		FIVE_END,
-		FOUR_WEEK,
-		FOUR_FRI,
-		FOUR_END
-	}
+    public enum HoursPreset {
+        ZERO(0, 0), TENS(2, 0), TWELVES(3, 7);
 
-	public static final String NAME = "Paycheque Calculator";
-	private double[] wageRates;
+        private int shiftIndex;
+        private int mealCount;
+        HoursPreset(int shiftIndex, int mealCount){
+            this.shiftIndex = shiftIndex;
+            this.mealCount = mealCount;
+        }
+
+        int getShiftIndex(){
+            return shiftIndex;
+        }
+
+        int[] getBonusCounts(){
+            return new int[]{mealCount, 0};
+        }
+    }
+
+    public enum SpinnerData {
+        SUN(R.id.sunSpin),
+        MON(R.id.monSpin),
+        TUE(R.id.tueSpin),
+        WED(R.id.wedSpin),
+        THU(R.id.thuSpin),
+        FRI(R.id.friSpin),
+        SAT(R.id.satSpin),
+        MEAL(R.id.meals_spin),
+        LOA(R.id.loa_spin),
+        WAGE(R.id.wageSpin);
+
+        private final String[] customDayShifts = {"0","8","10","12","13","A","B","C"};
+        private final String[] standardDayShifts = {"0","8","10","12","13"};
+        private final String[] bonusDayOptions = {"0","1","2","3","4","5","6","7"};
+
+        private Spinner spinner;
+        private int id;
+        private String selection;
+
+        SpinnerData(int id){
+            this.id = id;
+        }
+
+        static SpinnerData getDataBySpinner(Spinner spinner){
+            for(SpinnerData spinnerData: SpinnerData.values()){
+                if(spinner.getId() == spinnerData.id){
+                    return spinnerData;
+                }
+            }
+            return null;
+        }
+
+        void setSelection(int index, boolean animated){
+            spinner.setSelection(index, animated);
+            // Update this.selection so selectionChanged is !true when checked via listener.
+            getSelectedItem();
+        }
+
+        void setView(View parentView){
+            this.spinner = (Spinner) parentView.findViewById(id);
+        }
+
+        boolean selectionChanged(){
+            String newSelection = (String) spinner.getSelectedItem();
+            return !newSelection.equals(selection);
+        }
+
+        String getSelectedItem(){
+            this.selection = (String) spinner.getSelectedItem();
+            return selection;
+        }
+
+        void updateShiftAdaptor(Boolean customDays, Context context){
+            String[] shifts = customDays ? customDayShifts: standardDayShifts;
+            ArrayAdapter<String> shiftAdapter = new ArrayAdapter<String>(context, R.layout.spinner_layout, shifts);
+            spinner.setAdapter(shiftAdapter);
+        }
+
+        void updateBonusAdaptor(Context context){
+            if(this != MEAL || this != LOA){
+                //throw(new Error("updateBonusAdaptor invalid spinner type call."));
+            }
+
+            ArrayAdapter<String> bonusDayAdaptor = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, bonusDayOptions);
+            spinner.setAdapter(bonusDayAdaptor);
+        }
+
+
+
+    }
+
+    public static final String NAME = "Paycheque Calculator";
+    private float[] wageRates;
+
+    private SpinnerData[] daySpinners = {SpinnerData.SUN, SpinnerData.MON, SpinnerData.TUE, SpinnerData.WED, SpinnerData.THU, SpinnerData.FRI, SpinnerData.SAT};
+    private SpinnerData[] bonusSpinners = {SpinnerData.MEAL, SpinnerData.LOA};
+    private CheckBox taxToggle;
+    private CheckBox cppToggle;
+    private CheckBox fieldDuesToggle;
+    private CheckBox monthlyDuesToggle;
+    private CheckBox monHol;
+    private CheckBox tueHol;
+    private CheckBox wedHol;
+    private CheckBox thuHol;
+    private CheckBox friHol;
+    private TextView sTimeText;
+    private TextView hTimeText;
+    private TextView dTimeText;
+    private TextView wageRateVal;
+    private TextView vacationVal;
+    private TextView grossVal;
+    private TextView exemptVal;
+    private TextView dedVal;
+    private TextView netVal;
+    private ToggleButton fourToggle;
+    private ToggleButton nightToggle;
+    private ToggleButton travelToggle;
+    private ToggleButton dayTravelToggle;
+
     private View thisFragView;
+    private SharedPreferences prefs;
+    private Context context;
+    private Boolean customDay;
+    private String oldProvWage;
+    private static int minDayWidthDP = 310;
 
-
-	private SharedPreferences prefs;
-	private Context context;
-	private Boolean customDay;
-	private String oldProvWage;
 	private TaxManager taxManager;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +159,7 @@ import java.text.NumberFormat;
         View v = inflater.inflate(R.layout.paycalc, container, false);
         thisFragView = v;
 		context = getActivity().getApplicationContext();
+        resizeDayLayout();
 
         return v;
     }
@@ -59,6 +171,7 @@ import java.text.NumberFormat;
         //this.context = thisFragView.getContext();
         this.context = getActivity().getApplicationContext();
         setupViews();
+        setupSpinners();
 
     }
 
@@ -83,7 +196,7 @@ import java.text.NumberFormat;
 		String provWage = prefs.getString("list_provWageNew",  TaxManager.Prov.AB.getName());
 		if(!provWage.equals(oldProvWage)){
             oldProvWage = provWage;
-            setupViewsForProvince();
+            updateWageSpinner();
         }
 		updateCalcOutput();
 	}
@@ -92,53 +205,19 @@ import java.text.NumberFormat;
     public void onClick(View v) {
         switch (v.getId()) {
 			case R.id.clr_but:
-				preSets(0);
+				setShift(HoursPreset.ZERO);
 				break;
 			case R.id.tens_but:
-			    preSets(1);
+			    setShift(HoursPreset.TENS);
 				break;
 			case R.id.twelves_but:
-			    preSets(2);
-				break;
-			default:  // Refreshes calc when other buttons called
-			    updateCalcOutput();
+			    setShift(HoursPreset.TWELVES);
 				break;
         }
+
+        // update calc output on any button push.
+        updateCalcOutput();
     }
-
-    private Spinner sunSpin;
-    private Spinner monSpin;
-    private Spinner tueSpin;
-    private Spinner wedSpin;
-    private Spinner thuSpin;
-    private Spinner friSpin;
-    private Spinner satSpin;
-    private Spinner mealSpin;
-    private Spinner loaSpin;
-    private Spinner wageSpin;
-    private CheckBox taxToggle;
-    private CheckBox cppToggle;
-    private CheckBox fieldDuesToggle;
-    private CheckBox monthlyDuesToggle;
-    private CheckBox monHol;
-    private CheckBox tueHol;
-    private CheckBox wedHol;
-    private CheckBox thuHol;
-    private CheckBox friHol;
-    private TextView sTimeText;
-    private TextView hTimeText;
-    private TextView dTimeText;
-    private TextView wageRateVal;
-    private TextView vacationVal;
-    private TextView grossVal;
-    private TextView exemptVal;
-    private TextView dedVal;
-    private TextView netVal;
-    private ToggleButton fourToggle;
-    private ToggleButton nightToggle;
-    private ToggleButton travelToggle;
-    private ToggleButton dayTravelToggle;
-
 
     private void setupViews(){
         if(taxManager == null){
@@ -146,6 +225,7 @@ import java.text.NumberFormat;
             String provName = prefs.getString(getString(R.string.pref_prov), TaxManager.Prov.AB.getName());
             this.taxManager = new TaxManager(provName);
         }
+
 
         Button bClr = (Button) thisFragView.findViewById(R.id.clr_but);
         Button bTens = (Button) thisFragView.findViewById(R.id.tens_but);
@@ -191,91 +271,94 @@ import java.text.NumberFormat;
         exemptVal = (TextView) thisFragView.findViewById(R.id.exempt_val);
         dedVal = (TextView) thisFragView.findViewById(R.id.deduct_val);
         netVal = (TextView) thisFragView.findViewById(R.id.net_val);
-
-        setupSpinners();
     }
 
+    private void resizeDayLayout(){
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        RelativeLayout daySpinnerRelative = (RelativeLayout) thisFragView.findViewById(R.id.payDayRelative);
+        float logicalDensity = metrics.density;
+        int minWidth = dpToPixel(minDayWidthDP, logicalDensity);
+        int screenWidth = metrics.widthPixels;
+        int dayWidth = screenWidth < minWidth ? minWidth: screenWidth - 24;
+
+        for(int i=0; i<daySpinnerRelative.getChildCount(); i++) {
+            View view = (View) daySpinnerRelative.getChildAt(i);
+            if (view instanceof LinearLayout) {
+                LinearLayout daySpinnerLayout = (LinearLayout) view;
+                daySpinnerLayout.getLayoutParams().width = dayWidth;
+                Log.w("PayCalc", String.format("Set view to width: %d.", daySpinnerLayout.getWidth()));
+                Log.w("PayCalc", String.format("Screen Dimensions: %d x %d. DP: %d x %d", metrics.widthPixels, metrics.heightPixels,
+                        pixelToDp(metrics.widthPixels, logicalDensity), pixelToDp(metrics.heightPixels, logicalDensity)));
+            }
+        }
+    }
+
+    static int dpToPixel(int dp, float logicalDensity){
+        return (int) Math.ceil(dp * logicalDensity);
+    }
+
+    static int pixelToDp(int pixels, float logicalDensity){
+        return (int) Math.ceil(pixels / logicalDensity);
+    }
 
 	private void setupSpinners() {
-		sunSpin = (Spinner) thisFragView.findViewById(R.id.sunSpin);
-		monSpin = (Spinner) thisFragView.findViewById(R.id.monSpin);
-		tueSpin = (Spinner) thisFragView.findViewById(R.id.tueSpin);
-		wedSpin = (Spinner) thisFragView.findViewById(R.id.wedSpin);
-		thuSpin = (Spinner) thisFragView.findViewById(R.id.thuSpin);
-		friSpin = (Spinner) thisFragView.findViewById(R.id.friSpin);
-		satSpin = (Spinner) thisFragView.findViewById(R.id.satSpin);
+        // FindViewByID for spinners and add listeners
+        for(SpinnerData spinnerData : SpinnerData.values()){
+            spinnerData.setView(thisFragView);
+            addListenerToSpinner(spinnerData.spinner);
+        }
 
-		mealSpin = (Spinner) thisFragView.findViewById(R.id.meals_spin);
-		loaSpin = (Spinner) thisFragView.findViewById(R.id.loa_spin);
-		wageSpin = (Spinner) thisFragView.findViewById(R.id.wageSpin);
+        // Add ArrayAdaptors for DaySpinners
+        updateDaySpinners(prefs.getBoolean(getString(R.string.pref_custDaysOn), false));
 
+        // Add Array Adaptors for Meal and LOA Bonuses (0...7)
+        for(SpinnerData spinnerData : bonusSpinners){
+            spinnerData.updateBonusAdaptor(context);
+        }
 
-        //If Custom Day is active then they are added to the spinners
-		updateDaySpinners(prefs.getBoolean(getString(R.string.pref_custDaysOn), false));
+        updateWageSpinner();
 
-        ArrayAdapter<String> weekCount = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-                android.R.layout.simple_spinner_item,
-				new String[]{"0","1","2","3","4","5","6","7"});
-        loaSpin.setAdapter(weekCount);
-        mealSpin.setAdapter(weekCount);
-
-		setupViewsForProvince();
-
-        addListenerToSpinner(monSpin);
-        addListenerToSpinner(tueSpin);
-        addListenerToSpinner(wedSpin);
-        addListenerToSpinner(thuSpin);
-        addListenerToSpinner(friSpin);
-        addListenerToSpinner(satSpin);
-        addListenerToSpinner(sunSpin);
-        addListenerToSpinner(loaSpin);
-        addListenerToSpinner(mealSpin);
-        addListenerToSpinner(wageSpin);
+        addListenerToSpinner(SpinnerData.WAGE.spinner);
 
 		updateCalcOutput();
 	}
 
-    private void addListenerToSpinner(Spinner spinner){
+    private void addListenerToSpinner(final Spinner spinner){
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int pos, long id) {
-                updateCalcOutput();
+                spinnerItemSelection((Spinner) parent);
             }
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }
 
-	private void updateDaySpinners(Boolean custDayCheck){
-		String[] workHrs;
+    // Called by spinner itemSelectedListener
+    public void spinnerItemSelection(Spinner spinner){
+        SpinnerData spinnerData = SpinnerData.getDataBySpinner(spinner);
+        if(spinnerData == null){
+            Log.w("PaychequeFragment", "Spinner data returned null. Ignoring ItemSelection.");
+            return;
+        }
+        if(spinnerData.selectionChanged()){
+            spinnerData.getSelectedItem();
+            updateCalcOutput();
+            //Log.i("PaychequeFragment", "Spinner data changed... running calc.");
+        } else {
+            //Log.i("PayCheque Fragment", "Spinner data didn't change.");
+        }
+    }
 
-		customDay = custDayCheck;
-        verifyCustDays();
-		if(customDay) {
-			workHrs = new String[] {"0","8","10","12","13","A","B","C"};
-		} else {
-		    workHrs = new String[] {"0","8","10","12","13"};
-        	customDay = false;  //for pushbootan usage if invalid
-		}
-
-		/*
-		ArrayAdapter<String> weekAd = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-															   android.R.layout.simple_spinner_item, workHrs);
-		*/
-
-		ArrayAdapter<String> weekAd = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-			R.layout.spinner_layout, workHrs);
-
-		monSpin.setAdapter(weekAd);
-        tueSpin.setAdapter(weekAd);
-        wedSpin.setAdapter(weekAd);
-        thuSpin.setAdapter(weekAd);
-        friSpin.setAdapter(weekAd);
-        satSpin.setAdapter(weekAd);
-        sunSpin.setAdapter(weekAd);
+	private void updateDaySpinners(Boolean customDaysOn){
+		for(SpinnerData spinnerData : daySpinners){
+            spinnerData.updateShiftAdaptor(customDaysOn, context);
+        }
+        customDay = customDaysOn; //Flags change handled for redo spinners
 	}
 
-	private void setupViewsForProvince() {
+	private void updateWageSpinner() {
         oldProvWage = prefs.getString(getString(R.string.pref_prov), TaxManager.Prov.AB.getName());
 
         if(!TaxManager.validatePrefs(prefs)){
@@ -290,35 +373,44 @@ import java.text.NumberFormat;
                     TaxManager.yearStrings[TaxManager.yearStrings.length - 1]);
             prefEdit.apply();
         }
-		this.wageRates = floatToDoubArr(taxManager.getWageRates(oldProvWage));
+
+		this.wageRates = taxManager.getWageRates(oldProvWage);
 
 		String[] wageNames = taxManager.getWageNames(oldProvWage);
         ArrayAdapter<String> wageAdapt = new ArrayAdapter<String>(getActivity().getApplicationContext(),
                 android.R.layout.simple_spinner_item, wageNames);
 
-        wageSpin.setAdapter(wageAdapt);
+        SpinnerData.WAGE.spinner.setAdapter(wageAdapt);
 
-        int defaultWage = AtaMathUtils.bracketInt((int)wageRates[wageRates.length - 1], 0, wageSpin.getAdapter().getCount()-1);
-        String[] mealSpinnerVals = prefs.getString(getString(R.string.pref_wageMealSpinners), "5,0,0,").split(",");
-        mealSpinnerVals[0] = Integer.toString(defaultWage);
-        StringBuilder builder = new StringBuilder();
-        for(int i=0; i<mealSpinnerVals.length; i++){
-            builder.append(mealSpinnerVals[i]);
-            builder.append(",");
+        String[] mealSpinnerVals = prefs.getString(getString(R.string.pref_wageMealSpinners), "5,0,0").split(",");
+        if(Integer.parseInt(mealSpinnerVals[0]) > wageNames.length - 1){
+            int defaultWageIndex = AtaMathUtils.bracketInt((int)wageRates[wageRates.length - 1], 0, wageNames.length - 1);
+            mealSpinnerVals[0] = Integer.toString(defaultWageIndex);
+            String mealSpinnerString = String.format("%s,%s,%s", mealSpinnerVals[0], mealSpinnerVals[1], mealSpinnerVals[2]);
+            prefs.edit().putString(getString(R.string.pref_wageMealSpinners), mealSpinnerString).apply();
         }
-        prefs.edit().putString(getString(R.string.pref_wageMealSpinners), builder.toString()).apply();
-        //Log.w("PaychequeFragment", "wageMeaSpinner is: " + prefs.getString("payCalc_wageMealSpinners", "Failed"));
+    }
+
+    private void setShift(HoursPreset preset){
+        for(SpinnerData spinnerData: daySpinners){
+            spinnerData.setSelection(preset.getShiftIndex(), false);
+        }
+        SpinnerData.MEAL.setSelection(preset.getBonusCounts()[0], false);
+        SpinnerData.LOA.setSelection(preset.getBonusCounts()[1], false);
     }
 
     // TODO: stretch this out a bit and use string references
     private static final String[] custDayKeys = {"custom_a", "custom_b", "custom_c"};
     private static final String[] custDaySuffix = {"_straight", "_overtime", "_double"};
     private static final String[] custDayNames = {"Day A", "Day B", "Day C"};
-	private void verifyCustDays() {
+	private boolean verifyCustDays() {
+        boolean verifyFlag = true;
+
 		for(int i = 0; i < custDayKeys.length; i++) {
             for(int j=0; j< custDaySuffix.length; j++){
                 double[] parsedDay = parseDay(prefs.getString(custDayKeys[i] + custDaySuffix[j], "0"));
                 if(parsedDay[1] == 0){
+                    verifyFlag = false;
                     SharedPreferences.Editor pEdit = prefs.edit();
                     pEdit.putString(custDayKeys[i] + custDaySuffix[j], "0").apply();
                     Toast.makeText(context, custDayNames[i] + custDaySuffix[j].replace("_", " ") +
@@ -326,6 +418,7 @@ import java.text.NumberFormat;
                 }
             }
 		}
+        return verifyFlag;
 	}
 
     //second value is fail check
@@ -348,8 +441,8 @@ import java.text.NumberFormat;
 
         PayCalcData payCalcData = new PayCalcData(taxManager, provString, yearString);
 
-        int mealCount = Integer.parseInt(mealSpin.getSelectedItem().toString());
-        int loaCount = Integer.parseInt(loaSpin.getSelectedItem().toString());
+        int mealCount = Integer.parseInt(SpinnerData.MEAL.getSelectedItem());
+        int loaCount = Integer.parseInt(SpinnerData.LOA.getSelectedItem());
         float mealRate = checkPref(getString(R.string.pref_customMeal), 40, "Meal Rate");
         float loaRate = checkPref(getString(R.string.pref_loaRate), 195, "LOA Rate");
 
@@ -387,16 +480,16 @@ import java.text.NumberFormat;
 
         boolean doubleOT = taxManager.getDoubleOT(provString);
 
-        Spinner[] spinArr = {sunSpin, monSpin, tueSpin, wedSpin, thuSpin, friSpin, satSpin};
+
         boolean[] weekHolidays = {true, monHol.isChecked(), tueHol.isChecked(), wedHol.isChecked(),
                 thuHol.isChecked(),friHol.isChecked(), true};  //sat and sun count as holidays
-        for(int i=0; i<spinArr.length; i++){
+        for(int i=0; i<daySpinners.length; i++){
             float[] splitArr;
-            String itemStr = (spinArr[i].getSelectedItem().toString());
+            String itemStr = (daySpinners[i].getSelectedItem());
             if(itemStr.contains("A") || itemStr.contains("B") || itemStr.contains("C")){
                 splitArr = getCustomDayPrefs(itemStr);
             } else {
-                String selectedShift = (String) spinArr[i].getSelectedItem();
+                String selectedShift = daySpinners[i].getSelectedItem();
                 splitArr = new float[]{Float.parseFloat(selectedShift)};
             }
             // Sends to add hours as weekend if double time checked
@@ -406,10 +499,10 @@ import java.text.NumberFormat;
         }
 
         float wageRate;
-        if(wageSpin.getSelectedItem().toString().contains("Custom")) {
+        if(SpinnerData.WAGE.getSelectedItem().contains("Custom")) {
             wageRate = checkPref(getString(R.string.pref_custom_wage), 20, "Custom Wage");
         } else {
-            wageRate = (float) wageRates[wageSpin.getSelectedItemPosition()];
+            wageRate = (float) wageRates[SpinnerData.WAGE.spinner.getSelectedItemPosition()];
         }
 
         float vacRate = (prefs.getBoolean(getString(R.string.pref_vacOn), false)) ?
@@ -434,45 +527,24 @@ import java.text.NumberFormat;
         float netPay = earnings.getGross() - deductionsSum;
         float[] hoursSum = payCalcData.getHoursSum();
 
-        wageRateVal.setText(String.format("Wage: %.2f$", wageRate));
-        vacationVal.setText(String.format("Vac\\Hol (%.2f%%): %.2f$", vacRate * 100d, earnings.vacationBonus));
-        grossVal.setText(String.format("Gross: %.2f$", earnings.getGross()));
-        exemptVal.setText(String.format("Tax Exempt: %.2f$", earnings.getExempt()));
-        cppToggle.setText(String.format("EI/CPP: %.2f$ + %.2f$", deductions.ei, deductions.cpp));
-		fieldDuesToggle.setText(String.format("Work Dues (%.2f%%): %.2f$", fieldDuesRate * 100, fieldDues));
-		monthlyDuesToggle.setText(String.format("Monthly Dues: %.2f$", deductions.monthlyDues));
-		dedVal.setText(String.format("Deductions: %.2f$", deductionsSum));
-		netVal.setText(String.format("Takehome: %.2f$", netPay));
+        wageRateVal.setText(String.format("Wage: $%.2f", wageRate));
+        vacationVal.setText(String.format("Vac\\Hol (%.2f%%): $%.2f", vacRate * 100d, earnings.vacationBonus));
+        grossVal.setText(String.format("Gross: $%.2f", earnings.getGross()));
+        exemptVal.setText(String.format("Tax Exempt: $%.2f", earnings.getExempt()));
+        cppToggle.setText(String.format("EI/CPP: $%.2f + $%.2f", deductions.ei, deductions.cpp));
+		fieldDuesToggle.setText(String.format("Work Dues (%.2f%%): $%.2f", fieldDuesRate * 100, fieldDues));
+		monthlyDuesToggle.setText(String.format("Monthly Dues: $%.2f", deductions.monthlyDues));
+		dedVal.setText(String.format("Deductions: $%.2f", deductionsSum));
+		netVal.setText(String.format("Takehome: $%.2f", netPay));
 		sTimeText.setText("1.0x: " + twoPrecision(hoursSum[0]));
 		hTimeText.setText("1.5x: " + twoPrecision(hoursSum[1]));
 		dTimeText.setText("2.0x: " + twoPrecision(hoursSum[2]));
 
 		if(addTax == 0) {
-			taxToggle.setText(String.format("Tax: %.2f$", deductions.getTaxes()));
+			taxToggle.setText(String.format("Tax: $%.2f", deductions.getTaxes()));
 		} else {
-			taxToggle.setText(String.format("Tax: %.2f$ + %.2f$", deductions.getTaxes(), addTax));
+			taxToggle.setText(String.format("Tax: $%.2f + $%.2f", deductions.getTaxes(), addTax));
 		}
-	}
-
-	//unnecessary double
-	private double checkPrefDouble(String preferenceKey, double defaultVal, String toastName) {
-		double retVal;
-        String defaultString = Double.toString(defaultVal);
-		String prefString = prefs.getString(preferenceKey, defaultString);
-		try {
-			retVal = Double.parseDouble(prefString);
-		}
-		catch (NumberFormatException e) {
-			setPrefDefault(preferenceKey, defaultString);
-			Toast.makeText(context, toastName + " wasn't a number.", Toast.LENGTH_SHORT).show();
-			return defaultVal;
-		}
-		if(retVal > 100000 || retVal < 0) {
-			setPrefDefault(preferenceKey, defaultString);
-			Toast.makeText(context, toastName + " was out of range.", Toast.LENGTH_SHORT).show();
-			return defaultVal;
-		}
-		return retVal;
 	}
 
     private float checkPref(String prefKey, float defaultVal, String errorName){
@@ -501,35 +573,6 @@ import java.text.NumberFormat;
 		prefEdit.apply();
     }
 
-	private void preSets(int index){
-		if(index == 0) {
-        	sunSpin.setSelection(0, false);
-        	monSpin.setSelection(0, false);
-        	tueSpin.setSelection(0, false);
-        	wedSpin.setSelection(0, false);
-        	thuSpin.setSelection(0, false);
-        	friSpin.setSelection(0, false);
-        	satSpin.setSelection(0, false);
-        	mealSpin.setSelection(0, false);
-        	loaSpin.setSelection(0, false);
-        	return;
-        } else {
-			index += 1;
-        	sunSpin.setSelection(index, false);
-        	monSpin.setSelection(index, false);
-        	tueSpin.setSelection(index, false);
-        	wedSpin.setSelection(index, false);
-        	thuSpin.setSelection(index, false);
-        	friSpin.setSelection(index, false);
-        	satSpin.setSelection(index, false);
-        	mealSpin.setSelection(0, false);
-        	loaSpin.setSelection(0, false);
-        }
-        if(index == 3) {
-        	mealSpin.setSelection(7, false);
-        }
-    }
-
 	private float[] getCustomDayPrefs(String itemStr) {
         String prefName = "";
 		float[] dayFloats = new float[custDaySuffix.length];
@@ -549,92 +592,49 @@ import java.text.NumberFormat;
 		return dayFloats;
 	}
 
-	private double[] hrsSplit(double hrs, DayType day) {
-	//day 0 = 5-8s, 1 = 4-10s mon-thu, 2 = 4-10s fri, 3 = weekend
-		double sTime = 0;
-		double hTime = 0;
-		double dTime = 0;
-		switch(day) {
-			case FIVE_WEEK:
-				if (hrs > 10) {
-					dTime = hrs - 10;
-				}
-				if (hrs > 8) {
-					hTime = hrs - dTime - 8;
-				}
-				sTime = hrs - dTime - hTime;
-				break;
-			case FOUR_WEEK:
-				if(hrs > 10) {
-					dTime = hrs - 10;
-				}
-				sTime = hrs - dTime;
-				break;
-			case FOUR_FRI:
-				if(hrs > 10) {
-					dTime = hrs - 10;
-				}
-				hTime = hrs - dTime;
-				break;
-			default:
-				dTime = hrs;
-				break;
-		}
-		return new double[]{sTime, hTime, dTime};
-	}
-
-	private double calcDues(double grossNoVac, double duesRate) {
-		return grossNoVac * duesRate;
-	}
-
     //Groups like views and serializes to CSV strings
     private void saveState(){
-        //Had to make the arrays local or they'd be null before they were initialized
-        Spinner[] weekSpinners = {sunSpin, monSpin, tueSpin, wedSpin, thuSpin, friSpin, satSpin};
-        Spinner[] wageMealSpinners = {wageSpin, mealSpin, loaSpin};
         CompoundButton[] saveChecks = {monHol, tueHol, wedHol, thuHol, friHol,  //Checkboxes
                 taxToggle, cppToggle, fieldDuesToggle, monthlyDuesToggle,
                 fourToggle, nightToggle, travelToggle, dayTravelToggle};
-        if(prefs == null || wageSpin == null) return;
+        if(prefs == null || SpinnerData.WAGE.spinner == null) return;
 
         StringBuilder weekStringBuild = new StringBuilder();
-        for(int i=0; i<weekSpinners.length; i++){
-            if(weekSpinners[i]==null) {
+        for(int i=0; i<daySpinners.length; i++){
+            if(daySpinners[i].spinner==null) {
                 return;
             }
-            weekStringBuild.append(Integer.toString(weekSpinners[i].getSelectedItemPosition())).append(",");
+            weekStringBuild.append(Integer.toString(daySpinners[i].spinner.getSelectedItemPosition())).append(",");
         }
         StringBuilder holidayStringBuild = new StringBuilder();
         for(int i=0; i<saveChecks.length; i++){
             int boolInt = (saveChecks[i].isChecked()) ? 1 : 0;
             holidayStringBuild.append(boolInt).append(",");
         }
-        StringBuilder wageMealBuild = new StringBuilder();
-        for(int i=0; i<wageMealSpinners.length; i++){
-            wageMealBuild.append(wageMealSpinners[i].getSelectedItemPosition()).append(",");
-        }
+        int[] wageMealIndices = {SpinnerData.WAGE.spinner.getSelectedItemPosition(),
+                SpinnerData.MEAL.spinner.getSelectedItemPosition(),
+                SpinnerData.LOA.spinner.getSelectedItemPosition()};
 
         SharedPreferences.Editor prefEdit = prefs.edit();
         prefEdit.putString("payCalc_weekSpinners", weekStringBuild.toString());
         prefEdit.putString("payCalc_saveChecks", holidayStringBuild.toString());
-        prefEdit.putString("payCalc_wageMealSpinners", wageMealBuild.toString());
+        prefEdit.putString("payCalc_wageMealSpinners", String.format("%d,%d,%d", wageMealIndices[0], wageMealIndices[1], wageMealIndices[2]));
 
         //prefEdit.putStringSet();
         prefEdit.apply();
     }
 
+    // TODO: extract keys
     private void loadState(){
-        Spinner[] weekSpinners = {sunSpin, monSpin, tueSpin, wedSpin, thuSpin, friSpin, satSpin};
-        Spinner[] wageMealSpinners = {wageSpin, mealSpin, loaSpin};
         CompoundButton[] saveChecks = {monHol, tueHol, wedHol, thuHol, friHol,  //Checkboxes
                 taxToggle, cppToggle, fieldDuesToggle, monthlyDuesToggle,
                 fourToggle, nightToggle, travelToggle, dayTravelToggle};
         if(prefs == null) return;
 
         String[] weekSpinnerIndices = prefs.getString("payCalc_weekSpinners", "0,0,0,0,0,0,0,").split(",");
-        for(int i=0; i<weekSpinners.length; i++){
-            if(weekSpinners[i] == null) return;
-            weekSpinners[i].setSelection(AtaMathUtils.bracketInt(weekSpinnerIndices[i], 0, 6));
+        for(int i=0; i<daySpinners.length; i++){
+            if(daySpinners[i].spinner == null) return;
+            daySpinners[i].setSelection(AtaMathUtils.bracketInt(weekSpinnerIndices[i], 0, 6), false);
         }
         String[] saveChecksIndices = prefs.getString("payCalc_saveChecks", "0,0,0,0,0,1,1,1,0,0,0,0,0,").split(",");
         for(int i=0; i<saveChecks.length; i++){
@@ -642,10 +642,13 @@ import java.text.NumberFormat;
         }
         String[] wageMealIndices = prefs.getString("payCalc_wageMealSpinners", "5,0,0,").split(",");
         //Incase number of items in wage spinner has changed with province between saves
-        wageMealSpinners[0].setSelection(AtaMathUtils.bracketInt(
-                wageMealIndices[0], 0, wageMealSpinners[0].getAdapter().getCount() - 1));
-        wageMealSpinners[1].setSelection(AtaMathUtils.bracketInt(wageMealIndices[1], 0, 6));
-        wageMealSpinners[2].setSelection(AtaMathUtils.bracketInt(wageMealIndices[2], 0, 6));
+        SpinnerData.WAGE.setSelection(AtaMathUtils.bracketInt(wageMealIndices[0], 0, wageRates.length - 1), false);
+        SpinnerData.MEAL.setSelection(AtaMathUtils.bracketInt(wageMealIndices[1], 0, 6), false);
+        SpinnerData.LOA.setSelection(AtaMathUtils.bracketInt(wageMealIndices[2], 0, 6), false);
+
+        if(prefs.getBoolean(getString(R.string.pref_custDaysOn), false)){
+            verifyCustDays();
+        }
     }
 
     public static String twoPrecision (double d){

@@ -7,10 +7,11 @@ Cape Breton,Classification,Wage
 #wages,2nd Year App,28.61
 #wages,1st Year App,22.49
 #wages,Helper,28.61
+"Next Increase July 3, 2016",,
 ,,
 #vac_rate,0.12,
-#field_dues,0,
-#month_dues,40.95,
+#field_dues,0.0525,
+#month_dues,43.75,
 #night_ot,TRUE,
 #double_ot,TRUE,
 ,,

@@ -8,9 +8,10 @@ Alberta,Classification,Wage,,,
 #wages,1st Year App,26.16,,,
 #wages,Helper,33.15,,,
 ,,,,,
+,,,,,
 #vac_rate,0.1,,,,
 #field_dues,0.0375,,,,
-#month_dues,39.3,,,,
+#month_dues,39.85,,,,
 #night_prem,3.25,,,,
 ,,,,,
 ,,,,,
@@ -18,16 +19,16 @@ Alberta,Classification,Wage,,,
 #rates,0.1,,,,
 #rates,0.1,,,,
 #rates,0.1,,,,
-rates,0.1,0.12,0.13,0.14,0.15
+#rates,0.1,0.12,0.13,0.14,0.15
 ,,,,,
 #brackets,0,,,,
 #brackets,0,,,,
 #brackets,0,,,,
-brackets,0,125000,150000,200000,300000
+#brackets,0,125000,150000,200000,300000
 ,,,,,
 #const_k,0,,,,
 #const_k,0,,,,
 #const_k,0,,,,
-const_k,0,2500,4000,6000,9000
+#const_k,0,2500,4000,6000,9000
 ,,,,,
-#claim_amount,17593,17787,18214,,
+#claim_amount,17593,17787,18214,18451,

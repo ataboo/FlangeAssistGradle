@@ -149,6 +149,7 @@ import java.text.NumberFormat;
     private Boolean customDay;
     private String oldProvWage;
     private static int minDayWidthDP = 310;
+    private static int dayWidthMarginDP = 10;
 
 	private TaxManager taxManager;
 
@@ -281,16 +282,15 @@ import java.text.NumberFormat;
         float logicalDensity = metrics.density;
         int minWidth = dpToPixel(minDayWidthDP, logicalDensity);
         int screenWidth = metrics.widthPixels;
-        int dayWidth = screenWidth < minWidth ? minWidth: screenWidth - 24;
+        int dayWidth = screenWidth < minWidth ? minWidth: screenWidth - dpToPixel(2 * dayWidthMarginDP, logicalDensity);
 
         for(int i=0; i<daySpinnerRelative.getChildCount(); i++) {
             View view = (View) daySpinnerRelative.getChildAt(i);
             if (view instanceof LinearLayout) {
                 LinearLayout daySpinnerLayout = (LinearLayout) view;
                 daySpinnerLayout.getLayoutParams().width = dayWidth;
-                Log.w("PayCalc", String.format("Set view to width: %d.", daySpinnerLayout.getWidth()));
-                Log.w("PayCalc", String.format("Screen Dimensions: %d x %d. DP: %d x %d", metrics.widthPixels, metrics.heightPixels,
-                        pixelToDp(metrics.widthPixels, logicalDensity), pixelToDp(metrics.heightPixels, logicalDensity)));
+                //Log.w("PayCalc", String.format("Screen Dimensions: %d x %d. DP: %d x %d", metrics.widthPixels, metrics.heightPixels,
+                        //pixelToDp(metrics.widthPixels, logicalDensity), pixelToDp(metrics.heightPixels, logicalDensity)));
             }
         }
     }
@@ -524,8 +524,8 @@ import java.text.NumberFormat;
             deductions.cpp = deductions.ei = 0f;
         }
 
-        float fieldDues = deductions.getFieldDues(earnings.getDuesTaxable());
-        float deductionsSum = deductions.getDeductionsSum(earnings.getDuesTaxable());
+        float fieldDues = deductions.getFieldDues(earnings.getDuesApplicableEarnings());
+        float deductionsSum = deductions.getDeductionsSum(earnings.getDuesApplicableEarnings());
         float netPay = earnings.getGross() - deductionsSum;
         float[] hoursSum = payCalcData.getHoursSum();
 

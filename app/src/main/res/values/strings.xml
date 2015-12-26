@@ -2,8 +2,8 @@
 <resources>
 
     <string name="version_info">Boilermaker Toolbox v#VERSION
-		\nUpdated: 12/15/15
-		\nWages updated: 12/15/15</string>
+		\nUpdated: 12/26/15
+		\nWages updated: 12/26/15</string>
 
     <!-- Main Menu -->
     <string name="action_settings">Settings</string>
@@ -34,10 +34,10 @@
     <string name="holBut">Holidays:</string>
 
     <!-- About Page -->
-    <string name="about_blurb">Boilermaker Toolbox is a free reference tool geared towards industry in Alberta.  
-	    This tool is not affiliated with any associations and should be used for reference only.
-	    \n\nFeel free to mail bmtoolkit@gmail.com with any comments or suggestions.  If you want
-        your province\'s taxes and rates added shoot me a comment or email.</string>
+    <string name="about_blurb">Boilermaker Toolbox is a free reference tool geared towards Union industry in Alberta.
+	    This tool is not directly affiliated with any associations and shouldn\'t be relied on for anything official.
+	    \nFeel free to mail <a href="mailto:bmtoolkit@gmail.com">bmtoolbox@gmail.com</a> with any comments or suggestions.
+        \n\nCheck out <a href="https://itunes.apple.com/ca/app/boilermac-toolbox/id1066490351">BoilerMac Toolbox</a> on the iTunes store if you have an iPhone or iPad.</string>
     <string name="about_header">About Boilermaker Toolbox</string>
     <string name="but_call146">View 146 Callout</string>
 

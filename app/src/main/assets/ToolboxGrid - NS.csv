@@ -7,10 +7,11 @@ Nova Scotia,Classification,Wage,,,
 #wages,2nd Year App,26.52,,,
 #wages,1st Year App,20.82,,,
 #wages,Helper,26.52,,,
+"Next Increase July 3, 2016",,,,,
 ,,,,,
 #vac_rate,0.12,,,,
-#field_dues,0,,,,
-#month_dues,40.95,,,,
+#field_dues,0.0525,,,,
+#month_dues,43.75,,,,
 #night_ot,TRUE,,,,
 #double_ot,TRUE,,,,
 ,,,,,
@@ -19,14 +20,17 @@ Nova Scotia,Classification,Wage,,,
 #brackets,0,29590,59180,93000,150000
 #brackets,0,29590,59180,93000,150000
 #brackets,0,29590,59180,93000,150000
+#brackets,0,29590,59180,93000,150000
 ,,,,,
 #rates,0.0879,0.1495,0.1667,0.175,0.21
 #rates,0.0879,0.1495,0.1667,0.175,0.21
 #rates,0.0879,0.1495,0.1667,0.175,0.21
+#rates,0.0879,0.1495,0.1667,0.175,0.21
 ,,,,,
+#const_k,0,1823,2841,3613,8863
 #const_k,0,1823,2841,3613,8863
 #const_k,0,1823,2841,3613,8863
 #const_k,0,1823,2841,3613,8863
 ,,,,,
 Claim code 1,,,,,
-#claim_amount,8481,8481,8481,,
+#claim_amount,8481,8481,8481,8481,

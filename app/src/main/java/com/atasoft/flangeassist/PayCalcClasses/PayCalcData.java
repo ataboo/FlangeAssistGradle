@@ -62,12 +62,12 @@ public class PayCalcData {
             return loa + meal + dailyTravel + monthlyTravel;
         }
 
-        public float getTaxable(float unionDues){
+        public float getTaxable(){
             return wageEarnings + nightShiftBonus + vacationBonus + mealBonus + dailyTravelBonus +
-                    weeklyTravelBonus + loaBonus - getExempt() - unionDues;
+                    weeklyTravelBonus + loaBonus - getExempt();
         }
 
-        public float getDuesTaxable(){
+        public float getDuesApplicableEarnings(){
             return wageEarnings + nightShiftBonus;
         }
 
@@ -137,8 +137,7 @@ public class PayCalcData {
 
     public DeductionHolder getDeductions(float addTax){
         deductions.addTax = addTax;
-        float weekTaxable = earnings.getTaxable(deductions.getUnionDues(earnings.getDuesTaxable()));
-        float[] taxReturn = taxManager.getTaxes(weekTaxable, yearString, provString);
+        float[] taxReturn = taxManager.getTaxes(earnings.getTaxable(), deductions.getUnionDues(earnings.getDuesApplicableEarnings()), yearString, provString);
         deductions.fedTax = taxReturn[0];
         deductions.provTax = taxReturn[1];
         deductions.cpp = taxReturn[2];

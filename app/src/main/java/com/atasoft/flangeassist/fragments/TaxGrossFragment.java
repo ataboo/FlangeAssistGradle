@@ -121,15 +121,15 @@ public class TaxGrossFragment extends Fragment implements OnClickListener {
         }
 
         double[] taxVals = PaychequeFragment.
-                floatToDoubArr(taxMan.getTaxes((float) weekGross, yearName, provName));
+                floatToDoubArr(taxMan.getTaxes((float) weekGross, 0f, yearName, provName));
         double taxSum = 0d;
         for(double d: taxVals) taxSum+=d;
 
         //=====================================Set TextViews========================================
         Resources res = getResources();
-        fedTaxText.setText(res.getString(R.string.tax_fedTotal_text) + String.format("   $%.2f", taxVals[0]));
-        provTaxText.setText(res.getString(R.string.tax_provTotal_text) + String.format("   $%.2f", taxVals[1]));
-        cppEIText.setText(res.getString(R.string.tax_cpp_ei) + String.format("   $%.2f,  $%.2f", taxVals[2], taxVals[3]));
+        fedTaxText.setText(String.format("Federal Tax:   $%.2f", taxVals[0]));
+        provTaxText.setText(String.format("Provincial Tax:   $%.2f", taxVals[1]));
+        cppEIText.setText(String.format("CPP and EI:   $%.2f,  $%.2f", taxVals[2], taxVals[3]));
 
         String totalDed = String.format("   $%.2f", taxSum);
         totalDedText.setText(res.getString(R.string.tax_total_ded) + totalDed);

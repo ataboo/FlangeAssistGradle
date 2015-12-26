@@ -110,26 +110,46 @@ public class TaxStatHolder {
 
         //PEI uses NS wage table but needs to parse its tax info.
         if(prov == TaxManager.Prov.PE){peiInit();}
+
+        //Manitoba uses SK wage table.
+        if(prov == TaxManager.Prov.MB){manitobaInit();};
     }
 
     private void capeBretonInit(){
-        TaxStatHolder nsStats = new TaxStatHolder(TaxManager.Prov.NS);
-        this.brackets = nsStats.brackets;
-        this.rates = nsStats.rates;
-        this.constK = nsStats.constK;
-        this.claimAmount = nsStats.claimAmount;
+        copyTaxFields(this, TaxManager.Prov.NS);
+    }
+
+    private void manitobaInit(){
+        copyWageFields(this, TaxManager.Prov.SK);
     }
 
     private void peiInit(){
         //parseWageTable won't overwrite because it aborts when there's no table in the csv
-        TaxStatHolder nsStats = new TaxStatHolder(TaxManager.Prov.NS);
-        this.wageRates = nsStats.wageRates;
-        this.wageNames = nsStats.wageNames;
-        this.vacRate = nsStats.vacRate;
-        this.fieldDuesRate = nsStats.fieldDuesRate;
-        this.monthDuesRate = nsStats.monthDuesRate;
-        this.nightOT = nsStats.nightOT;
-        this.doubleOT = nsStats.doubleOT;
+        copyWageFields(this, TaxManager.Prov.NS);
+    }
+
+    private static void copyWageFields(TaxStatHolder receiver, TaxManager.Prov wageProv){
+        TaxStatHolder wageStats = new TaxStatHolder(wageProv);
+        receiver.wageNames = wageStats.wageNames;
+        receiver.wageRates = wageStats.wageRates;
+        receiver.vacRate = wageStats.vacRate;
+        receiver.fieldDuesRate = wageStats.fieldDuesRate;
+        receiver.monthDuesRate = wageStats.monthDuesRate;
+        receiver.nightOT = wageStats.nightOT;
+        receiver.doubleOT = wageStats.doubleOT;
+        receiver.nightPremiumRate = wageStats.nightPremiumRate;
+    }
+
+    private static void copyTaxFields(TaxStatHolder receiver, TaxManager.Prov taxProv){
+        TaxStatHolder taxStats = new TaxStatHolder(taxProv);
+        receiver.brackets = taxStats.brackets;
+        receiver.rates = taxStats.rates;
+        receiver.constK = taxStats.constK;
+        receiver.claimAmount = taxStats.claimAmount;
+        receiver.healthAmount = taxStats.healthAmount;
+        receiver.healthBracket = taxStats.healthBracket;
+        receiver.healthRate = taxStats.healthRate;
+        receiver.surtax = taxStats.surtax;
     }
 
     private void parseWageTable(ArrayList<String[]> wageTableList) {

@@ -26,7 +26,7 @@ Tell your friends with iPhones to search for BoilerMac Toolbox in the IOS Store.
 Feel free to send feedback or suggestions to bmtoolbox@gmail.com
 
 ###Changes:
-####V0.29 (12/14/15):
+####V0.29.3 (12/26/15):
 - Tax and Wage values updated
 - Added SK and NF to Pay Calculator
 - Provinces now have Night Shift Premium, Dues, and Vacation rates as available through BCA
@@ -38,6 +38,7 @@ Feel free to send feedback or suggestions to bmtoolbox@gmail.com
 - Days of the week spinners now resize properly to screen
 - Icon changed to new IOS BoilerMac Toolbox icon.
 - Menu doesn't open on first run
+- Added 2016 tax, updated rates.
 
 ####V0.28 (11/04/15):
 - Updated wage rates

@@ -60,7 +60,8 @@ public class TaxManager {
     public enum TaxYear {
         TY_2013 ("2013", 0),
         TY_2014 ("2014", 1),
-        TY_2015 ("2015", 2);
+        TY_2015 ("2015", 2),
+        TY_2016 ("2016", 3);
 
         private String name;
         private int index;
@@ -133,52 +134,51 @@ public class TaxManager {
 	}
 
 	//Returns [fed, prov, cpp, ei]
-	public float[] getTaxes(float gross, int year, Prov prov) {
+	public float[] getTaxes(float gross, float dues, int year, Prov prov) {
 		BigDecimal provTax;
 
-        BigDecimal anGrossDec = new BigDecimal(gross)
-                .setScale(bdPrecision, bdRounding)
-                .multiply(new BigDecimal(52));
+        BigDecimal anGross = new BigDecimal(gross).setScale(bdPrecision, bdRounding).multiply(new BigDecimal(52));
+        BigDecimal anGrossTaxable = new BigDecimal(gross - dues).setScale(bdPrecision, bdRounding).multiply(new BigDecimal(52));
         switch(prov){
             case BC:
-                provTax = getBCTax(anGrossDec, year);
+                provTax = getBCTax(anGrossTaxable, year);
                 break;
             case AB:
-                provTax = getABTax(anGrossDec, year);
+                provTax = getABTax(anGrossTaxable, year);
                 break;
             case SK:
-                provTax = getSKTax(anGrossDec, year);
+                provTax = getSKTax(anGrossTaxable, year);
                 break;
             case ON:
-                provTax = getONTax(anGrossDec, year);
+                provTax = getONTax(anGrossTaxable, year);
                 break;
             case MB:
-                provTax = getMBTax(anGrossDec, year);
+                provTax = getMBTax(anGrossTaxable, year);
                 break;
             case NB:
-                provTax = getNBTax(anGrossDec, year);
+                provTax = getNBTax(anGrossTaxable, year);
                 break;
             case NS:
-                provTax = getNSTax(anGrossDec, year, false);
+                provTax = getNSTax(anGrossTaxable, year, false);
                 break;
             case CB:
-                provTax = getNSTax(anGrossDec, year, true);
+                provTax = getNSTax(anGrossTaxable, year, true);
                 break;
             case PE:
-                provTax = getPEITax(anGrossDec, year);
+                provTax = getPEITax(anGrossTaxable, year);
                 break;
             case NL:
-                provTax = getNLTax(anGrossDec, year);
+                provTax = getNLTax(anGrossTaxable, year);
                 break;
             default:  //No Provincial Tax (FED)
                 provTax = BigDecimal.ZERO;
                 break;
         }
 
-        BigDecimal[] cppEiDec = getCppEi(anGrossDec, year);
+        BigDecimal[] cppEiDec = getCppEi(anGross, year);
         BigDecimal fiftyTwo = new BigDecimal(52);
 
-        BigDecimal fedTaxDec = getFedTax(anGrossDec, year);
+        BigDecimal fedTaxDec = getFedTax(anGrossTaxable, year);
         // x.compare(y) ==  -1:(x<y), 0:(x==y), 1:(x>y)
         if(fedTaxDec.compareTo(BigDecimal.ZERO) < 0) fedTaxDec = BigDecimal.ZERO;
         if(provTax.compareTo(BigDecimal.ZERO) < 0) provTax = BigDecimal.ZERO;
@@ -191,11 +191,9 @@ public class TaxManager {
         return new float[]{fedTax, provTaxFl, cppFl, eiFl};
 	}
 
-    public float[] getTaxes(float gross, String year, String province){
+    public float[] getTaxes(float gross, float dues, String year, String province){
         //Log.w("TaxManager", "Ran get Taxes... again.");
-        return getTaxes(gross,
-                getYearIndexFromName(year),
-                getProvEnumFromName(province));
+        return getTaxes(gross, dues, getYearIndexFromName(year), getProvEnumFromName(province));
     }
 
     public float getVacationRate(String province){
@@ -242,8 +240,9 @@ public class TaxManager {
                 multiply(new BigDecimal(cppRate)).setScale(bdPrecision, bdRounding);
         if(cppRet.compareTo(BigDecimal.ZERO) < 0) cppRet = BigDecimal.ZERO;
 
-        BigDecimal eiRet = anGross.multiply(new BigDecimal(eiRate)).
-                setScale(bdPrecision, bdRounding);
+        BigDecimal eiRet = anGross.multiply(new BigDecimal(eiRate)).setScale(bdPrecision, bdRounding);
+        if(eiRet.compareTo(BigDecimal.ZERO) < 0) eiRet = BigDecimal.ZERO;
+
 		return new BigDecimal[]{cppRet, eiRet};
 	}
 
@@ -281,13 +280,8 @@ public class TaxManager {
 
 	private BigDecimal getABTax(BigDecimal anGross, int year){
         TaxStatHolder abStats = getStatType(Prov.AB);
-        if(abStats == null){
-            Log.e("TaxManager", "Failed to get abStats, received null.");
-            return BigDecimal.ZERO;
-        }
-        BigDecimal taxDec =  anGross.multiply(BigDecimal.valueOf(abStats.rates[year][0]))
-                .subtract(getTaxCredit(abStats, anGross, year));
-        return taxDec;
+
+        return getStandardProvincialTax(anGross, year, abStats);
 	}
 
     private BigDecimal getSKTax(BigDecimal anGrossDec, int year){

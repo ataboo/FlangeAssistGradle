@@ -8,8 +8,8 @@ android {
         applicationId "com.atasoft.flangeassist"
         minSdkVersion 11
         targetSdkVersion 23
-        versionCode 23
-        versionName "0.29.3"
+        versionCode 24
+        versionName "0.29.4"
     }
     buildTypes {
         release {

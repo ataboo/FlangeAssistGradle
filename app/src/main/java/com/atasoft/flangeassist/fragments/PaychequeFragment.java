@@ -75,10 +75,33 @@ import java.text.NumberFormat;
             return null;
         }
 
-        void setSelection(int index, boolean animated){
+        void setSelectionIndex(int index, boolean animated){
+            int selectionLength = spinner.getAdapter().getCount();
+
+            if(selectionLength < 1){
+                Log.e("PaychequeFragment", "Couldn't set selection on unpopulated spinner.");
+                return;
+            }
+            if(index > selectionLength - 1){
+                Log.w("PaychequeFragment", "Caged index of spinner selection to 0.");
+                index = 0;
+            }
+
             spinner.setSelection(index, animated);
             // Update this.selection so selectionChanged is !true when checked via listener.
             getSelectedItem();
+        }
+
+        void setSelectionIndex(String indexStr, boolean animated){
+            int index = 0;
+            try{
+                index = Integer.parseInt(indexStr);
+            } catch (NumberFormatException e){
+                Log.e("PaychequeFragment", String.format("Failed to parse String \"%s\" as a selectionIndex.", indexStr));
+                e.printStackTrace();
+            }
+
+            setSelectionIndex(index, animated);
         }
 
         void setView(View parentView){
@@ -146,7 +169,7 @@ import java.text.NumberFormat;
     private View thisFragView;
     private SharedPreferences prefs;
     private Context context;
-    private Boolean customDay;
+    private Boolean customDaySpinners;
     private String oldProvWage;
     private static int minDayWidthDP = 310;
     private static int dayWidthMarginDP = 10;
@@ -179,22 +202,24 @@ import java.text.NumberFormat;
 
     @Override
 	public void onResume() {
-		redoSpinners();
-        loadState();
         super.onResume();
+        redoSpinners();
+        loadState();
     }
 
     @Override
     public void onPause() {
-        saveState();
         super.onPause();
+        saveState();
     }
 
     private void redoSpinners(){
 		Boolean custDayCheck = prefs.getBoolean(getString(R.string.pref_custDaysOn), false);
-		if(custDayCheck) {
-            if(customDay != custDayCheck) updateDaySpinners(custDayCheck);
-		}
+        if(customDaySpinners != custDayCheck){
+            String qualifier = custDayCheck ? " with custom days.": " without custom days.";
+            Log.w("PaychequeFragment", "Resetting day spinners" + qualifier);
+            updateDaySpinners(custDayCheck);
+        }
 		String provWage = prefs.getString("list_provWageNew",  TaxManager.Prov.AB.getName());
 		if(!provWage.equals(oldProvWage)){
             oldProvWage = provWage;
@@ -356,7 +381,7 @@ import java.text.NumberFormat;
 		for(SpinnerData spinnerData : daySpinners){
             spinnerData.updateShiftAdaptor(customDaysOn, context);
         }
-        customDay = customDaysOn; //Flags change handled for redo spinners
+        customDaySpinners = customDaysOn; //Flags change handled for redo spinners
 	}
 
 	private void updateWageSpinner() {
@@ -390,15 +415,15 @@ import java.text.NumberFormat;
                 break;
             }
         }
-        SpinnerData.WAGE.setSelection(newSelectedWageIndex, false);
+        SpinnerData.WAGE.setSelectionIndex(newSelectedWageIndex, false);
     }
 
     private void setShift(HoursPreset preset){
         for(SpinnerData spinnerData: daySpinners){
-            spinnerData.setSelection(preset.getShiftIndex(), false);
+            spinnerData.setSelectionIndex(preset.getShiftIndex(), false);
         }
-        SpinnerData.MEAL.setSelection(preset.getBonusCounts()[0], false);
-        SpinnerData.LOA.setSelection(preset.getBonusCounts()[1], false);
+        SpinnerData.MEAL.setSelectionIndex(preset.getBonusCounts()[0], false);
+        SpinnerData.LOA.setSelectionIndex(preset.getBonusCounts()[1], false);
     }
 
     // TODO: stretch this out a bit and use string references
@@ -642,21 +667,23 @@ import java.text.NumberFormat;
         String[] weekSpinnerIndices = prefs.getString(getString(R.string.pref_weekSpinners), "0,0,0,0,0,0,0,").split(",");
         for(int i=0; i<daySpinners.length; i++){
             if(daySpinners[i].spinner == null) return;
-            daySpinners[i].setSelection(AtaMathUtils.bracketInt(weekSpinnerIndices[i], 0, 6), false);
+            daySpinners[i].setSelectionIndex(weekSpinnerIndices[i], false);
         }
+
         String[] saveChecksIndices = prefs.getString(getString(R.string.pref_saveChecks), "0,0,0,0,0,1,1,1,0,0,0,0,0,").split(",");
         for(int i=0; i<saveChecks.length; i++){
             saveChecks[i].setChecked(saveChecksIndices[i].equals("1"));
         }
-
-        SpinnerData.LOA.setSelection(prefs.getInt(getString(R.string.pref_loaSelectedIndex), 0), false);
-        SpinnerData.MEAL.setSelection(prefs.getInt(getString(R.string.pref_mealSelectedIndex), 0), false);
+        int loaIndex = AtaMathUtils.bracketInt(prefs.getInt(getString(R.string.pref_loaSelectedIndex), 0), 0, 6);
+        SpinnerData.LOA.setSelectionIndex(loaIndex, false);
+        int mealIndex = AtaMathUtils.bracketInt(prefs.getInt(getString(R.string.pref_mealSelectedIndex), 0), 0, 6);
+        SpinnerData.MEAL.setSelectionIndex(mealIndex, false);
 
         if(wageNames != null){
             String lastWageName = prefs.getString(getString(R.string.pref_lastWageName), TaxManager.defaultWageName);
             for(int i=0; i<wageNames.length; i++){
                 if (wageNames[i].contains(lastWageName)){
-                    SpinnerData.WAGE.setSelection(i, false);
+                    SpinnerData.WAGE.setSelectionIndex(i, false);
                     break;
                 }
             }

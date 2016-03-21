@@ -130,7 +130,7 @@ public class PayCalcData {
 
     public EarningHolder getEarnings(float wageRate, float vacRate){
         earnings.wageEarnings = wageRate * hourSum[0] + wageRate * hourSum[1] * 1.5f + wageRate * hourSum[2] * 2.0f;
-        earnings.vacationBonus = earnings.wageEarnings * vacRate;
+        earnings.vacationBonus = (earnings.wageEarnings + earnings.nightShiftBonus) * vacRate;
 
         return earnings;
     }

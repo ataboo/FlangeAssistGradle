@@ -1,6 +1,7 @@
 package com.atasoft.flangeassist.fragments;
 
 import android.content.*;
+import android.graphics.*;
 import android.os.*;
 import android.preference.*;
 import android.support.v4.app.*;
@@ -11,12 +12,37 @@ import android.view.View.*;
 import android.view.animation.*;
 import android.widget.*;
 import com.atasoft.flangeassist.*;
+import com.atasoft.flangeassist.fragments.cashcounter.*;
 import com.atasoft.helpers.*;
-import android.graphics.*;
 
 
 public class CashCounter extends Fragment implements OnClickListener {
 
+	public enum EarningType {
+		WEEKEND_DOUBLE("Weekend Double (2x)", Color.parseColor(goldColor)),
+	    STRAIGHT_TIME("Straight Time (1x)", Color.parseColor(bronzeColor)),
+	    DOUBLE_TIME("Double Time (2x)", Color.parseColor(goldColor)),
+		OVER_TIME("Overtime (1.5x)", Color.parseColor(silverColor)),
+        OFF_SHIFT("Off Shift", Color.RED),
+		HOLIDAY_TIME("Holiday Double (2x)", Color.parseColor(goldColor));
+		
+		private final String display;
+		private final int color;
+		
+		public EarningType(String display, int color){
+			this.display = display;
+			this.color = color;
+		}
+		
+		public String toString(){
+			return this.display;
+	    }
+		
+		public int getColor(){
+			return this.color;
+		}
+	}
+	
 	private View thisFrag;
 	private Context context;
 	
@@ -47,31 +73,7 @@ public class CashCounter extends Fragment implements OnClickListener {
 		super.onPause();
 	}
 	
-	public class CounterDigit{
-		TextView textView;
-		int oldVal;
-		int newVal;
-		boolean changing = false;
-		
-		public CounterDigit(TextView textView, int startVal){
-			this.textView = textView;
-			this.oldVal = startVal;
-			this.newVal = startVal;
-			textView.setText(Integer.toString(startVal));
-		}
-		
-		//returns true if changed
-		public boolean changeVal(int newVal){
-			this.newVal = newVal;
-			this.changing = (newVal != oldVal);
-			return changing;
-		}
-		
-		public void hide(boolean isHide){
-			int visCode = isHide ? TextView.GONE: TextView.VISIBLE;
-			textView.setVisibility(visCode);
-		}
-	}
+	
 	
 	@Override
     public void onClick(View v) {
@@ -215,7 +217,7 @@ public class CashCounter extends Fragment implements OnClickListener {
                 long now = SystemClock.uptimeMillis();
                 long next = now + 1000;
                 handler.postAtTime(ticker, next);
-				testClick();
+				clockTick();
             }
         };
 	}
@@ -257,7 +259,7 @@ public class CashCounter extends Fragment implements OnClickListener {
 			double earnings = getEarnings(currentTimeArr, shiftStartVal, wageRate);
 			newCountVals = makeValsFromDouble(earnings);
 		} else {
-			otIndicate(OFF_SHIFT);
+			otIndicate(EarningType.OFF_SHIFT);
 		}
 		
 		//------Write to counter------
@@ -321,23 +323,19 @@ public class CashCounter extends Fragment implements OnClickListener {
 			secondsIntoShift += (timeNowArr[0] - shiftStart[0] + 24) * 3600;
 		}
 		double hoursIntoShift = secondsIntoShift / 3600d;
-		double earnings;
 		
-		boolean isFriday;
-		boolean isWeekend;
-		boolean isHoliday = false;
         boolean beforeMidnight = floatNow > floatStart;
 
-        isWeekend =
+        boolean isWeekend =
                 // if shift doesn't stradle midnight and its saturday or sunday now...
                 (beforeMidnight && (timeNow.weekDay == Time.SATURDAY || timeNow.weekDay == Time.SUNDAY)) ||
                 // if nightshift and after midnight sunday is sat shift and monday is sun shift
                 (!beforeMidnight && (timeNow.weekDay == Time.SUNDAY || timeNow.weekDay == Time.MONDAY));
 
-        isFriday = (beforeMidnight && timeNow.weekDay == Time.FRIDAY) ||
+        boolean isFriday = (beforeMidnight && timeNow.weekDay == Time.FRIDAY) ||
                 (!beforeMidnight && timeNow.weekDay == Time.SATURDAY);
 
-        if(holidayToggle.isChecked()) isHoliday = true;
+        boolean isHoliday = holidayToggle.isChecked();
 		double[] hours = new double[3];  //single, ot, double
 		if(fourTenToggle.isActivated()){
 			hours[2] = AtaMathUtils.bracketDouble(hoursIntoShift - 10, 0, 24);
@@ -360,65 +358,34 @@ public class CashCounter extends Fragment implements OnClickListener {
 		}
 		if(hours[2] > 0){
 		    if(isHoliday){
-				otIndicate(HOLIDAY_TIME);
+				otIndicate(EarningType.HOLIDAY_TIME);
 			} else {
 				if(isWeekend){
-					otIndicate(WEEKEND_DOUBLE);
+					otIndicate(EarningType.WEEKEND_DOUBLE);
 				} else {
-					otIndicate(DOUBLE_TIME);
+					otIndicate(EarningType.DOUBLE_TIME);
 				}
 			}
 		} else {
 			if(hours[1] > 0){
-				otIndicate(OVER_TIME);
+				otIndicate(EarningType.OVER_TIME);
 			} else {
-				otIndicate(STRAIGHT_TIME);
+				otIndicate(EarningType.STRAIGHT_TIME);
 			}
 		}
 		double hoursEquivelant = 1d * hours[0] + 1.5d * hours[1] + 2d * hours[2];
 		//Log.w("CashCounter",String.format("weekdayhours[0]:%.3f, weekdayhours[1]:%.3f, weekdayhours[2]:%.3f", weekdayHours[0], weekdayHours[1], weekdayHours[2]));
 		
 		//Log.w("CashCounter",String.format("hours[0]:%.3f, hours[1]:%.3f, hours[2]:%.3f, intoShift: %.3f", hours[0], hours[1], hours[2], hoursIntoShift));
-		earnings = hoursEquivelant * wageVal;
+		double earnings = hoursEquivelant * wageVal;
 		if(nightToggle.isChecked()) earnings += hoursIntoShift * 3d;
 		earnings = Math.floor(earnings * 100) / 100;
 		return earnings;
 	}
 	
-	private static final int STRAIGHT_TIME = 0;
-	private static final int DOUBLE_TIME = 1;
-	private static final int OVER_TIME = 2;
-	private static final int OFF_SHIFT = 3;
-	private static final int HOLIDAY_TIME = 4;
-	private static final int WEEKEND_DOUBLE = 5;
-	
-	private void otIndicate(int rateCode){
-		switch(rateCode){
-			case DOUBLE_TIME:
-				otIndicator.setText("Double Time (x2)");
-				otIndicator.setTextColor(Color.parseColor(goldColor));
-				break;
-			case OVER_TIME:
-				otIndicator.setText("Overtime (x1.5)");
-				otIndicator.setTextColor(Color.parseColor(silverColor));
-				break;
-			case STRAIGHT_TIME:
-				otIndicator.setText("Straight Time (x1)");
-				otIndicator.setTextColor(Color.parseColor(bronzeColor));
-				break;
-			case OFF_SHIFT:
-				otIndicator.setText("Off Shift");
-				otIndicator.setTextColor(Color.RED);
-				break;
-			case WEEKEND_DOUBLE:
-				otIndicator.setText("Weekend Double (2x)");
-				otIndicator.setTextColor(Color.parseColor(goldColor));
-				break;
-			case HOLIDAY_TIME:
-				otIndicator.setText("Holiday Double (2x)");
-				otIndicator.setTextColor(Color.parseColor(goldColor));
-				break;
-		}
+	private void otIndicate(EarningType earningType){
+		otIndicator.setText(earningType.toString());
+		otIndicator.setTextColor(earningType.getColor());
 	}
 	
 	private int[] makeValsFromDouble(double earnings){
@@ -545,7 +512,7 @@ public class CashCounter extends Fragment implements OnClickListener {
 			weekdayEdits[1].setEnabled(!fourTenToggle.isChecked());
 	}
 	
-	private void testClick(){
+	private void clockTick(){
 		if(!changeFlag) {
 			updateValues();
 		}

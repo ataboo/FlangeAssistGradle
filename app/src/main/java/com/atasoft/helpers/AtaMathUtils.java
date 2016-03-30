@@ -52,4 +52,13 @@ public class AtaMathUtils
         }
         return inArr;
     }
+
+    public static float parseFloat(String strIn) throws NumberFormatException{
+        try{
+            return Float.parseFloat(strIn);
+        } catch (NumberFormatException e){
+            Log.e("CashCounter", "Error parsing Float");
+            return 0f;
+        }
+    }
 }

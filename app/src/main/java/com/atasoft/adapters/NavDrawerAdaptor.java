@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 
 
 import com.atasoft.flangeassist.fragments.*;
+import com.atasoft.flangeassist.fragments.cashcounter.CashCounter;
 
 
 public class NavDrawerAdaptor {

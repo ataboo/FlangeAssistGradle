@@ -32,7 +32,17 @@ public class CashCounterData {
         }
     }
 
-    private static int[] makeValsFromDouble(double earnings){
+    public class EarningsReturn{
+        public final double earnings;
+        public final EarningType earningType;
+
+        public EarningsReturn(double earnings, EarningType earningType){
+            this.earnings = earnings;
+            this.earningType = earningType;
+        }
+    }
+
+    public static int[] makeValsFromDouble(double earnings){
         String valString = String.format("%.2f", earnings);
         int earnLength = valString.length();
         int[] retVals = new int[]{0,0,0,0,0,0};
@@ -57,7 +67,7 @@ public class CashCounterData {
 
         shiftEnd[1] = shiftStart[1] + shiftDuration[1];
         if(shiftEnd[1] >= 60){
-            shiftDuration[0]++; //adds and hour when minutes overflow
+            shiftDuration[0]++; //adds an hour when minutes overflow
             shiftEnd[1] = shiftEnd[1] % 60;
         }
         shiftEnd[0] = shiftStart[0] + shiftDuration[0];
@@ -66,32 +76,26 @@ public class CashCounterData {
         return shiftEnd;
     }
 
-    private void updateValues(){
-        float shiftLengthFloat = AtaMathUtils.bracketFloat(weekdayHours[0] + weekdayHours[1] + weekdayHours[2], 0, 24);
-        shiftDuration[0] = (int) shiftLengthFloat;
-        shiftDuration[1] = (int) (shiftLengthFloat - (float) shiftDuration[0]) * 60;
-        this.shiftStartVal = startAtaPicker.getVals();
-        int[] shiftEnd = getShiftEnd(shiftStartVal, shiftDuration);
-
-    }
-
-    private double getEarnings(Time timeNow, EarningAttributes earningAttributes){
+    public EarningsReturn getEarnings(Time timeNow, EarningAttributes earningAttributes){
         //used float for comparisons but keep into for calcs incase of rounding shenanigans
         int[] timeNowArr = {timeNow.hour, timeNow.minute, timeNow.second};
 
+        EarningType earningType = EarningType.OFF_SHIFT;
+
         float floatNow = getFloatTime(timeNowArr);
         float floatStart = getFloatTime(earningAttributes.shiftStart);
-        int secondsIntoShift = timeNowArr[2];
-        secondsIntoShift += (timeNowArr[1] - earningAttributes.shiftStart[1]) * 60;
-        //already checked that it's mid shift
-        if(floatNow > floatStart) {
-            secondsIntoShift += (timeNowArr[0] - earningAttributes.shiftStart[0]) * 3600;
-        } else {  //start-->now range stradles midnight
-            secondsIntoShift += (timeNowArr[0] - earningAttributes.shiftStart[0] + 24) * 3600;
+        float shiftDuration = earningAttributes.weekdayHours[0] + earningAttributes.weekdayHours[1] + earningAttributes.weekdayHours[2];
+        float floatEnd = floatStart + shiftDuration;
+        if (floatEnd > 24) {
+            floatEnd -= 24f;
         }
-        double hoursIntoShift = secondsIntoShift / 3600d;
+
+        if(!isInTimeRange(floatStart, floatEnd, floatNow)){
+            return new EarningsReturn(0d, EarningType.OFF_SHIFT);
+        }
 
         boolean beforeMidnight = floatNow > floatStart;
+        float hoursIntoShift = beforeMidnight ? floatNow - floatStart: floatNow - floatStart + 24f;
 
         boolean isWeekend =
                 // if shift doesn't stradle midnight and its saturday or sunday now...
@@ -124,19 +128,19 @@ public class CashCounterData {
         }
         if(hours[2] > 0){
             if(earningAttributes.isHoliday){
-                otIndicate(EarningType.HOLIDAY_TIME);
+                earningType = EarningType.HOLIDAY_TIME;
             } else {
                 if(isWeekend){
-                    otIndicate(EarningType.WEEKEND_DOUBLE);
+                    earningType = EarningType.WEEKEND_DOUBLE;
                 } else {
-                    otIndicate(EarningType.DOUBLE_TIME);
+                    earningType = EarningType.DOUBLE_TIME;
                 }
             }
         } else {
             if(hours[1] > 0){
-                otIndicate(EarningType.OVER_TIME);
+                earningType = EarningType.OVER_TIME;
             } else {
-                otIndicate(EarningType.STRAIGHT_TIME);
+                earningType = EarningType.STRAIGHT_TIME;
             }
         }
         double hoursEquivelant = 1d * hours[0] + 1.5d * hours[1] + 2d * hours[2];
@@ -146,7 +150,7 @@ public class CashCounterData {
         double earnings = hoursEquivelant * earningAttributes.wageRate;
         if(earningAttributes.isNights) earnings += hoursIntoShift * 3d;
         earnings = Math.floor(earnings * 100) / 100;
-        return earnings;
+        return new EarningsReturn(earnings, earningType);
     }
 
     private static float getFloatTime(int[] intTime){
@@ -158,14 +162,11 @@ public class CashCounterData {
         return retFloat;
     }
 
-    private static boolean isInTimeRange(int[] rangeStart, int[] rangeEnd, int[] timeCheck){
-        float floatStart = getFloatTime(rangeStart);
-        float floatEnd = getFloatTime(rangeEnd);
-        float floatCheck = getFloatTime(timeCheck);
-        if(floatStart <= floatEnd){
-            return !(floatCheck < floatStart || floatCheck > floatEnd);
+    private static boolean isInTimeRange(float rangeStart, float rangeEnd, float checkTime) {
+        if(rangeStart <= rangeEnd){
+            return !(checkTime < rangeStart || checkTime > rangeEnd);
         } else { //range stradles midnight
-            return floatCheck > floatStart || floatCheck < floatEnd;
+            return checkTime > rangeStart || checkTime < rangeEnd;
         }
     }
 }

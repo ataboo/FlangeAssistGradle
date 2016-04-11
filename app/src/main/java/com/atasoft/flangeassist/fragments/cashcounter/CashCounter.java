@@ -91,7 +91,6 @@ public class CashCounter extends Fragment implements OnClickListener {
 	//-------------------------initial functions-----------------
     private Time timeNow;
 	private int[] shiftStartVal = {18, 30};
-	private Button setExpand;
 	private EditText wageEdit;
 	private TextView otIndicator;
 	private LinearLayout setLay;
@@ -130,7 +129,7 @@ public class CashCounter extends Fragment implements OnClickListener {
 		this.wageRate = prefs.getFloat("cashcount_wage", 43.25f);
 		wageEdit.setText(Float.toString(wageRate), EditText.BufferType.EDITABLE);
 		
-		this.setExpand = (Button) thisFrag.findViewById(R.id.cash_settingsBut);
+		Button setExpand = (Button) thisFrag.findViewById(R.id.cash_settingsBut);
 		setExpand.setOnClickListener(this);
 		this.nightToggle = (CheckBox) thisFrag.findViewById(R.id.cash_nightshiftCheck);
 		this.holidayToggle = (CheckBox) thisFrag.findViewById(R.id.cash_holidayCheck);
@@ -145,7 +144,7 @@ public class CashCounter extends Fragment implements OnClickListener {
 		this.weekdayEdits[2] = (EditText) thisFrag.findViewById(R.id.cash_weekdayDouble);
 		this.weekdayHours[2] = prefs.getFloat("cash_week_double", 2);
 		for(int i=0; i<weekdayEdits.length; i++){
-			weekdayEdits[i].setText(Float.toString(weekdayHours[i]));
+			weekdayEdits[i].setText(String.format("%.1f", weekdayHours[i]));
 		}
 		
 		CounterDigit hundredthDigit = new CounterDigit((TextView) thisFrag.findViewById(R.id.cash_hundredthsText), oldCountVals[5]);
@@ -232,41 +231,34 @@ public class CashCounter extends Fragment implements OnClickListener {
 			weekdayHours[i] = AtaMathUtils.bracketFloat(parseFromEdit(weekdayEdits[i], String.format("weekdayEdits[%s]", i)), 0, 24);
 		}
 		timeNow.setToNow();
+		shiftStartVal = startAtaPicker.getVals();
+
 		//Log.w("CashCounter", String.format("hour is %2d, day is %2d.", timeNow.hour, timeNow.weekDay));
 
 		//------Update wage and schedule settings------
 		this.wageRate = AtaMathUtils.parseFloat(wageEdit.getText().toString());
 
-		int[] newCountVals = {0,0,0,0,0,0};
-
 		CashCounterData.EarningAttributes earningAttributes = cashCounterData.new EarningAttributes(
 				shiftStartVal, weekdayHours, wageRate, holidayToggle.isChecked(), fourTenToggle.isChecked(),
 				weekendDoubleToggle.isChecked(), nightToggle.isChecked());
 
+		EarningsReturn earningsReturn = cashCounterData.getEarnings(timeNow, earningAttributes);
 
-
-		if(isInTimeRange(shiftStartVal, shiftEnd, currentTimeArr)){
-			double earnings = getEarnings(currentTimeArr, shiftStartVal, wageRate);
-			newCountVals = makeValsFromDouble(earnings);
-		} else {
-			otIndicate(EarningType.OFF_SHIFT);
-		}
-
-		//------Write to counter------
-		updateCounter(newCountVals);
+		otIndicate(earningsReturn.earningType);
+		updateCounter(CashCounterData.makeValsFromDouble(earningsReturn.earnings));
 	}
 	
 	private void recallSettings(){
 		startAtaPicker.setPickerValue(new int[]{prefs.getInt("ATA_counterStartHour", 8), prefs.getInt("ATA_counterStartMin", 0)});
-		wageEdit.setText(Float.toString(prefs.getFloat("ATA_counterWageRate", 43.90f)));
+		wageEdit.setText(String.format("%.2f", prefs.getFloat("ATA_counterWageRate", 43.90f)));
+
 		nightToggle.setChecked(prefs.getBoolean("ATA_counterNightShift", false));
 		weekendDoubleToggle.setChecked(prefs.getBoolean("ATA_counterWeekendDouble", true));
 		holidayToggle.setChecked(prefs.getBoolean("ATA_counterHoliday", false));
 		fourTenToggle.setChecked(prefs.getBoolean("ATA_counterFourTens", false));
-		weekdayEdits[0].setText(Float.toString(prefs.getFloat("ATA_counterWeekdayST", 8f)));
-		weekdayEdits[1].setText(Float.toString(prefs.getFloat("ATA_counterWeekdayOT", 2f)));
-		weekdayEdits[2].setText(Float.toString(prefs.getFloat("ATA_counterWeekdayDT", 2f)));
-		
+		weekdayEdits[0].setText(String.format("%.1f", prefs.getFloat("ATA_counterWeekdatST", 8f)));
+		weekdayEdits[1].setText(String.format("%.1f", prefs.getFloat("ATA_counterWeekdatOT", 2f)));
+		weekdayEdits[2].setText(String.format("%.1f", prefs.getFloat("ATA_counterWeekdatDT", 2f)));
 		//going to be via preferences eventually
 		//startAtaPicker.setPickerValue(shiftStartVal);
 	}
@@ -286,7 +278,6 @@ public class CashCounter extends Fragment implements OnClickListener {
 		prefEdit.putFloat("ATA_counterWeekdayOT", weekdayHours[1]);
 		prefEdit.putFloat("ATA_counterWeekdayDT", weekdayHours[2]);
 		prefEdit.apply();
-		
 	}
 
 	private void otIndicate(EarningType earningType){
@@ -350,7 +341,7 @@ public class CashCounter extends Fragment implements OnClickListener {
 		boolean isFirstOne = true;
 		for(CounterDigit digit: counterDigits){
 			if(digit.changing) {
-				digit.textView.setText(Integer.toString(digit.newVal));
+				digit.textView.setText(String.format("%d", digit.newVal));
 				digit.oldVal = digit.newVal;
 				TranslateAnimation slide = (isFirstOne) ? slideInListen : slideIn;
 				digit.textView.startAnimation(slide);

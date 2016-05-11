@@ -1,0 +1,88 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+	<RelativeLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:paddingLeft="12dp"
+		android:paddingRight="12dp">
+		<TextView
+			android:id="@+id/rope_val_title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Choose rope type and size."/>
+		<View
+			android:id="@+id/rope_val_pb1"
+			android:layout_below="@id/rope_val_title"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginTop="6dp"
+			android:layout_marginBottom="6dp"
+			android:background="#70a5b3" />
+        <LinearLayout
+            android:id="@+id/rope_picker_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/weld_header"
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true"
+            >
+            <Spinner
+                android:id="@+id/rope_type_spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rope_val_title"
+                android:paddingTop="15dp"/>
+            <NumberPicker
+                android:id="@+id/rope_diameter_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp" />
+        </LinearLayout>
+
+		<TextView
+			android:id="@+id/rope_bs_text"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/rope_picker_layout"
+			android:text="Break Strength:"
+			android:paddingTop="10dp"
+			android:paddingStart="12dp"
+			android:layout_marginStart="16dp"
+			android:textSize="18sp"
+		/>
+        <TextView
+            android:id="@+id/rope_wll_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rope_bs_text"
+            android:text="Working Load Limit:"
+            android:paddingTop="10dp"
+            android:paddingStart="12dp"
+            android:layout_marginStart="16dp"
+            android:textSize="18sp"
+            />
+        <TextView
+            android:id="@+id/rope_bolt_spacing_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rope_wll_text"
+            android:text="U-Bolt Spacing: "
+            android:paddingTop="10dp"
+            android:paddingStart="12dp"
+            android:layout_marginStart="16dp"
+            android:textSize="18sp"
+            />
+        <TextView
+            android:id="@+id/rope_bolt_count_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rope_bolt_spacing_text"
+            android:text="U-Bolt Count: "
+            android:paddingTop="10dp"
+            android:paddingStart="12dp"
+            android:layout_marginStart="16dp"
+            android:textSize="18sp"
+            />
+	</RelativeLayout>
+</ScrollView>

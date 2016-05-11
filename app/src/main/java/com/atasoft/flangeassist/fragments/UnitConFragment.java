@@ -48,11 +48,11 @@ public class UnitConFragment extends Fragment //implements OnClickListener
 	Button goButton;
 	private ConvDataHold dataHold;
 	private void setupConvSpinners(){
-		this.typeSpin = (Spinner) thisFrag.findViewById(R.id.unit_conv_type_spinner);
-		this.unitSpin1 = (Spinner) thisFrag.findViewById(R.id.unit_conv_unit1_spinner);
+		this.typeSpin = (Spinner) thisFrag.findViewById(R.id.rope_type_spinner);
+		this.unitSpin1 = (Spinner) thisFrag.findViewById(R.id.rope_size_spinner);
 		this.unitSpin2 = (Spinner) thisFrag.findViewById(R.id.unit_conv_unit2_spinner);
 		this.inBox = (EditText) thisFrag.findViewById(R.id.unit_conv_text_input);
-		this.outBox = (TextView) thisFrag.findViewById(R.id.unit_conv_text_output);
+		this.outBox = (TextView) thisFrag.findViewById(R.id.rope_val_break_strength);
 		this.fracBox = (TextView) thisFrag.findViewById(R.id.unit_conv_frac_output);
 		this.dataHold = new ConvDataHold();
 

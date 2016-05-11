@@ -7,27 +7,27 @@
 		android:paddingLeft="12dp"
 		android:paddingRight="12dp">
 		<TextView
-			android:id="@+id/unit_conv_title"
+			android:id="@+id/rope_val_title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Choose a category and 2 units from dropdowns and enter value:"/>
 		<View
-			android:id="@+id/unit_conv_pb1"
-			android:layout_below="@id/unit_conv_title"
+			android:id="@+id/rope_val_pb1"
+			android:layout_below="@id/rope_val_title"
 			android:layout_width="match_parent"
 			android:layout_height="1dp"
 			android:layout_marginTop="6dp"
 			android:layout_marginBottom="6dp"
 			android:background="#70a5b3" />
 		<Spinner
-			android:id="@+id/unit_conv_type_spinner"
+			android:id="@+id/rope_type_spinner"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:layout_below="@id/unit_conv_title"
+			android:layout_below="@id/rope_val_title"
 			android:paddingTop="15dp"/>
 		<Spinner
-			android:id="@+id/unit_conv_unit1_spinner"
-			android:layout_below="@id/unit_conv_type_spinner"
+			android:id="@+id/rope_size_spinner"
+			android:layout_below="@id/rope_type_spinner"
 			android:layout_width="fill_parent"
 			android:layout_marginLeft="16dp"
 			android:layout_height="wrap_content"/>
@@ -38,7 +38,7 @@
 			android:text="Input: "
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_below="@id/unit_conv_unit1_spinner"
+			android:layout_below="@id/rope_size_spinner"
 			android:layout_marginLeft="20dp"
 		/>
 		<EditText
@@ -50,7 +50,7 @@
 			android:maxLength="20"
 			android:singleLine="true"
 			android:inputType="numberDecimal"	
-			android:layout_below="@id/unit_conv_unit1_spinner"
+			android:layout_below="@id/rope_size_spinner"
 			android:layout_toRightOf="@id/unit_conv_input_label"
 		/>
 		<Spinner
@@ -61,7 +61,7 @@
 			android:layout_below="@id/unit_conv_text_input"
 		/>
 		<TextView
-			android:id="@+id/unit_conv_text_output"
+			android:id="@+id/rope_val_break_strength"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:layout_below="@id/unit_conv_unit2_spinner"
@@ -75,7 +75,7 @@
 			android:id="@+id/unit_conv_frac_output"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:layout_below="@id/unit_conv_text_output"
+			android:layout_below="@id/rope_val_break_strength"
 			android:text="Fraction Equivalent"
 			android:paddingTop="10dp"
 			android:paddingLeft="12dp"

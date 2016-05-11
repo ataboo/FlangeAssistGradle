@@ -1,5 +1,7 @@
 package com.atasoft.flangeassist.fragments.ropevalues;
 
+import android.util.Log;
+
 /**
  * Created by ataboo on 2016-05-10.
  */
@@ -32,7 +34,19 @@ public class RopeType {
         return breakFactor;
     }
 
-    public String getDescription(){
+    @Override
+    public boolean equals(Object obj){
+        if(!(obj instanceof RopeType)){
+            return false;
+        }
+
+        RopeType ropeType = (RopeType) obj;
+
+        return description.equals(ropeType.description) && breakFactor == ropeType.breakFactor;
+    }
+
+    @Override
+    public String toString(){
         return description;
     }
 }

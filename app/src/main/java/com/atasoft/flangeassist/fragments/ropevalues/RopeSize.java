@@ -9,9 +9,11 @@ import java.util.ArrayList;
  */
 public class RopeSize {
     private float diameter;
+    private MixedFraction fraction;
 
     public RopeSize(float decimalInchDiameter){
         diameter = decimalInchDiameter;
+        fraction = new MixedFraction(decimalInchDiameter);
     }
 
     public static RopeSize[] makeRopeSizes(float startSize, float endSize){
@@ -29,7 +31,7 @@ public class RopeSize {
             Log.w("RopeSize", String.format("Added %s from %.3f", ropeSizeObj, ropeSize));
         }
 
-        return (RopeSize[]) sizes.toArray();
+        return sizes.toArray(new RopeSize[sizes.size()]);
     }
 
     public float getBreakStrength(RopeType type){
@@ -39,5 +41,20 @@ public class RopeSize {
     public float getWorkLoadLimit(RopeType type, float safetyFactor){
         float breakStrength = getBreakStrength(type);
         return breakStrength / safetyFactor;
+    }
+
+    @Override
+    public String toString(){
+        return fraction.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(!(obj instanceof RopeSize)){
+            return false;
+        }
+        RopeSize ropeSizeObj = (RopeSize) obj;
+
+        return diameter == ropeSizeObj.diameter;
     }
 }

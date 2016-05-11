@@ -25,7 +25,8 @@ public class MixedFraction {
         }
     }
 
-    public String description(){
+    @Override
+    public String toString(){
         if(whole > 0){
             if(numerator > 0){
                 return String.format("%d - %d/%d\"", whole, numerator, denominator);
@@ -39,6 +40,18 @@ public class MixedFraction {
 
     public float getDecimal(){
         return decimal;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(!(obj instanceof MixedFraction)){
+            return false;
+        }
+        MixedFraction mixedFrac = (MixedFraction) obj;
+
+        return  whole == mixedFrac.whole &&
+                numerator == mixedFrac.numerator &&
+                denominator == mixedFrac.denominator;
     }
 
 

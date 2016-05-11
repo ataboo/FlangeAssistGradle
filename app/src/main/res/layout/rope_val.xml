@@ -19,32 +19,30 @@
 			android:layout_marginTop="6dp"
 			android:layout_marginBottom="6dp"
 			android:background="#70a5b3" />
-        <LinearLayout
-            android:id="@+id/rope_picker_layout"
-            android:layout_width="wrap_content"
+        <Spinner
+            android:id="@+id/rope_type_spinner"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/weld_header"
-            android:orientation="horizontal"
-            android:layout_centerHorizontal="true"
-            >
-            <Spinner
-                android:id="@+id/rope_type_spinner"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/rope_val_title"
-                android:paddingTop="15dp"/>
-            <NumberPicker
-                android:id="@+id/rope_diameter_picker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp" />
-        </LinearLayout>
+            android:layout_below="@id/rope_val_pb1"
+            android:paddingTop="15dp"/>
+        <NumberPicker
+            android:id="@+id/rope_diameter_picker"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rope_type_spinner"
+            android:layout_marginLeft="12dp" />
+		<Spinner
+			android:id="@+id/rope_safety_spinner"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/rope_diameter_picker"
+			/>
 
 		<TextView
 			android:id="@+id/rope_bs_text"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:layout_below="@id/rope_picker_layout"
+			android:layout_below="@id/rope_safety_spinner"
 			android:text="Break Strength:"
 			android:paddingTop="10dp"
 			android:paddingStart="12dp"

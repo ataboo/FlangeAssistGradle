@@ -21,6 +21,10 @@ public class RopeSafety {
         this.factor = factor;
     }
 
+    public float getFactor(){
+        return factor;
+    }
+
     @Override
     public boolean equals(Object obj){
         if(!(obj instanceof RopeSafety)){

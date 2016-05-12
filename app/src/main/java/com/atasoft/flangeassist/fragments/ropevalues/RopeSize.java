@@ -43,6 +43,15 @@ public class RopeSize {
         return breakStrength / safetyFactor;
     }
 
+    public float getBoltSpacing(){
+        return diameter * 6;
+    }
+
+    public int getBoltCount(){
+        int clipCalc = (int) Math.ceil(diameter * 3 + 1);
+        return clipCalc < 3 ? 3 : clipCalc;
+    }
+
     @Override
     public String toString(){
         return fraction.toString();

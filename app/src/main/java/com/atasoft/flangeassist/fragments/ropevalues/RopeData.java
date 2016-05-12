@@ -47,4 +47,20 @@ public class RopeData {
         return safetyList.toArray(new String[safetyList.size()]);
     }
 
+    public RopeType getTypeAtIndex(int index){
+        return inArrayBounds(index, types) ? types[index] : new RopeType("Type Error", 1);
+    }
+
+    public RopeSafety getSafetyAtIndex(int index){
+        return inArrayBounds(index, safetyFactors) ? safetyFactors[index] : new RopeSafety("Safety Error", 1);
+    }
+
+    public RopeSize getSizeAtIndex(int index){
+        return inArrayBounds(index, sizes) ? sizes[index] : new RopeSize(1);
+    }
+
+    private static boolean inArrayBounds(int index, Object[] array){
+        return index >= 0 && index < array.length;
+    }
+
 }

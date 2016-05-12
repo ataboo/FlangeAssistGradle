@@ -26,7 +26,7 @@ public class RopeType {
         this.breakFactor = breakFactor;
     }
 
-    public float getWllFactor(float safetyFactor, float diameter){
+    public float getWllFactor(float safetyFactor){
         return breakFactor / safetyFactor;
     }
 

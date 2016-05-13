@@ -1,4 +1,4 @@
- package com.atasoft.flangeassist.fragments;
+ package com.atasoft.flangeassist.fragments.paycalc;
 
 
 import android.content.*;
@@ -13,8 +13,6 @@ import android.widget.*;
 import android.util.Log;
 
 import com.atasoft.flangeassist.*;
-import com.atasoft.flangeassist.PayCalcClasses.PayCalcData;
-import com.atasoft.flangeassist.PayCalcClasses.TaxManager;
 import com.atasoft.helpers.*;
 
 import java.text.DecimalFormat;
@@ -198,6 +196,7 @@ import java.text.NumberFormat;
         setupViews();
         setupSpinners();
 
+
     }
 
     @Override
@@ -205,6 +204,7 @@ import java.text.NumberFormat;
         super.onResume();
         redoSpinners();
         loadState();
+        updateCalcOutput();
     }
 
     @Override
@@ -225,7 +225,6 @@ import java.text.NumberFormat;
             oldProvWage = provWage;
             updateWageSpinner();
         }
-		updateCalcOutput();
 	}
 
     @Override
@@ -467,6 +466,7 @@ import java.text.NumberFormat;
         String yearString = prefs.getString(getString(R.string.pref_taxYear), TaxManager.yearStrings[TaxManager.yearStrings.length - 1]);
 
         PayCalcData payCalcData = new PayCalcData(taxManager, provString, yearString);
+        TaxManager.Prov activeProv = TaxManager.Prov.getProvFromName(provString);
 
         int mealCount = Integer.parseInt(SpinnerData.MEAL.getSelectedItem());
         int loaCount = Integer.parseInt(SpinnerData.LOA.getSelectedItem());
@@ -558,7 +558,11 @@ import java.text.NumberFormat;
         vacationVal.setText(String.format("Vac\\Hol (%.2f%%): $%.2f", vacRate * 100d, earnings.vacationBonus));
         grossVal.setText(String.format("Gross: $%.2f", earnings.getGross()));
         exemptVal.setText(String.format("Tax Exempt: $%.2f", earnings.getExempt()));
-        cppToggle.setText(String.format("EI/CPP: $%.2f + $%.2f", deductions.ei, deductions.cpp));
+        if(activeProv == TaxManager.Prov.QC){
+            cppToggle.setText(String.format("QPIP/QPP: $%.2f + $%.2f", deductions.ei, deductions.cpp));
+        } else {
+            cppToggle.setText(String.format("EI/CPP: $%.2f + $%.2f", deductions.ei, deductions.cpp));
+        }
 		fieldDuesToggle.setText(String.format("Work Dues (%.2f%%): $%.2f", fieldDuesRate * 100, fieldDues));
 		monthlyDuesToggle.setText(String.format("Monthly Dues: $%.2f", deductions.monthlyDues));
 		dedVal.setText(String.format("Deductions: $%.2f", deductionsSum));

@@ -1,10 +1,8 @@
-package com.atasoft.flangeassist.PayCalcClasses;
+package com.atasoft.flangeassist.fragments.paycalc;
 
 
 import android.content.SharedPreferences;
 import android.util.Log;
-
-import com.atasoft.flangeassist.PayCalcClasses.TaxStatHolder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -19,7 +17,7 @@ public class TaxManager {
         SK ("Saskatchewan", "SK - ", true, 2),
         MB ("Manitoba", "MB - ", true, 3),
         ON ("Ontario", "ON - ", true, 4),
-        QC ("Quebec", "QC - ", false, 5),
+        QC ("Quebec", "QC - ", true, 5),
         NB ("New Brunswick", "NB - ", true, 6),
         NS ("Nova Scotia", "NS - ", true, 7),
         CB ("Cape Breton", "CB - ", true, 8),
@@ -55,6 +53,14 @@ public class TaxManager {
             String[] retArr = new String[nameList.size()];
             nameList.toArray(retArr);
             return retArr;
+        }
+
+        public static Prov getProvFromName(String provName){
+            for(Prov prov: Prov.values()){
+                if(provName.equals(prov.getName())) return prov;
+            }
+            Log.e("TaxManager", "Couldn't find province matching: "+ provName + " returned Fed.");
+            return Prov.FED;
         }
     }
     public enum TaxYear {
@@ -102,7 +108,7 @@ public class TaxManager {
     private static final int bdRounding = BigDecimal.ROUND_HALF_EVEN;
 
     public TaxManager(String provName) {
-        getStatType(getProvEnumFromName(provName));
+        getStatType(Prov.getProvFromName(provName));
     }
 
 	public String[] getWageNames(String province) {
@@ -155,6 +161,9 @@ public class TaxManager {
             case MB:
                 provTax = getMBTax(anGrossTaxable, year);
                 break;
+            case QC:
+                provTax = getQCTax(anGrossTaxable, year);
+                break;
             case NB:
                 provTax = getNBTax(anGrossTaxable, year);
                 break;
@@ -176,6 +185,11 @@ public class TaxManager {
         }
 
         BigDecimal[] cppEiDec = getCppEi(anGross, year);
+
+        if(prov == Prov.QC) {
+            cppEiDec = getQppQpip(anGross, year);
+        }
+
         BigDecimal fiftyTwo = new BigDecimal(52);
 
         BigDecimal fedTaxDec = getFedTax(anGrossTaxable, year);
@@ -193,7 +207,7 @@ public class TaxManager {
 
     public float[] getTaxes(float gross, float dues, String year, String province){
         //Log.w("TaxManager", "Ran get Taxes... again.");
-        return getTaxes(gross, dues, getYearIndexFromName(year), getProvEnumFromName(province));
+        return getTaxes(gross, dues, getYearIndexFromName(year), Prov.getProvFromName(province));
     }
 
     public float getVacationRate(String province){
@@ -246,6 +260,21 @@ public class TaxManager {
 		return new BigDecimal[]{cppRet, eiRet};
 	}
 
+    private BigDecimal[] getQppQpip(BigDecimal anGross, int year){
+        TaxStatHolder qcStats = getStatType(Prov.QC);
+        float cppExempt = fedStats.cppEi[year][1];
+
+        float gross = anGross.floatValue();
+
+        float qppDed = (gross - cppExempt) * qcStats.qppRate[year];
+        float qpipDed = gross * qcStats.qpipRate[year];
+
+        qppDed = qppDed > 0 ? qppDed : 0;
+        qpipDed = qpipDed > 0 ? qpipDed : 0;
+
+        return new BigDecimal[]{new BigDecimal(qppDed), new BigDecimal(qpipDed)};
+    }
+
     private BigDecimal getFedTax(BigDecimal anGross, int year){
         float[] bracket = fedStats.brackets[year];
         float anGrossfloat = anGross.floatValue();
@@ -287,6 +316,44 @@ public class TaxManager {
     private BigDecimal getSKTax(BigDecimal anGrossDec, int year){
         TaxStatHolder skStats = getStatType(Prov.SK);
         return getStandardProvincialTax(anGrossDec, year, skStats);
+    }
+
+    private BigDecimal getQCTax(BigDecimal anGrossDec, int year){
+        TaxStatHolder qcStats = getStatType(Prov.QC);
+
+        float annualTax = cumulativeBracketTax(anGrossDec, qcStats, year);
+        annualTax -= (qcStats.claimAmount[year]) * 0.20;
+
+        return new BigDecimal(annualTax);
+    }
+
+    private float cumulativeBracketTax(BigDecimal anGross, TaxStatHolder taxStatHolder, int year){
+        float gross = anGross.floatValue();
+        float[] bracket = taxStatHolder.brackets[year];
+        float[] rates = taxStatHolder.rates[year];
+
+        float taxPayable = 0f;
+        for(int i=0; i< bracket.length - 1; i++){
+            float roofBracket = bracket[i+1];
+            float floorBracket = bracket[i];
+
+            if(gross > roofBracket){
+                taxPayable += (roofBracket - floorBracket) * rates[i];
+
+                if(i == bracket.length -2){
+                    Log.w("TaxManager", String.format("i == %d, bracket.length-1 == %d", i, bracket.length - 1));
+
+                    taxPayable += (gross - roofBracket) * rates[i+1];
+                    return taxPayable;
+                }
+            } else {
+                taxPayable += (gross - floorBracket) * rates[i];
+                return taxPayable;
+            }
+        }
+
+        Log.e("TaxManager", "cumulativeBracketTax should not have fell through the for loop.");
+        return 0f;
     }
 
 	private BigDecimal getONTax(BigDecimal anGrossDec, int year){
@@ -410,7 +477,7 @@ public class TaxManager {
     }
 
     private TaxStatHolder getStatType(String province){
-        return getStatType(getProvEnumFromName(province));
+        return getStatType(Prov.getProvFromName(province));
     }
 
     public static int getYearIndexFromName(String yearName){
@@ -418,14 +485,6 @@ public class TaxManager {
             if(yearName.equals(yearStrings[i])) return i;
         }
         return yearStrings.length - 1;
-    }
-
-    public static Prov getProvEnumFromName(String provName){
-        for(Prov prov: Prov.values()){
-            if(provName.equals(prov.getName())) return prov;
-        }
-        Log.e("TaxManager", "Couldn't find province matching: "+ provName + " returned Fed.");
-        return Prov.FED;
     }
     
     public static boolean validatePrefs(SharedPreferences prefs){

@@ -5,7 +5,7 @@ import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 
 import com.atasoft.flangeassist.*;
-import com.atasoft.flangeassist.PayCalcClasses.TaxManager;
+import com.atasoft.flangeassist.fragments.paycalc.TaxManager;
 
 public class SettingsRegional extends PreferenceFragment {
 

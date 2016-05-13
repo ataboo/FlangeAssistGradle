@@ -1,4 +1,4 @@
-package com.atasoft.flangeassist.PayCalcClasses;
+package com.atasoft.flangeassist.fragments.paycalc;
 
 import android.util.Log;
 
@@ -40,6 +40,11 @@ public class TaxStatHolder {
     public static final String nightOTTag = "#night_ot";
     public static final String doubleOTTag = "#double_ot";
 
+    public static final String qppRateTag = "#qpp_rate";
+    public static final String qppMaxTag = "#qpp_max";
+    public static final String qpipRateTag = "#qpip_rate";
+    public static final String qpipMaxTag = "#qpip_max";
+
 
     //TODO: change public stats to getters and add null checks;
     public TaxManager.Prov prov = TaxManager.Prov.FED;
@@ -62,6 +67,11 @@ public class TaxStatHolder {
     public float nightPremiumRate;
     public boolean nightOT;
     public boolean doubleOT;
+
+    public float[] qppRate;
+    public float[] qppMax;
+    public float[] qpipRate;
+    public float[] qpipMax;
 
     public float vacRate = 0f;
     public String surName = "fail";
@@ -88,8 +98,6 @@ public class TaxStatHolder {
         }
         */
 
-
-
         parseFile(getCSVFileName(prov));
 
         if(wageTableList.size() > 0) parseWageTable(wageTableList);
@@ -112,7 +120,7 @@ public class TaxStatHolder {
         if(prov == TaxManager.Prov.PE){peiInit();}
 
         //Manitoba uses SK wage table.
-        if(prov == TaxManager.Prov.MB){manitobaInit();};
+        if(prov == TaxManager.Prov.MB){manitobaInit();}
     }
 
     private void capeBretonInit(){
@@ -304,26 +312,45 @@ public class TaxStatHolder {
         // Single Row Arrays
         if(lineTag.equals(claimAmountTag)) {
             this.claimAmount = parseFloatArr(lineTrim, claimAmountTag);
+            return;
+        }
+        if(lineTag.equals(qppRateTag)){
+            this.qppRate = parseFloatArr(lineTrim, qppRateTag);
+            return;
+        }
+        if(lineTag.equals(qppMaxTag)){
+            this.qppMax = parseFloatArr(lineTrim, qppMaxTag);
+            return;
+        }
+        if(lineTag.equals(qpipRateTag)){
+            this.qpipRate = parseFloatArr(lineTrim, qpipRateTag);
+            return;
+        }
+        if(lineTag.equals(qpipMaxTag)){
+            this.qpipMax = parseFloatArr(lineTrim, qpipMaxTag);
         }
 
         // Single Values
         if (lineTag.equals(fieldDuesTag)) {
             this.fieldDuesRate = parseFloatVal(lineTrim, fieldDuesTag);
+            return;
         }
         if (lineTag.equals(monthDuesTag)) {
             this.monthDuesRate = parseFloatVal(lineTrim, monthDuesTag);
+            return;
         }
         if(lineTag.equals(nightPremiumTag)){
             this.nightPremiumRate = parseFloatVal(lineTrim, nightPremiumTag);
+            return;
         }
         if(lineTag.equals(nightOTTag)){
             this.nightOT = parseBoolVal(lineTrim, nightOTTag);
+            return;
         }
         if(lineTag.equals(doubleOTTag)){
             this.doubleOT = parseBoolVal(lineTrim, doubleOTTag);
+            //return;
         }
-
-
     }
 
     private static String[] trimArray(String[] srcArr){

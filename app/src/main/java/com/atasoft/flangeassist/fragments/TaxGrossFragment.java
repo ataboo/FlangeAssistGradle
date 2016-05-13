@@ -18,7 +18,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.atasoft.flangeassist.*;
-import com.atasoft.flangeassist.PayCalcClasses.TaxManager;
+import com.atasoft.flangeassist.fragments.paycalc.PaychequeFragment;
+import com.atasoft.flangeassist.fragments.paycalc.TaxManager;
 
 
 public class TaxGrossFragment extends Fragment implements OnClickListener {

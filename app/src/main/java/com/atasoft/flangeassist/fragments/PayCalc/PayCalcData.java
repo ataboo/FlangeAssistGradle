@@ -1,4 +1,4 @@
-package com.atasoft.flangeassist.PayCalcClasses;
+package com.atasoft.flangeassist.fragments.paycalc;
 
 import com.atasoft.helpers.AtaMathUtils;
 

@@ -1,5 +1,6 @@
 package com.atasoft.flangeassist.fragments.paycalc;
 
+import android.content.res.AssetManager;
 import android.util.Log;
 
 import com.atasoft.flangeassist.MainActivity;
@@ -88,7 +89,9 @@ public class TaxStatHolder {
     private ArrayList<String[]> surtaxList = new ArrayList<>();
     private ArrayList<String[]> cppEiList = new ArrayList<>();
 
-    public TaxStatHolder(TaxManager.Prov prov){
+    private AssetManager assets;
+
+    public TaxStatHolder(TaxManager.Prov prov, AssetManager assets){
         this.prov = prov;
         this.surName = prov.getSurname();
 
@@ -98,7 +101,8 @@ public class TaxStatHolder {
         }
         */
 
-        parseFile(getCSVFileName(prov));
+        this.assets = assets;
+        parseFile(getCSVFileName(prov), assets);
 
         if(wageTableList.size() > 0) parseWageTable(wageTableList);
 
@@ -124,20 +128,20 @@ public class TaxStatHolder {
     }
 
     private void capeBretonInit(){
-        copyTaxFields(this, TaxManager.Prov.NS);
+        copyTaxFields(this, TaxManager.Prov.NS, assets);
     }
 
     private void manitobaInit(){
-        copyWageFields(this, TaxManager.Prov.SK);
+        copyWageFields(this, TaxManager.Prov.SK, assets);
     }
 
     private void peiInit(){
         //parseWageTable won't overwrite because it aborts when there's no table in the csv
-        copyWageFields(this, TaxManager.Prov.NS);
+        copyWageFields(this, TaxManager.Prov.NS, assets);
     }
 
-    private static void copyWageFields(TaxStatHolder receiver, TaxManager.Prov wageProv){
-        TaxStatHolder wageStats = new TaxStatHolder(wageProv);
+    private static void copyWageFields(TaxStatHolder receiver, TaxManager.Prov wageProv, AssetManager assets){
+        TaxStatHolder wageStats = new TaxStatHolder(wageProv, assets);
         receiver.wageNames = wageStats.wageNames;
         receiver.wageRates = wageStats.wageRates;
         receiver.vacRate = wageStats.vacRate;
@@ -148,8 +152,8 @@ public class TaxStatHolder {
         receiver.nightPremiumRate = wageStats.nightPremiumRate;
     }
 
-    private static void copyTaxFields(TaxStatHolder receiver, TaxManager.Prov taxProv){
-        TaxStatHolder taxStats = new TaxStatHolder(taxProv);
+    private static void copyTaxFields(TaxStatHolder receiver, TaxManager.Prov taxProv, AssetManager assets){
+        TaxStatHolder taxStats = new TaxStatHolder(taxProv, assets);
         receiver.brackets = taxStats.brackets;
         receiver.rates = taxStats.rates;
         receiver.constK = taxStats.constK;
@@ -204,7 +208,7 @@ public class TaxStatHolder {
         for(int i=0; i<retArr.length; i++){
             retArr[i] = list.get(i);
             if(retArr[i].length != sizeCheck){
-                Log.w("TaxStatHolder", "Size mismatch on:  " + surName + ", " + errorName);
+               // Log.w("TaxStatHolder", "Size mismatch on:  " + surName + ", " + errorName);
             }
         }
         list.clear();
@@ -222,19 +226,19 @@ public class TaxStatHolder {
         for(int i=0; i < retArr.length; i++){
             retArr[i] = parseFloatArr(list.get(i), errorName);
             if(retArr[i].length != sizeCheck){
-                Log.w("TaxStatHolder", "Size mismatch on:  " + surName + ", " + errorName);
+                //Log.w("TaxStatHolder", "Size mismatch on:  " + surName + ", " + errorName);
             }
         }
         list.clear();
         return retArr;
     }
     
-    private boolean parseFile(String fileName){
+    private boolean parseFile(String fileName, AssetManager assets){
         BufferedReader br;
         String line;
 
         try {
-            InputStream inStr = MainActivity.staticRef.getAssets().open(fileName);
+            InputStream inStr = assets.open(fileName);
             br = new BufferedReader(new InputStreamReader(inStr));
 
             while((line = br.readLine()) != null){

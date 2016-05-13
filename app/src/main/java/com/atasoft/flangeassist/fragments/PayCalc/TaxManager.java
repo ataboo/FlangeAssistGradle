@@ -2,6 +2,7 @@ package com.atasoft.flangeassist.fragments.paycalc;
 
 
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.util.Log;
 
 import java.math.BigDecimal;
@@ -99,15 +100,20 @@ public class TaxManager {
 
     public static final String defaultWageName = "Journeyperson";
 
-    private TaxStatHolder fedStats = new TaxStatHolder(Prov.FED);
+    private TaxStatHolder fedStats;
     private TaxStatHolder provStats;
+
+    private AssetManager assets;
 
     public static final String[] yearStrings = TaxYear.getYearStrings();
 
     private static final int bdPrecision = 5;
     private static final int bdRounding = BigDecimal.ROUND_HALF_EVEN;
 
-    public TaxManager(String provName) {
+    public TaxManager(String provName, AssetManager assets) {
+        this.assets = assets;
+
+        fedStats = new TaxStatHolder(Prov.FED, assets);
         getStatType(Prov.getProvFromName(provName));
     }
 
@@ -468,10 +474,10 @@ public class TaxManager {
 
     private TaxStatHolder getStatType(Prov prov){
         if(provStats == null){
-            provStats = new TaxStatHolder(prov);
+            provStats = new TaxStatHolder(prov, assets);
         } else{
             if(provStats.prov != prov)
-                provStats = new TaxStatHolder(prov);
+                provStats = new TaxStatHolder(prov, assets);
         }
         return provStats;
     }

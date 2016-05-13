@@ -249,7 +249,7 @@ import java.text.NumberFormat;
         if(taxManager == null){
             this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
             String provName = prefs.getString(getString(R.string.pref_prov), TaxManager.Prov.AB.getName());
-            this.taxManager = new TaxManager(provName);
+            this.taxManager = new TaxManager(provName, getActivity().getAssets());
         }
 
 

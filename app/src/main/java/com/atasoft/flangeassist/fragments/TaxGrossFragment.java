@@ -118,8 +118,10 @@ public class TaxGrossFragment extends Fragment implements OnClickListener {
         provName = provName.equals(noProvinceName) ? TaxManager.Prov.FED.getName(): provName;
 
         if(taxMan == null){
-            taxMan = new TaxManager(provName);
+            taxMan = new TaxManager(provName, getActivity().getAssets());
         }
+
+        TaxManager.Prov prov = TaxManager.Prov.getProvFromName(provName);
 
         double[] taxVals = PaychequeFragment.
                 floatToDoubArr(taxMan.getTaxes((float) weekGross, 0f, yearName, provName));
@@ -130,7 +132,11 @@ public class TaxGrossFragment extends Fragment implements OnClickListener {
         Resources res = getResources();
         fedTaxText.setText(String.format("Federal Tax:   $%.2f", taxVals[0]));
         provTaxText.setText(String.format("Provincial Tax:   $%.2f", taxVals[1]));
-        cppEIText.setText(String.format("CPP and EI:   $%.2f,  $%.2f", taxVals[2], taxVals[3]));
+        if(prov == TaxManager.Prov.QC) {
+            cppEIText.setText(String.format("QPP and QPIP:   $%.2f,  $%.2f", taxVals[2], taxVals[3]));
+        } else {
+            cppEIText.setText(String.format("CPP and EI:   $%.2f,  $%.2f", taxVals[2], taxVals[3]));
+        }
 
         String totalDed = String.format("   $%.2f", taxSum);
         totalDedText.setText(res.getString(R.string.tax_total_ded) + totalDed);

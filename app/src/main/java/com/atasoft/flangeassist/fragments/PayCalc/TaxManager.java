@@ -194,11 +194,13 @@ public class TaxManager {
 
         if(prov == Prov.QC) {
             cppEiDec = getQppQpip(anGross, year);
+            cppEiDec[1] = cppEiDec[1].add(cppEiDec[2]);
         }
 
         BigDecimal fiftyTwo = new BigDecimal(52);
 
-        BigDecimal fedTaxDec = getFedTax(anGrossTaxable, year);
+        BigDecimal fedTaxDec = prov == Prov.QC ? getFedTax(anGrossTaxable, getStatType(Prov.QC), year) :
+                getFedTax(anGrossTaxable, year);
         // x.compare(y) ==  -1:(x<y), 0:(x==y), 1:(x>y)
         if(fedTaxDec.compareTo(BigDecimal.ZERO) < 0) fedTaxDec = BigDecimal.ZERO;
         if(provTax.compareTo(BigDecimal.ZERO) < 0) provTax = BigDecimal.ZERO;
@@ -274,22 +276,59 @@ public class TaxManager {
 
         float qppDed = (gross - cppExempt) * qcStats.qppRate[year];
         float qpipDed = gross * qcStats.qpipRate[year];
+        float eiDed = gross * qcStats.cppEi[year][0];
 
         qppDed = qppDed > 0 ? qppDed : 0;
         qpipDed = qpipDed > 0 ? qpipDed : 0;
+        eiDed = eiDed > 0 ? eiDed : 0;
 
-        return new BigDecimal[]{new BigDecimal(qppDed), new BigDecimal(qpipDed)};
+        return new BigDecimal[]{new BigDecimal(qppDed), new BigDecimal(qpipDed), new BigDecimal(eiDed)};
+    }
+
+    // Fed tax in Quebec uses a different tax credit
+    private float getQCTaxCredit(TaxStatHolder qcHolder, BigDecimal anGross, int year){
+        BigDecimal[] qppQpipEi = getQppQpip(anGross, year);
+
+        float qppCont = qppQpipEi[0].floatValue();
+        float qpipCont = qppQpipEi[1].floatValue();
+        float eiCont = qppQpipEi[2].floatValue();
+
+        float maxQppCont = qcHolder.qppMax[year];
+        float maxQpipCont = qcHolder.qpipMax[year];
+        float maxEiCont = qcHolder.cppEi[year][1];
+        float claimAmount = fedStats.claimAmount[year];
+
+        qppCont = qppCont < maxQppCont ? qppCont: maxQppCont;
+        qpipCont = qpipCont < maxQpipCont ? qpipCont : maxQpipCont;
+        eiCont = eiCont < maxEiCont ? eiCont : maxEiCont;
+
+
+        return (claimAmount + qppCont + qpipCont + eiCont) * fedStats.rates[year][0];
     }
 
     private BigDecimal getFedTax(BigDecimal anGross, int year){
         float[] bracket = fedStats.brackets[year];
-        float anGrossfloat = anGross.floatValue();
-        int taxIndex = bracketGrossIndex(anGrossfloat, bracket);
+        float anGrossFloat = anGross.floatValue();
+        int taxIndex = bracketGrossIndex(anGrossFloat, bracket);
         //Log.w("TaxManager", "taxIndex: " + taxIndex + " rate is: " + fedStats.rates[year][taxIndex]);
 
         return anGross.multiply(BigDecimal.valueOf(fedStats.rates[year][taxIndex])).
                 subtract(getTaxCredit(fedStats, anGross, year)).
                 subtract(BigDecimal.valueOf(fedStats.constK[year][taxIndex]));
+    }
+
+    private BigDecimal getFedTax(BigDecimal anGross, TaxStatHolder qcHolder, int year){
+        float[] bracket = fedStats.brackets[year];
+        float anGrossFloat = anGross.floatValue();
+        int taxIndex = bracketGrossIndex(anGrossFloat, bracket);
+
+        float basicTax = anGrossFloat * fedStats.rates[year][taxIndex];
+        basicTax -= getQCTaxCredit(qcHolder, anGross, year);
+        basicTax -= fedStats.constK[year][taxIndex];
+        basicTax -= basicTax * 0.165;
+        basicTax = basicTax > 0 ? basicTax : 0;
+
+        return BigDecimal.valueOf(basicTax);
     }
 
 	private  BigDecimal getBCTax(BigDecimal anGrossDec, int year){
@@ -327,39 +366,28 @@ public class TaxManager {
     private BigDecimal getQCTax(BigDecimal anGrossDec, int year){
         TaxStatHolder qcStats = getStatType(Prov.QC);
 
-        float annualTax = cumulativeBracketTax(anGrossDec, qcStats, year);
-        annualTax -= (qcStats.claimAmount[year]) * 0.20;
+        float taxableAnnual = anGrossDec.floatValue() - qcStats.empDeduction[year];
+        int taxIndex = bracketGrossIndex(taxableAnnual, qcStats.brackets[year]);
 
-        return new BigDecimal(annualTax);
+        float taxPayable = taxableAnnual * qcStats.rates[year][taxIndex];
+        taxPayable -= qcStats.constK[year][taxIndex];
+        taxPayable += getQCHealthPrem(taxableAnnual, qcStats, year);
+        taxPayable -= qcStats.claimAmount[year] * 0.20;
+
+        return BigDecimal.valueOf(taxPayable);
     }
 
-    private float cumulativeBracketTax(BigDecimal anGross, TaxStatHolder taxStatHolder, int year){
-        float gross = anGross.floatValue();
-        float[] bracket = taxStatHolder.brackets[year];
-        float[] rates = taxStatHolder.rates[year];
+    private float getQCHealthPrem(float anGross, TaxStatHolder qcStats, int year){
+        int healthIndex = TaxManager.bracketGrossIndex(anGross, qcStats.healthBracket[year]);
+        if(healthIndex == 0) return 0;
 
-        float taxPayable = 0f;
-        for(int i=0; i< bracket.length - 1; i++){
-            float roofBracket = bracket[i+1];
-            float floorBracket = bracket[i];
+        float addFlat = healthIndex == 1 ? 0 : qcStats.healthAmount[year][healthIndex - 1];
 
-            if(gross > roofBracket){
-                taxPayable += (roofBracket - floorBracket) * rates[i];
+        float healthCalc = (anGross - qcStats.healthBracket[year][healthIndex]) *
+                qcStats.healthRate[year][healthIndex] + addFlat;
+        float healthFlat = qcStats.healthAmount[year][healthIndex];
 
-                if(i == bracket.length -2){
-                    Log.w("TaxManager", String.format("i == %d, bracket.length-1 == %d", i, bracket.length - 1));
-
-                    taxPayable += (gross - roofBracket) * rates[i+1];
-                    return taxPayable;
-                }
-            } else {
-                taxPayable += (gross - floorBracket) * rates[i];
-                return taxPayable;
-            }
-        }
-
-        Log.e("TaxManager", "cumulativeBracketTax should not have fell through the for loop.");
-        return 0f;
+        return healthCalc < healthFlat ? healthCalc : healthFlat;
     }
 
 	private BigDecimal getONTax(BigDecimal anGrossDec, int year){

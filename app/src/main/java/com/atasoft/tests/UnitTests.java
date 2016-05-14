@@ -29,8 +29,8 @@ public class UnitTests extends InstrumentationTestCase {
 
     public void testTax() throws Exception {
 
-        TaxManager.Prov[] testProvs = {TaxManager.Prov.FED, TaxManager.Prov.BC, TaxManager.Prov.AB,
-                TaxManager.Prov.SK, TaxManager.Prov.MB, TaxManager.Prov.ON, TaxManager.Prov.NB,
+        TaxManager.Prov[] testProvs = {TaxManager.Prov.FED, TaxManager.Prov.QC, TaxManager.Prov.BC, TaxManager.Prov.AB,
+                TaxManager.Prov.SK, TaxManager.Prov.MB, TaxManager.Prov.ON, TaxManager.Prov.QC, TaxManager.Prov.NB,
                 TaxManager.Prov.NS, TaxManager.Prov.PE, TaxManager.Prov.NL};
 
         BufferedReader br;
@@ -38,6 +38,7 @@ public class UnitTests extends InstrumentationTestCase {
         ArrayList<float[]> testLines = new ArrayList<float[]>();
 
         String yearName = "";
+        String[] legendRow;
 
         try {
             InputStream inStr =  getInstrumentation().getTargetContext().getResources().getAssets().open(TEST_2016);
@@ -45,14 +46,11 @@ public class UnitTests extends InstrumentationTestCase {
 
             line = br.readLine();
             assertNotNull(line);
-            String[] lineSplit = line.split(",");
-            assertEquals(lineSplit.length - 1, testProvs.length);
+            legendRow = line.split(",");
 
-            for(int i=1; i<lineSplit.length; i++){
-                assertTrue(testProvs[i - 1].getSurname().contains(lineSplit[i]));
-            }
 
-            yearName = lineSplit[0];
+
+            yearName = legendRow[0];
 
             while ((line = br.readLine()) != null) {
                 testLines.add(parseLine(line));
@@ -72,7 +70,7 @@ public class UnitTests extends InstrumentationTestCase {
             for(float[] testLine: testLines){
                 float incomeVal = testLine[0];
                 float[] calcTax = taxMan.getTaxes(incomeVal, 0f, TaxManager.getYearIndexFromName(yearName), prov);
-                float testTax = provIndex == 0 ? calcTax[0]: calcTax[1];
+                float testTax = provIndex == 0 || provIndex == 1 ? calcTax[0]: calcTax[1];
 
                 float tableTax = testLine[provIndex + 1];
 

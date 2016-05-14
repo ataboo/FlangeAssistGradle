@@ -1,0 +1,82 @@
+Quebec,Classification,Wage,,
+#wages,GF,47.56,,
+#wages,Foreperson,45.56,,
+#wages,Lead Hand,42.56,,
+#wages,Journeyperson,40.56,,
+#wages,4th Year App,36.3,,
+#wages,3rd Year App,32.05,,
+#wages,2nd Year App,27.79,,
+#wages,1st Year App,23.54,,
+#wages,Helper,27.79,,
+,,,,
+#vac_rate,0,,,
+#field_dues,0.045,,,
+#month_dues,41.6,,,
+#night_ot,TRUE,,,
+#double_ot,TRUE,,,
+,,,,
+,,,,
+,,,,
+#brackets,0,41095,82190,100000
+#brackets,0,41495,82985,100970
+#brackets,0,41935,83865,102040
+#brackets,0,42390,84780,103150
+,,,,
+#const_k,0,1644,4931,6681
+#const_k,0,1659,4979,6746
+#const_k,0,1677,5032,6817
+#const_k,0,1695,5086,6891
+,,,,
+#rates,0.16,0.2,0.24,0.2575
+#rates,0.16,0.2,0.24,0.2575
+#rates,0.16,0.2,0.24,0.2575
+#rates,0.16,0.2,0.24,0.2575
+,,,,
+#health_rates,0,0.05,0.05,0.04
+#health_rates,0,0.05,0.05,0.04
+#health_rates,0,0.05,0.05,0.04
+#health_rates,0,0.05,0.05,0.04
+,,,,
+#health_amounts,0,100,200,1000
+#health_amounts,0,100,200,1000
+#health_amounts,0,100,200,1000
+#health_amounts,0,100,200,1000
+,,,,
+#health_brackets,0,18000,40000,130000
+#health_brackets,0,18175,40390,131260
+#health_brackets,0,18370,40820,132650
+#health_brackets,0,18570,41265,134095
+,,,,
+,2013,2014,2015,2016
+#claim_amount,11195,11305,11425,11550
+#emp_ded,1100,1110,1120,1130
+#qpp_rate,0.051,0.05175,0.0525,0.05325
+#qpp_max,2427.6,2535.75,2630.25,2737.05
+Added quebec EI rate and max to QPIP,,,,
+#qpip_rate,0.00559,0.00559,0.00559,0.00548
+#qpip_max,377.33,385.71,391.3,391.82
+,,,,
+,QC ei rate,QC ei max,,
+#cpp_ei,0.0152,720.48,,
+#cpp_ei,0.0153,743.58,,
+#cpp_ei,0.0154,762.3,,
+#cpp_ei,0.0152,772.16,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+Income Tax,,,,
+annual - empcredit = taxable,,,,
+basic = taxable * rate - const,,,,
+tax = basic - claim * 20% + health prem,,,,
+,,,,
+QPP,,,,
+subtract 3500/52 exemption from earnings,,,,
+multiply by rate,,,,
+,,,,
+QPIP,,,,
+multiply income by rate?,,,,
+,,,,
+Tax Credit,,,,
+(td1 + can emp credit + qpp cont + cpip cont + cpp (quebec) cont) * low bracket(15%),,,,

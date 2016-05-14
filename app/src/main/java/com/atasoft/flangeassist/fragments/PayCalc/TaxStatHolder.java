@@ -45,6 +45,7 @@ public class TaxStatHolder {
     public static final String qppMaxTag = "#qpp_max";
     public static final String qpipRateTag = "#qpip_rate";
     public static final String qpipMaxTag = "#qpip_max";
+    public static final String empDedTag = "#emp_ded";
 
 
     //TODO: change public stats to getters and add null checks;
@@ -73,6 +74,7 @@ public class TaxStatHolder {
     public float[] qppMax;
     public float[] qpipRate;
     public float[] qpipMax;
+    public float[] empDeduction;
 
     public float vacRate = 0f;
     public String surName = "fail";
@@ -83,7 +85,7 @@ public class TaxStatHolder {
     private ArrayList<String[]> rateList = new ArrayList<>();
     private ArrayList<String[]> constKList = new ArrayList<>();
     private ArrayList<String[]> taxReductionList = new ArrayList<>();
-    private ArrayList<String[]> healthBrackList = new ArrayList<>();
+    private ArrayList<String[]> healthBracketList = new ArrayList<>();
     private ArrayList<String[]> healthRateList = new ArrayList<>();
     private ArrayList<String[]> healthAmountList = new ArrayList<>();
     private ArrayList<String[]> surtaxList = new ArrayList<>();
@@ -110,7 +112,7 @@ public class TaxStatHolder {
         this.rates = listToFloatArray(rateList, "rates");
         this.constK = listToFloatArray(constKList, "constK");
         this.taxReduction = listToFloatArray(taxReductionList, "taxReduction");
-        this.healthBracket = listToFloatArray(healthBrackList, "healthBrack");
+        this.healthBracket = listToFloatArray(healthBracketList, "healthBrack");
         this.healthRate = listToFloatArray(healthRateList, "healthRate");
         this.healthAmount = listToFloatArray(healthAmountList, "healthAmount");
 
@@ -122,17 +124,10 @@ public class TaxStatHolder {
 
         //PEI uses NS wage table but needs to parse its tax info.
         if(prov == TaxManager.Prov.PE){peiInit();}
-
-        //Manitoba uses SK wage table.
-        if(prov == TaxManager.Prov.MB){manitobaInit();}
     }
 
     private void capeBretonInit(){
         copyTaxFields(this, TaxManager.Prov.NS, assets);
-    }
-
-    private void manitobaInit(){
-        copyWageFields(this, TaxManager.Prov.SK, assets);
     }
 
     private void peiInit(){
@@ -293,7 +288,7 @@ public class TaxStatHolder {
             return;
         }
         if(lineTag.equals(healthBracketTag)){
-            healthBrackList.add(lineTrim);
+            healthBracketList.add(lineTrim);
             return;
         }
         if(lineTag.equals(healthRateTag)){
@@ -332,6 +327,9 @@ public class TaxStatHolder {
         }
         if(lineTag.equals(qpipMaxTag)){
             this.qpipMax = parseFloatArr(lineTrim, qpipMaxTag);
+        }
+        if(lineTag.equals(empDedTag)){
+            this.empDeduction = parseFloatArr(lineTrim, empDedTag);
         }
 
         // Single Values

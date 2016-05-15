@@ -241,7 +241,7 @@ import java.text.NumberFormat;
 				break;
         }
 
-        // update calc output on any button push.
+        // draw calc output on any button push.
         updateCalcOutput();
     }
 

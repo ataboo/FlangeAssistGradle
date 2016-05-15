@@ -3,9 +3,9 @@ package com.atasoft.adapters;
 import android.support.v4.app.Fragment;
 
 
+import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
 import com.atasoft.flangeassist.fragments.paycalc.PaychequeFragment;
 import com.atasoft.flangeassist.fragments.*;
-import com.atasoft.flangeassist.fragments.cashcounter.CashCounter;
 import com.atasoft.flangeassist.fragments.ropevalues.RopeFragment;
 
 
@@ -44,7 +44,7 @@ public class NavDrawerAdaptor {
 				return new WeldingFrag();
 			case 8:
 				// Cash Counter
-				return new CashCounter();
+				return new CashCounter2();
 			case 9:
 				// Rigging Calculator
 				return new RigTrig();

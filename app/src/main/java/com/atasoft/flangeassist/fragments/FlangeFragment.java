@@ -84,7 +84,7 @@ public class FlangeFragment extends Fragment {
             android.R.layout.simple_spinner_item, fStuds);
         studSizeSpinner.setAdapter(adapterStud);
 
-        //Set Listeners on spinners to update stats
+        //Set Listeners on spinners to draw stats
         rateS.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 		    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 spinSend();

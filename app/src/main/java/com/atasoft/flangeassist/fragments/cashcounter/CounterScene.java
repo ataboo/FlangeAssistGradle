@@ -6,10 +6,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.Log;
 
+import com.atasoft.flangeassist.MainActivity;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.CounterAnim;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.EarningText;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.IntVector;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.OilDripScene;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.OnceAnimation;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.TextureBox;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,30 +25,91 @@ import java.util.ArrayList;
  * Created by ataboo on 2016-05-14.
  */
 public abstract class CounterScene {
+    protected Context context;
+    protected float sceneRatio = 720f/1080f;
+    protected Rect sceneRect = new Rect(0, 0, 720, 1024);
+    protected EarningText earningText;
+    protected TextureBox textureBox = MainActivity.TEXTURE_BOX;
+
     public enum Scene{
-        PULP_MILL;
+        PULP_MILL,
+        OIL_DRIP;
 
         public CounterScene makeScene(Context context, IntVector screenSize){
             switch (this){
                 default: case PULP_MILL:
                     return new PulpMillScene(context, screenSize);
+                case OIL_DRIP:
+                    return new OilDripScene(context, screenSize);
             }
         }
     }
 
     protected ArrayList<CounterAnim> animations = new ArrayList<>();
+    protected ArrayList<CounterAnim> graveYard = new ArrayList<>();
 
-    public abstract void addFineAnim(long startTime, float earnings);
+    public void addFineAnim(long startTime, float earnings, CashCounter2.EarningType earningType){
+        earningText.animateEarnings(earnings, startTime, earningType);
+    }
 
     public abstract void addCoarseAnim(long startTime, float earnings);
 
-    public abstract void screenResize(IntVector size);
+    public void screenResize(IntVector size) {
+        this.sceneRect = sceneSize(size);
 
-    public abstract void draw(long time, Canvas canvas, Paint paint);
+        for(CounterAnim anim: animations){
+            anim.resize(sceneRect);
+        }
+    }
+
+    public void update(){
+        for(CounterAnim anim: graveYard){
+            anim.dispose();
+            animations.remove(anim);
+        }
+        graveYard.clear();
+    }
+
+    public void draw(long time, Canvas canvas, Paint paint) {
+        for(CounterAnim anim: animations){
+            anim.draw(time, canvas, paint);
+
+            if(anim instanceof OnceAnimation){
+                if(((OnceAnimation) anim).isDone){
+                    graveYard.add(anim);
+                }
+            }
+        }
+    }
+
+    public void setEarnings(float earnings, CashCounter2.EarningType earningType){
+        earningText.setEarnings(earnings, earningType);
+    }
 
     public abstract void dispose();
 
-    protected void disposeTextures(Bitmap[] bitmaps){
+    protected Rect sceneSize(IntVector screenSize){
+        int width = screenSize.x;
+        int height = screenSize.y;
+
+        if(screenSize.y > screenSize.x){
+            height = (int) (sceneRatio * width);
+            int vertOffset = (screenSize.y - height) / 2;
+
+            return new Rect(0, vertOffset, width, height + vertOffset);
+        } else {
+            width = (int) (height / sceneRatio);
+            int horizOffset = (screenSize.x - width) / 2;
+
+            return new Rect(horizOffset, 0, width + horizOffset, height);
+        }
+    }
+
+    public static void disposeTextures(Bitmap[] bitmaps){
+        if(bitmaps == null){
+            return;
+        }
+
         for(Bitmap bitmap: bitmaps){
             bitmap.recycle();
         }
@@ -97,7 +164,13 @@ public abstract class CounterScene {
 
         istr = assetManager.open(filePath);
         bitmap = BitmapFactory.decodeStream(istr);
+        istr.close();
 
         return bitmap;
+    }
+
+    protected int getCents(float earnings){
+        float difference = (earnings - earningText.getEarnings());
+        return Math.round(difference * 100);
     }
 }

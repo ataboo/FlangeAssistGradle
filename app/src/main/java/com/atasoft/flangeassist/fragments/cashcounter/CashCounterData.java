@@ -4,7 +4,7 @@ import android.text.format.Time;
 import android.util.Log;
 
 import com.atasoft.helpers.AtaMathUtils;
-import com.atasoft.flangeassist.fragments.cashcounter.CashCounter.*;
+import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2.*;
 
 /**
  * Created by ataboo on 2016-03-29.
@@ -108,23 +108,23 @@ public class CashCounterData {
 
         double[] hours = new double[3];  //single, ot, double
         if(earningAttributes.isFourTens){
-            hours[2] = AtaMathUtils.bracketDouble(hoursIntoShift - 10, 0, 24);
+            hours[2] = AtaMathUtils.clampDouble(hoursIntoShift - 10, 0, 24);
             if(isFriday){
-                hours[1] = AtaMathUtils.bracketDouble(hoursIntoShift, 0, 10);
+                hours[1] = AtaMathUtils.clampDouble(hoursIntoShift, 0, 10);
                 hours[0] = 0;
             } else {
-                hours[0] = AtaMathUtils.bracketDouble(hoursIntoShift, 0, 10);
+                hours[0] = AtaMathUtils.clampDouble(hoursIntoShift, 0, 10);
                 hours[1] = 0;
             }
         } else {
-            hours[0] = AtaMathUtils.bracketDouble(hoursIntoShift, 0, earningAttributes.weekdayHours[0]);
-            hours[2] = AtaMathUtils.bracketDouble(hoursIntoShift - earningAttributes.weekdayHours[0] - earningAttributes.weekdayHours[1], 0, 24);
-            hours[1] = AtaMathUtils.bracketDouble(hoursIntoShift - hours[0] - hours[2], 0, 24);
+            hours[0] = AtaMathUtils.clampDouble(hoursIntoShift, 0, earningAttributes.weekdayHours[0]);
+            hours[2] = AtaMathUtils.clampDouble(hoursIntoShift - earningAttributes.weekdayHours[0] - earningAttributes.weekdayHours[1], 0, 24);
+            hours[1] = AtaMathUtils.clampDouble(hoursIntoShift - hours[0] - hours[2], 0, 24);
         }
         if((isWeekend && earningAttributes.weekendDouble) || earningAttributes.isHoliday){
             hours[0] = 0;
             hours[1] = 0;
-            hours[2] = AtaMathUtils.bracketDouble(hoursIntoShift, 0, 24);
+            hours[2] = AtaMathUtils.clampDouble(hoursIntoShift, 0, 24);
         }
         if(hours[2] > 0){
             if(earningAttributes.isHoliday){

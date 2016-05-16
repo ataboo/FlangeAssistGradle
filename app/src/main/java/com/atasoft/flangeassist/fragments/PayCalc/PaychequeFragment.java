@@ -456,7 +456,7 @@ import java.text.NumberFormat;
         catch(NumberFormatException e) {
             return strParse;
         }
-        double bracketedParse = AtaMathUtils.bracketDouble(strParse[0], 0, 24);
+        double bracketedParse = AtaMathUtils.clampDouble(strParse[0], 0, 24);
         if(strParse[0] == bracketedParse) strParse[1] = 1d;
         return new double[]{bracketedParse, strParse[1]};
     }
@@ -678,9 +678,9 @@ import java.text.NumberFormat;
         for(int i=0; i<saveChecks.length; i++){
             saveChecks[i].setChecked(saveChecksIndices[i].equals("1"));
         }
-        int loaIndex = AtaMathUtils.bracketInt(prefs.getInt(getString(R.string.pref_loaSelectedIndex), 0), 0, 6);
+        int loaIndex = AtaMathUtils.clampInt(prefs.getInt(getString(R.string.pref_loaSelectedIndex), 0), 0, 6);
         SpinnerData.LOA.setSelectionIndex(loaIndex, false);
-        int mealIndex = AtaMathUtils.bracketInt(prefs.getInt(getString(R.string.pref_mealSelectedIndex), 0), 0, 6);
+        int mealIndex = AtaMathUtils.clampInt(prefs.getInt(getString(R.string.pref_mealSelectedIndex), 0), 0, 6);
         SpinnerData.MEAL.setSelectionIndex(mealIndex, false);
 
         if(wageNames != null){

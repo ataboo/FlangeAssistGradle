@@ -3,6 +3,8 @@ package com.atasoft.flangeassist.fragments.cashcounter.counterobjects;
 
 import android.graphics.Rect;
 
+import com.atasoft.helpers.AtaMathUtils;
+
 /**
  * Created by ataboo on 2015-12-19.
  */
@@ -218,6 +220,13 @@ public class IntVector implements Comparable<IntVector> {
 
     public Rect originRect(){
         return new Rect(0, 0, x, y);
+    }
+
+    public IntVector lerpTowards(IntVector dest, float progress){
+        progress = AtaMathUtils.clampFloat(progress, 0f, 1f);
+
+        return dest.sub(this).scl(progress).add(this);
+
     }
 
 }

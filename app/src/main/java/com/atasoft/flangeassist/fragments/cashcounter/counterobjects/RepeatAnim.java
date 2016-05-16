@@ -16,20 +16,16 @@ public class RepeatAnim extends CounterAnim {
     private Bitmap[] textures;
     private int frameIndex;
     private int frameLength;
-    private IntVector imgSize;
     private AtaVector posFactor;
     private AtaVector sizeFactor;
-    private IntVector screenSize;
 
-    public RepeatAnim(Bitmap[] textures, int frameLength, AtaVector posFactor, AtaVector sizeFactor, IntVector screenSize){
+    public RepeatAnim(Bitmap[] textures, int frameLength, AtaVector posFactor, AtaVector sizeFactor){
         this.textures = textures;
         this.posFactor = posFactor;
         this.sizeFactor = sizeFactor;
         this.frameIndex = textures.length - 1;
         this.frameLength = frameLength;
         this.sprite = new AtaSprite(textures[frameIndex]);
-
-        resize(screenSize);
     }
 
     @Override
@@ -45,14 +41,19 @@ public class RepeatAnim extends CounterAnim {
 
         sprite.texture = textures[frameIndex];
 
+        if(sprite.texture.isRecycled()){
+            return;
+        }
+
         sprite.draw(canvas, paint);
 
     }
 
     @Override
-    public void resize(IntVector screenSize){
-        sprite.size = new IntVector(screenSize.x * sizeFactor.x, screenSize.y * sizeFactor.y, IntVector.RoundMode.ROUND);
-        sprite.position = new IntVector(screenSize.x * posFactor.x, screenSize.y * posFactor.y, IntVector.RoundMode.ROUND);
+    public void resize(Rect sceneRect){
+        sprite.size = new IntVector(sceneRect.width() * sizeFactor.x, sceneRect.height() * sizeFactor.y, IntVector.RoundMode.ROUND);
+        sprite.position = new IntVector(sceneRect.width() * posFactor.x + sceneRect.left,
+                sceneRect.top + sceneRect.height() * posFactor.y, IntVector.RoundMode.ROUND);
     }
 
 

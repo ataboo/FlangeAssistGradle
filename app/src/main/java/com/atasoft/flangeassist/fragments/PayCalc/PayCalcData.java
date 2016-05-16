@@ -189,9 +189,9 @@ public class PayCalcData {
 
     float[] splitShiftFourTens(float shiftHours, int dayIndex){
         // Monday to Thursday: 10 hours straight double after that.
-        float straight = AtaMathUtils.bracketFloat(shiftHours, 0, 10);
+        float straight = AtaMathUtils.clampFloat(shiftHours, 0, 10);
         float overTime = 0;
-        float doubleTime = AtaMathUtils.bracketFloat(shiftHours - 10, 0, Float.MAX_VALUE);
+        float doubleTime = AtaMathUtils.clampFloat(shiftHours - 10, 0, Float.MAX_VALUE);
 
         // Friday: overtime first 10 double after that.
         if(dayIndex == 5) {
@@ -203,9 +203,9 @@ public class PayCalcData {
     }
 
     float[] splitShiftFiveEights(float shiftHours){
-        float straight = AtaMathUtils.bracketFloat(shiftHours, 0, 8);
-        float overTime = AtaMathUtils.bracketFloat(shiftHours - 8, 0, 2);
-        float doubleTime = AtaMathUtils.bracketFloat(shiftHours - 10, 0, Float.MAX_VALUE);
+        float straight = AtaMathUtils.clampFloat(shiftHours, 0, 8);
+        float overTime = AtaMathUtils.clampFloat(shiftHours - 8, 0, 2);
+        float doubleTime = AtaMathUtils.clampFloat(shiftHours - 10, 0, Float.MAX_VALUE);
 
         return new float[]{straight, overTime, doubleTime};
     }

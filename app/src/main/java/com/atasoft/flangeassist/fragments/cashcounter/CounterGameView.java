@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.text.format.Time;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -20,6 +22,13 @@ public class CounterGameView extends SurfaceView implements Runnable {
     private long timeThisFrame;
     private long fps;
     private boolean playing;
+    private long nextFineAnim = -1;
+    private final int fineAnimPeriod = 2000;
+    private long nextCoarseAnim = -1;
+    private final int coarseAnimPeriod = 5000;
+    private float earnings = 0f;
+    private CashCounter2.EarningType earningType = CashCounter2.EarningType.OFF_SHIFT;
+    private CashCounterData cashCounterData = new CashCounterData();
     Thread gameThread;
 
     CounterScene activeScene;
@@ -28,17 +37,18 @@ public class CounterGameView extends SurfaceView implements Runnable {
         super(context);
 
         surfaceHolder = getHolder();
-
-        activeScene = CounterScene.Scene.PULP_MILL.makeScene(context, new IntVector(getWidth(), getHeight()));
-
-
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTypeface(Typeface.DEFAULT_BOLD);
+        activeScene = CounterScene.Scene.OIL_DRIP.makeScene(context, new IntVector(getWidth(), getHeight()));
+        updateEarnings();
+        activeScene.setEarnings(earnings, earningType);
     }
 
     @Override
     public void run() {
+
         while(playing) {
             long startFrameTime = System.currentTimeMillis();
-
 
             update();
             draw();
@@ -50,7 +60,13 @@ public class CounterGameView extends SurfaceView implements Runnable {
         }
     }
 
+    @Override
+    public void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
 
+        activeScene.screenResize(new IntVector(w, h));
+
+    }
 
     public void pause() {
         playing = false;
@@ -67,6 +83,11 @@ public class CounterGameView extends SurfaceView implements Runnable {
         gameThread.start();
     }
 
+    public void destroy(){
+        activeScene.dispose();
+    }
+
+    /*
     public void resize(){
         int screenWidth = getWidth();
         int screenHeight = getHeight();
@@ -83,13 +104,34 @@ public class CounterGameView extends SurfaceView implements Runnable {
 
         activeScene.screenResize(new IntVector(screenWidth, screenHeight));
     }
-
-    public void resize(IntVector size){
-        activeScene.screenResize(size);
-    }
+    */
 
     private void update() {
+        long time = System.currentTimeMillis();
 
+        if(time > nextFineAnim){
+            nextFineAnim = time + fineAnimPeriod;
+
+            updateEarnings();
+
+            activeScene.addFineAnim(nextFineAnim, earnings, earningType);
+        }
+
+        if(time > nextCoarseAnim){
+            nextCoarseAnim = time + coarseAnimPeriod;
+            activeScene.addCoarseAnim(nextCoarseAnim, 0);
+        }
+
+        activeScene.update();
+    }
+
+    private void updateEarnings(){
+        Time now = new Time();
+        now.setToNow();
+        CashCounterData.EarningAttributes attributes = cashCounterData.new EarningAttributes(new int[]{12, 0}, new float[]{8f, 2f, 2f}, 40f, false, false, true, false);
+        CashCounterData.EarningsReturn earningsRet = cashCounterData.getEarnings(now, attributes);
+        earnings = (float) earningsRet.earnings;
+        earningType = earningsRet.earningType;
     }
 
     private void draw() {
@@ -97,11 +139,9 @@ public class CounterGameView extends SurfaceView implements Runnable {
             // Lock the canvas ready to draw
             canvas = surfaceHolder.lockCanvas();
 
-            resize(new IntVector(canvas.getWidth(), canvas.getHeight()));
-
             // Draw the background color
-            canvas.drawColor(Color.argb(255, 26, 128, 182));
-
+            //canvas.drawColor(Color.argb(255, 26, 128, 182));
+            canvas.drawColor(Color.DKGRAY);
             // Choose the brush color for drawing
             paint.setColor(Color.argb(255, 249, 129, 0));
 

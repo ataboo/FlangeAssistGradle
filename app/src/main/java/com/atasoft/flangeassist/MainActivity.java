@@ -17,6 +17,8 @@ import android.widget.*;
 
 import com.atasoft.adapters.NavDrawerAdaptor;
 import com.atasoft.flangeassist.fragments.NavigationDrawerFragment;
+import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.TextureBox;
 
 
 public class MainActivity extends ActionBarActivity
@@ -24,7 +26,9 @@ public class MainActivity extends ActionBarActivity
 
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
+    private Fragment lastFrag;
     public static MainActivity staticRef;
+    public static TextureBox TEXTURE_BOX = new TextureBox();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         this.staticRef = this;
@@ -43,9 +47,17 @@ public class MainActivity extends ActionBarActivity
     public void onNavigationDrawerItemSelected(int position) {
         // draw the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
+
+        Fragment newFrag = NavDrawerAdaptor.getItem(position);
+
         fragmentManager.beginTransaction()
-                .replace(R.id.container, NavDrawerAdaptor.getItem(position))
+                .replace(R.id.container, newFrag)
                 .commit();
+
+        if(lastFrag instanceof CashCounter2){
+            MainActivity.TEXTURE_BOX.dispose();
+        }
+        lastFrag = newFrag;
     }
 
 	

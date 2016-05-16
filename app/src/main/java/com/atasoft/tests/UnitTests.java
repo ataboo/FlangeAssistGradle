@@ -4,7 +4,9 @@ import android.test.InstrumentationTestCase;
 import android.util.Log;
 
 import com.atasoft.flangeassist.MainActivity;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.IntVector;
 import com.atasoft.flangeassist.fragments.paycalc.TaxManager;
+import com.atasoft.helpers.AtaMathUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -100,6 +102,33 @@ public class UnitTests extends InstrumentationTestCase {
 
         return floats;
 
+    }
+
+    public void testLerps(){
+        IntVector first = new IntVector(5, 5);
+        IntVector second = new IntVector(-5, -5);
+
+        IntVector result = first.lerpTowards(second, 0.5f);
+
+        assertTrue(result.equals(new IntVector(0,0)));
+
+        first = new IntVector(50,50);
+        second = new IntVector(50, -50);
+
+        result = first.lerpTowards(second, 0.7f);
+
+        assertTrue(result.equals(new IntVector(50, -20)));
+
+        first = new IntVector(-50,0);
+        second = new IntVector(50, -100);
+
+        result = first.lerpTowards(second, 0.25f);
+
+        assertTrue(result.equals(new IntVector(-25, -25)));
+
+        assertTrue(AtaMathUtils.lerpFloat(-100f, 100f, 1f) - 100f < 0.001);
+
+        assertTrue(AtaMathUtils.lerpFloat(-100f, 100f, 0.25f) - -50f < 0.001);
     }
 
 

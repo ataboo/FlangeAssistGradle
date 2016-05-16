@@ -12,14 +12,13 @@ import android.view.View.*;
 import android.view.animation.*;
 import android.widget.*;
 import com.atasoft.flangeassist.*;
-import com.atasoft.flangeassist.fragments.cashcounter.*;
 import com.atasoft.helpers.*;
 import com.atasoft.flangeassist.fragments.cashcounter.CashCounterData.*;
 
 
 public class CashCounter extends Fragment implements OnClickListener {
 
-	public enum EarningType {
+	public enum VestigialEarningType {
 		WEEKEND_DOUBLE("Weekend Double (2x)", Color.parseColor(goldColor)),
 	    STRAIGHT_TIME("Straight Time (1x)", Color.parseColor(bronzeColor)),
 	    DOUBLE_TIME("Double Time (2x)", Color.parseColor(goldColor)),
@@ -30,7 +29,7 @@ public class CashCounter extends Fragment implements OnClickListener {
 		private final String display;
 		private final int color;
 		
-		EarningType(String display, int color){
+		VestigialEarningType(String display, int color){
 			this.display = display;
 			this.color = color;
 		}
@@ -228,7 +227,7 @@ public class CashCounter extends Fragment implements OnClickListener {
 		
 		//------Update time info-----
 		for(int i=0; i<weekdayHours.length; i++){
-			weekdayHours[i] = AtaMathUtils.bracketFloat(parseFromEdit(weekdayEdits[i], String.format("weekdayEdits[%s]", i)), 0, 24);
+			weekdayHours[i] = AtaMathUtils.clampFloat(parseFromEdit(weekdayEdits[i], String.format("weekdayEdits[%s]", i)), 0, 24);
 		}
 		timeNow.setToNow();
 		shiftStartVal = startAtaPicker.getVals();
@@ -244,7 +243,7 @@ public class CashCounter extends Fragment implements OnClickListener {
 
 		EarningsReturn earningsReturn = cashCounterData.getEarnings(timeNow, earningAttributes);
 
-		otIndicate(earningsReturn.earningType);
+		//otIndicate(earningsReturn.earningType);
 		updateCounter(CashCounterData.makeValsFromDouble(earningsReturn.earnings));
 	}
 	
@@ -280,9 +279,9 @@ public class CashCounter extends Fragment implements OnClickListener {
 		prefEdit.apply();
 	}
 
-	private void otIndicate(EarningType earningType){
-		otIndicator.setText(earningType.toString());
-		otIndicator.setTextColor(earningType.getColor());
+	private void otIndicate(VestigialEarningType vestigialEarningType){
+		otIndicator.setText(vestigialEarningType.toString());
+		otIndicator.setTextColor(vestigialEarningType.getColor());
 	}
 
 	private float parseFromEdit(EditText eText, String name) throws NumberFormatException{

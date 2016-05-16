@@ -3,30 +3,35 @@ package com.atasoft.flangeassist.fragments.cashcounter.counterobjects;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 /**
  * Created by ataboo on 2016-05-14.
  */
 public class StaticAnim extends CounterAnim {
-    private AtaSprite ataSprite;
+    private AtaSprite sprite;
 
-    public StaticAnim(Bitmap texture, IntVector screenSize){
-        this.ataSprite = new AtaSprite(texture);
-        resize(screenSize);
+    public StaticAnim(Bitmap texture){
+        this.sprite = new AtaSprite(texture);
     }
 
     @Override
     public void draw(long timeMillis, Canvas canvas, Paint paint) {
-        ataSprite.draw(canvas, paint);
+        if(sprite.texture.isRecycled()){
+            return;
+        }
+        sprite.draw(canvas, paint);
     }
 
     @Override
-    public void resize(IntVector screenSize) {
-        //ataSprite.size = screenSize;
+    public void resize(Rect sceneRect) {
+        sprite.position = new IntVector(sceneRect.left, sceneRect.top);
+        sprite.size = new IntVector(sceneRect.width(), sceneRect.height());
+        //sprite.size = screenSize;
     }
 
     @Override
     public void dispose() {
-        ataSprite.dispose();
+        sprite.dispose();
     }
 }

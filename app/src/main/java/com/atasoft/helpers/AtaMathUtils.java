@@ -4,13 +4,16 @@ import android.util.Log;
 
 public class AtaMathUtils
 {
-	public static float bracketFloat(float value, float lower, float upper){
-        if(upper < lower) return 0f;
-		if(value > upper) return upper;
-		if(value < lower) return lower;
-		return value;}
+	public static float clampFloat(float value, float lower, float upper) {
+        if (upper < lower) {
+            float newLower = upper;
+            upper = lower;
+            lower = newLower;
+        }
+        return value > upper ? upper : value < lower ? lower : value;
+    }
 	
-	public static double bracketDouble(double value, double lower, double upper){
+	public static double clampDouble(double value, double lower, double upper){
 		if(upper < lower) return 0d;
 		if(value > upper) return upper;
 		if(value < lower) return lower;
@@ -18,32 +21,41 @@ public class AtaMathUtils
 	}
 
     //Attempts to parse float between floor and ceiling values.  Returns 0 on invalid.
-    public static float bracketFloat(String str, float floor, float ceiling) throws NumberFormatException{
+    public static float clampFloat(String str, float floor, float ceiling) throws NumberFormatException{
         float val = 0f;
         try{
             val = Float.parseFloat(str);
         } catch(NumberFormatException e){
             e.printStackTrace();
         }
-        val = bracketFloat(val, floor, ceiling);
+        val = clampFloat(val, floor, ceiling);
         return val;
     }
 
-    public static int bracketInt(int value, int floor, int ceiling){
+    /*
+    public static int clampInt(int value, int floor, int ceiling){
         if(ceiling < floor) return 0;
         if(value > ceiling) return ceiling;
         if(value < floor) return floor;
         return value;
     }
+    */
 
-    public static int bracketInt(String str, int floor, int ceiling) throws NumberFormatException{
+    public static int clampInt(int val, int floor, int ceiling){
+        int newFloor = ceiling > floor ? floor: ceiling;
+        ceiling = ceiling > floor ? ceiling : floor;
+
+        return val > ceiling ? ceiling : val < floor ? floor : val;
+    }
+
+    public static int clampInt(String str, int floor, int ceiling) throws NumberFormatException{
         int val = 0;
         try{
             val = Integer.parseInt(str);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        return bracketInt(val, floor, ceiling);
+        return clampInt(val, floor, ceiling);
     }
 
     public static double[] roundDoubles(double[] inArr){
@@ -60,5 +72,10 @@ public class AtaMathUtils
             Log.e("CashCounter", "Error parsing Float");
             return 0f;
         }
+    }
+
+    public static float lerpFloat(float start, float target, float progress){
+        float dif = Math.abs(target - start);
+        return start > target ? start - dif * progress : start + dif * progress;
     }
 }

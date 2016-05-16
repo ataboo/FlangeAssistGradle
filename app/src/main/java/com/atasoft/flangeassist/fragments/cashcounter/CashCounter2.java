@@ -33,6 +33,35 @@ import com.atasoft.helpers.AtaTimePicker;
 
 public class CashCounter2 extends Fragment {
 
+	public enum EarningType {
+		WEEKEND_DOUBLE("Weekend Double (2x)", Color.parseColor(goldColor)),
+		STRAIGHT_TIME("Straight Time (1x)", Color.parseColor(bronzeColor)),
+		DOUBLE_TIME("Double Time (2x)", Color.parseColor(goldColor)),
+		OVER_TIME("Overtime (1.5x)", Color.parseColor(silverColor)),
+		OFF_SHIFT("Off Shift", Color.RED),
+		HOLIDAY_TIME("Holiday Double (2x)", Color.parseColor(goldColor));
+
+		private final String display;
+		private final int color;
+
+		EarningType(String display, int color){
+			this.display = display;
+			this.color = color;
+		}
+
+		public String toString(){
+			return this.display;
+		}
+
+		public int getColor(){
+			return this.color;
+		}
+	}
+
+    private static final String goldColor = "#FFDF00";
+    private static final String silverColor = "#C0C0C0";
+    private static final String bronzeColor = "#CD7F32";
+
 	private CounterGameView counterGameView;
     private SharedPreferences prefs;
 
@@ -44,11 +73,16 @@ public class CashCounter2 extends Fragment {
 		if(counterGameView == null) {
 			prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 			counterGameView = new CounterGameView(getContext());
-		} else {
-			counterGameView.resize();
 		}
 
 		return counterGameView;
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+
+		counterGameView.destroy();
 	}
 
 	@Override
@@ -66,9 +100,6 @@ public class CashCounter2 extends Fragment {
 
         counterGameView.pause();
 	}
-
-
-
 
 	private void recallSettings(){
 

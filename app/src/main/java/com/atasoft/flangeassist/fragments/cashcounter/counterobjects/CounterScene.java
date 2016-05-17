@@ -1,4 +1,4 @@
-package com.atasoft.flangeassist.fragments.cashcounter;
+package com.atasoft.flangeassist.fragments.cashcounter.counterobjects;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -10,12 +10,7 @@ import android.graphics.Rect;
 import android.util.Log;
 
 import com.atasoft.flangeassist.MainActivity;
-import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.CounterAnim;
-import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.EarningText;
-import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.IntVector;
-import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.OilDripScene;
-import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.OnceAnimation;
-import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.TextureBox;
+import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
 
 import java.io.IOException;
 import java.io.InputStream;

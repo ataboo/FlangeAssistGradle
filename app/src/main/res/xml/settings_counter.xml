@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="category_counter_settings"
+        android:title="Cash Counter Settings">
+        <com.atasoft.flangeassist.fragments.cashcounter.counterobjects.TimePickerPreference
+            android:key="@string/counter_time_picker_key"
+            android:negativeButtonText="Cancel"
+            android:persistent="true"
+            android:positiveButtonText="OK"
+            android:title="Cash Counter Shift Start:" />
+        <com.atasoft.flangeassist.fragments.cashcounter.counterobjects.ShiftPickerPreference
+            android:key="@string/counter_shift_picker"
+            android:negativeButtonText="Cancel"
+            android:ems="10"
+            android:persistent="true"
+            android:positiveButtonText="OK"
+            android:title="Cash Counter Shift Hours:"
+            />
+    </PreferenceCategory>
+</PreferenceScreen>

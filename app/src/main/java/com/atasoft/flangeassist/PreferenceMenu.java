@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.support.v7.widget.Toolbar;
 
+import com.atasoft.flangeassist.fragments.SettingsCounter;
 import com.atasoft.flangeassist.fragments.SettingsCustomDays;
 import com.atasoft.flangeassist.fragments.SettingsRates;
 import com.atasoft.flangeassist.fragments.SettingsRegional;
@@ -49,7 +50,8 @@ public class PreferenceMenu extends PreferenceActivity {
             SettingsRegional.class.getName(),
             SettingsRates.class.getName(),
             SettingsCustomDays.class.getName(),
-            SettingsReset.class.getName()};
+            SettingsReset.class.getName(),
+            SettingsCounter.class.getName()};
     
     @Override
     protected boolean isValidFragment(String fragmentName) {

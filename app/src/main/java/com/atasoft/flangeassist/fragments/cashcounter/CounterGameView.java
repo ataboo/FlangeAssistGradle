@@ -4,12 +4,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.text.format.Time;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.CounterScene;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.IntVector;
 
 /**

@@ -13,8 +13,12 @@
         android:title="Custom Day Settings"
         android:summary="Set custom day values for use in the pay calculator"/>
     <header
+        android:fragment="com.atasoft.flangeassist.fragments.SettingsCounter"
+        android:title="Cash Counter Settings"
+        android:summary="Set values for the Cash Counter animations" />
+    <header
         android:fragment="com.atasoft.flangeassist.fragments.SettingsReset"
         android:title="Reset Settings"
         android:summary="Reset all settings for custom values"/>
-        
+
 </preference-headers>

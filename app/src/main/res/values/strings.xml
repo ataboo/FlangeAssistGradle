@@ -146,6 +146,10 @@
     <string name="pref_loaSelectedIndex">loaCountIndex</string>
     <string name="pref_mealSelectedIndex">mealCountIndex</string>
     <string name="pref_lastWageName">lastWageName</string>
+    <string name="counter_time_picker_key">counter_time_preference</string>
+    <string name="pref_counter_straight">pref_counter_straight</string>
+    <string name="pref_counter_ot">pref_counter_ot</string>
+    <string name="counter_shift_picker">counter_shift_picker</string>
 
     <string-array name="dummy_day_entries">
         <item>0</item>

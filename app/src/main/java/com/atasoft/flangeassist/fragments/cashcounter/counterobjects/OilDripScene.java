@@ -2,11 +2,8 @@ package com.atasoft.flangeassist.fragments.cashcounter.counterobjects;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 
 import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
-import com.atasoft.flangeassist.fragments.cashcounter.CounterScene;
 
 /**
  * Created by ataboo on 2016-05-15.

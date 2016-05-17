@@ -34,8 +34,7 @@ public class OnceAnimation extends CounterAnim {
         }
 
         if(timeMillis > startTime + textures.length * frameLength){
-            isDone = true;
-            return;
+            dispose();
         }
 
         int frameIndex = (int) (timeMillis - startTime) / frameLength;
@@ -60,6 +59,14 @@ public class OnceAnimation extends CounterAnim {
 
     @Override
     public void dispose() {
+        isDone = true;
+    }
 
+    public int getDuration(){
+        return textures.length * frameLength;
+    }
+
+    public void setStartTime(long startTime){
+        this.startTime = startTime;
     }
 }

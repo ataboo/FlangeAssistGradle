@@ -30,8 +30,8 @@ public class HydroScene extends CounterScene {
 
         initTextures();
         backAnim = new StaticAnim(backgroundTexture);
-        beltAnim = new RepeatAnim(waterTextures, 50, new AtaVector(0, 510f / 720f), new AtaVector(460f / 1024f, 160f / 720f));
-        earningText = new EarningText(new AtaVector(0.5f, 0.20f), 0f, CashCounter2.EarningType.OFF_SHIFT);
+        beltAnim = new RepeatAnim(waterTextures, 50, new AtaVector(202f / 1024f, 208f / 720f), new AtaVector(822f / 1024f, 512f / 720f));
+        earningText = new EarningText(new AtaVector(0.5f, 0.14f), 0f, CashCounter2.EarningType.OFF_SHIFT);
 
         animations.add(backAnim);
         animations.add(beltAnim);
@@ -44,27 +44,28 @@ public class HydroScene extends CounterScene {
         // Stored textures in MainActivity to prevent reloading on screen size change.
         if (!textureBox.contains(TEXT_ELECTRIC)) {
             textureBox.dispose();
-            textureBox.addTextureSeries(TEXT_ELECTRIC, getBitmapsFromSeries(context, "counter_anim/hydro_electric", "Electric_"));
-            textureBox.addTextureSeries(TEXT_SALMON, getBitmapsFromSeries(context, "counter_anim/hydro_salmon", "Salmon_"));
-            textureBox.addTextureSeries(TEXT_WATER, getBitmapsFromSeries(context, "counter_anim/hydro_water", "Water_"));
+            textureBox.addTextureSeries(TEXT_ELECTRIC, getBitmapsFromSeries(context, "counter_anim/hydro_power", "HydroPower_"));
+            textureBox.addTextureSeries(TEXT_SALMON, getBitmapsFromSeries(context, "counter_anim/hydro_salmon", "HydroSalmon_"));
+            textureBox.addTextureSeries(TEXT_WATER, getBitmapsFromSeries(context, "counter_anim/hydro_water", "HydroWater_"));
         }
         waterTextures = textureBox.getTextureSet(TEXT_WATER);
         salmonTextures = textureBox.getTextureSet(TEXT_SALMON);
         electricTextures = textureBox.getTextureSet(TEXT_ELECTRIC);
 
-        backgroundTexture = getBitmapFromAssets(context, "counter_anim/HydroDamBackground.png");
+        backgroundTexture = getBitmapFromAssets(context, "counter_anim/HydroBackground.png");
     }
 
     @Override
     public void addFineAnim(long startTime, float earnings, CashCounter2.EarningType earningType) {
         super.addFineAnim(startTime, earnings, earningType);
 
-        OnceAnimation electricAnim = new OnceAnimation(electricTextures, 50, new AtaVector(760f/1024f, 400f/720f),
-                new AtaVector(264f/1024f, 204f/720f), startTime - 300);
+        OnceAnimation electricAnim = new OnceAnimation(electricTextures, 50, new AtaVector(132f/1024f, 300f/720f),
+                new AtaVector(90f/1024f, 168f/720f), startTime - 1100);
 
         electricAnim.resize(sceneRect);
 
-        OnceText electricText = new OnceText(String.format("%d¢", getCents(earnings)), new AtaVector(0.74f, 0.68f), new AtaVector(0.87f, 0.30f), startTime + 100, 2000);
+        OnceText electricText = new OnceText(String.format("%d¢", getCents(earnings)), new AtaVector(177f/1024f, 370f/720f),
+                new AtaVector(177f/1024f, 200f/720f), startTime - 800, 2000);
         electricText.resize(sceneRect);
 
         animations.add(electricAnim);
@@ -73,8 +74,8 @@ public class HydroScene extends CounterScene {
 
     @Override
     public void addCoarseAnim(long startTime, float earnings) {
-        OnceAnimation salmonAnim = new OnceAnimation(salmonTextures, 70, new AtaVector(0f, 0f),
-                new AtaVector(436f / 1024f, 642f / 720f), startTime);
+        OnceAnimation salmonAnim = new OnceAnimation(salmonTextures, 70, new AtaVector(644f/1024f, 108f/720f),
+                new AtaVector(224f / 1024f, 612f / 720f), startTime);
         salmonAnim.resize(sceneRect);
         animations.add(salmonAnim);
     }

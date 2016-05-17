@@ -31,7 +31,8 @@ public abstract class CounterScene {
     public enum Scene{
         PULP_MILL("Pulp Mill"),
         OIL_DRIP("Oil Drip"),
-        HYDRO_DAM("Hydro Dam");
+        HYDRO_DAM("Hydro Dam"),
+        NUKE_PLANT("Nuclear Plant");
 
         public final String name;
         Scene(String name){
@@ -115,7 +116,10 @@ public abstract class CounterScene {
             anim.dispose();
         }
 
-        backgroundTexture.recycle();
+        if(backgroundTexture != null){
+            backgroundTexture.recycle();
+        }
+
     }
 
     protected Rect sceneSize(IntVector screenSize){
@@ -193,7 +197,10 @@ public abstract class CounterScene {
         Bitmap bitmap = null;
 
         istr = assetManager.open(filePath);
-        bitmap = BitmapFactory.decodeStream(istr);
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_4444;
+        bitmap = BitmapFactory.decodeStream(istr, null, options);
         istr.close();
 
         return bitmap;

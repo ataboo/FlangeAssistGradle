@@ -15,7 +15,7 @@ import com.atasoft.helpers.AtaMathUtils;
  */
 public class EarningText extends CounterAnim {
     private static float FONT_NORMAL = 96f;
-    private static float FONT_BIG = 128f;
+    private static float FONT_BIG = 110f;
     private static int ANIM_DURATION = 200;
 
     private float earnings;

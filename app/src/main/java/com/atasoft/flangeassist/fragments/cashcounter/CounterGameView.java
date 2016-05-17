@@ -53,7 +53,7 @@ public class CounterGameView extends SurfaceView implements Runnable {
     private long nextFineAnim = -1;
     private final int fineAnimPeriod = 2000;
     private long nextCoarseAnim = -1;
-    private final int coarseAnimPeriod = 8000;
+    private final int coarseAnimPeriod = 10000;
     private float earnings = 0f;
     private CashCounter2.EarningType earningType = CashCounter2.EarningType.OFF_SHIFT;
     private CashCounterData cashCounterData = new CashCounterData();

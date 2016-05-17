@@ -1,21 +1,49 @@
 package com.atasoft.flangeassist.fragments.cashcounter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.text.format.Time;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.atasoft.flangeassist.R;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.CounterScene;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.IntVector;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.ShiftPickerPreference;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.TimePickerPreference;
+import com.atasoft.flangeassist.fragments.ropevalues.RopeFragment;
+import com.atasoft.helpers.AtaMathUtils;
 
 /**
  * Created by ataboo on 2016-05-14.
  */
 public class CounterGameView extends SurfaceView implements Runnable {
+    public enum PrefKey{
+        SHIFT_START_PICKER(R.string.counter_time_picker_key),
+        SHIFT_HOURS_PICKER(R.string.counter_shift_picker_key),
+        WEEKEND_DOUBLE(R.string.counter_weekend_key),
+        FOUR_TENS(R.string.counter_fourtens_key),
+        NIGHT_SHIFT(R.string.counter_night_key),
+        HOLIDAY(R.string.counter_holiday_key),
+        WAGE_RATE(R.string.counter_wage_key);
+
+        public int stringRes;
+
+        PrefKey(int res){
+            this.stringRes = res;
+        }
+
+        public String getString(Resources resources){
+            return resources.getString(stringRes);
+        }
+    }
+
     private SurfaceHolder surfaceHolder;
     private Canvas canvas;
     private Paint paint = new Paint();
@@ -25,23 +53,45 @@ public class CounterGameView extends SurfaceView implements Runnable {
     private long nextFineAnim = -1;
     private final int fineAnimPeriod = 2000;
     private long nextCoarseAnim = -1;
-    private final int coarseAnimPeriod = 5000;
+    private final int coarseAnimPeriod = 8000;
     private float earnings = 0f;
     private CashCounter2.EarningType earningType = CashCounter2.EarningType.OFF_SHIFT;
     private CashCounterData cashCounterData = new CashCounterData();
-    Thread gameThread;
 
+    Thread gameThread;
     CounterScene activeScene;
+    SharedPreferences prefs;
 
     public CounterGameView(Context context) {
         super(context);
 
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
         surfaceHolder = getHolder();
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTypeface(Typeface.DEFAULT_BOLD);
-        activeScene = CounterScene.Scene.OIL_DRIP.makeScene(context, new IntVector(getWidth(), getHeight()));
+
+        resetScene();
+    }
+
+    public void resetScene(){
+        String prefScene = prefs.getString(getResources().getString(R.string.counter_scene_key), CounterScene.Scene.OIL_DRIP.name);
+        CounterScene.Scene newScene = CounterScene.Scene.getSceneFromName(prefScene);
+
+        if(activeScene != null) {
+            if (activeScene.scene == newScene) {
+                return;
+            } else {
+                activeScene.dispose();
+            }
+        }
+
+        activeScene = newScene.makeScene(getContext(), new IntVector(getWidth(), getHeight()));
+
         updateEarnings();
         activeScene.setEarnings(earnings, earningType);
+        nextFineAnim = System.currentTimeMillis() + fineAnimPeriod - 200;
+        nextCoarseAnim = System.currentTimeMillis() + coarseAnimPeriod - 200;
     }
 
     @Override
@@ -65,7 +115,6 @@ public class CounterGameView extends SurfaceView implements Runnable {
         super.onSizeChanged(w, h, oldw, oldh);
 
         activeScene.screenResize(new IntVector(w, h));
-
     }
 
     public void pause() {
@@ -79,6 +128,9 @@ public class CounterGameView extends SurfaceView implements Runnable {
 
     public void resume() {
         playing = true;
+
+        resetScene();
+
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -86,25 +138,6 @@ public class CounterGameView extends SurfaceView implements Runnable {
     public void destroy(){
         activeScene.dispose();
     }
-
-    /*
-    public void resize(){
-        int screenWidth = getWidth();
-        int screenHeight = getHeight();
-
-        if(screenWidth == 0){
-            return;
-        }
-
-        if (screenHeight > screenWidth){
-            screenHeight = (int) (screenWidth * 720f / 1024f);
-        } else {
-            screenWidth = (int) (screenHeight * 1024f / 720f);
-        }
-
-        activeScene.screenResize(new IntVector(screenWidth, screenHeight));
-    }
-    */
 
     private void update() {
         long time = System.currentTimeMillis();
@@ -128,7 +161,30 @@ public class CounterGameView extends SurfaceView implements Runnable {
     private void updateEarnings(){
         Time now = new Time();
         now.setToNow();
-        CashCounterData.EarningAttributes attributes = cashCounterData.new EarningAttributes(new int[]{12, 0}, new float[]{8f, 2f, 2f}, 40f, false, false, true, false);
+
+        Resources resources = getResources();
+        String shiftStartString = prefs.getString(PrefKey.SHIFT_START_PICKER.getString(resources), "8,0");
+        int[] shiftStart = new int[]{TimePickerPreference.getHourFromPref(shiftStartString), TimePickerPreference.getMinFromPref(shiftStartString)};
+
+        String shiftHoursString = prefs.getString(PrefKey.SHIFT_HOURS_PICKER.getString(resources), "8,2,0");
+        float[] shiftHours = ShiftPickerPreference.parseHours(shiftHoursString);
+
+        boolean fourTens = prefs.getBoolean(PrefKey.FOUR_TENS.getString(resources), false);
+        boolean weekendDouble = prefs.getBoolean(PrefKey.WEEKEND_DOUBLE.getString(resources), true);
+        boolean isHoliday = prefs.getBoolean(PrefKey.HOLIDAY.getString(resources), false);
+        boolean nightShift = prefs.getBoolean(PrefKey.NIGHT_SHIFT.getString(resources), false);
+
+        String wageRateString = prefs.getString(PrefKey.WAGE_RATE.getString(resources), "40");
+
+        float wageRate;
+        try{
+            wageRate = AtaMathUtils.clampFloat(Float.parseFloat(wageRateString), 0f, 500f);
+        } catch (NumberFormatException e){
+            wageRate = 40f;
+        }
+
+        CashCounterData.EarningAttributes attributes = cashCounterData.new EarningAttributes(shiftStart,
+                shiftHours, wageRate, isHoliday, fourTens, weekendDouble, nightShift);
         CashCounterData.EarningsReturn earningsRet = cashCounterData.getEarnings(now, attributes);
         earnings = (float) earningsRet.earnings;
         earningType = earningsRet.earningType;

@@ -1,4 +1,4 @@
-package com.atasoft.flangeassist;
+package com.atasoft.flangeassist.fragments.settings;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
@@ -7,11 +7,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.support.v7.widget.Toolbar;
 
-import com.atasoft.flangeassist.fragments.SettingsCounter;
-import com.atasoft.flangeassist.fragments.SettingsCustomDays;
-import com.atasoft.flangeassist.fragments.SettingsRates;
-import com.atasoft.flangeassist.fragments.SettingsRegional;
-import com.atasoft.flangeassist.fragments.SettingsReset;
+import com.atasoft.flangeassist.R;
+import com.atasoft.flangeassist.fragments.settings.SettingsCounter;
+import com.atasoft.flangeassist.fragments.settings.SettingsCustomDays;
+import com.atasoft.flangeassist.fragments.settings.SettingsRates;
+import com.atasoft.flangeassist.fragments.settings.SettingsRegional;
+import com.atasoft.flangeassist.fragments.settings.SettingsReset;
 
 import java.util.List;
 

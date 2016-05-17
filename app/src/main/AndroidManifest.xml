@@ -19,7 +19,7 @@
             </intent-filter>>
         </activity>
         <activity
-            android:name="com.atasoft.flangeassist.PreferenceMenu"
+            android:name=".fragments.settings.PreferenceMenu"
             android:label="Toolbox Preferences"
             android:parentActivityName="com.atasoft.flangeassist.MainActivity" >
 

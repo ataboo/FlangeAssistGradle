@@ -23,9 +23,10 @@ public class PulpMillScene extends CounterScene {
     private Bitmap[] timberTextures;
 
 
-
     public PulpMillScene(Context context, IntVector screenSize) {
         this.context = context;
+
+        scene = Scene.PULP_MILL;
 
         sceneRatio = 720f/1024f;
 
@@ -65,9 +66,6 @@ public class PulpMillScene extends CounterScene {
 
         rollAnim.resize(sceneRect);
 
-
-
-
         OnceText rollText = new OnceText(String.format("%d¢", getCents(earnings)), new AtaVector(0.74f, 0.68f), new AtaVector(0.87f, 0.30f), startTime + 100, 2000);
         rollText.resize(sceneRect);
 
@@ -81,14 +79,5 @@ public class PulpMillScene extends CounterScene {
                 new AtaVector(436f / 1024f, 642f / 720f), startTime);
         timberAnim.resize(sceneRect);
         animations.add(timberAnim);
-    }
-
-    @Override
-    public void dispose() {
-        for (CounterAnim anim : animations) {
-            anim.dispose();
-        }
-
-        backgroundTexture.recycle();
     }
 }

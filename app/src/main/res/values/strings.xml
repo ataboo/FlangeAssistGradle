@@ -149,7 +149,13 @@
     <string name="counter_time_picker_key">counter_time_preference</string>
     <string name="pref_counter_straight">pref_counter_straight</string>
     <string name="pref_counter_ot">pref_counter_ot</string>
-    <string name="counter_shift_picker">counter_shift_picker</string>
+    <string name="counter_shift_picker_key">counter_shift_picker</string>
+    <string name="counter_weekend_key">counter_weekend_double</string>
+    <string name="counter_holiday_key">counter_holiday</string>
+    <string name="counter_fourtens_key">counter_fourtens</string>
+    <string name="counter_night_key">counter_nightshift</string>
+    <string name="counter_wage_key">counter_wage_rate</string>
+    <string name="counter_scene_key">counter_active_scene</string>
 
     <string-array name="dummy_day_entries">
         <item>0</item>

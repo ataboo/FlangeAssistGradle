@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
     <header
-        android:fragment="com.atasoft.flangeassist.fragments.SettingsRegional"
+        android:fragment="com.atasoft.flangeassist.fragments.settings.SettingsRegional"
         android:title="Regional Settings"
         android:summary="Set Province and Tax Year"/>
     <header
-        android:fragment="com.atasoft.flangeassist.fragments.SettingsRates"
+        android:fragment="com.atasoft.flangeassist.fragments.settings.SettingsRates"
         android:title="Set Rates"
         android:summary="Set various rates for the pay calculator"/>
     <header
-        android:fragment="com.atasoft.flangeassist.fragments.SettingsCustomDays"
+        android:fragment="com.atasoft.flangeassist.fragments.settings.SettingsCustomDays"
         android:title="Custom Day Settings"
         android:summary="Set custom day values for use in the pay calculator"/>
     <header
-        android:fragment="com.atasoft.flangeassist.fragments.SettingsCounter"
+        android:fragment="com.atasoft.flangeassist.fragments.settings.SettingsCounter"
         android:title="Cash Counter Settings"
         android:summary="Set values for the Cash Counter animations" />
     <header
-        android:fragment="com.atasoft.flangeassist.fragments.SettingsReset"
+        android:fragment="com.atasoft.flangeassist.fragments.settings.SettingsReset"
         android:title="Reset Settings"
         android:summary="Reset all settings for custom values"/>
 

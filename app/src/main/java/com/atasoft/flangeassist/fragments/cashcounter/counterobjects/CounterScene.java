@@ -20,15 +20,23 @@ import java.util.ArrayList;
  * Created by ataboo on 2016-05-14.
  */
 public abstract class CounterScene {
+    protected Bitmap backgroundTexture;
     protected Context context;
     protected float sceneRatio = 720f/1080f;
     protected Rect sceneRect = new Rect(0, 0, 720, 1024);
     protected EarningText earningText;
     protected TextureBox textureBox = MainActivity.TEXTURE_BOX;
+    public Scene scene;
 
     public enum Scene{
-        PULP_MILL,
-        OIL_DRIP;
+        PULP_MILL("Pulp Mill"),
+        OIL_DRIP("Oil Drip"),
+        HYDRO_DAM("Hydro Dam");
+
+        public final String name;
+        Scene(String name){
+            this.name = name;
+        }
 
         public CounterScene makeScene(Context context, IntVector screenSize){
             switch (this){
@@ -36,7 +44,28 @@ public abstract class CounterScene {
                     return new PulpMillScene(context, screenSize);
                 case OIL_DRIP:
                     return new OilDripScene(context, screenSize);
+                case HYDRO_DAM:
+                    return new HydroScene(context, screenSize);
             }
+        }
+
+        public static String[] getNames(){
+            ArrayList<String> nameList = new ArrayList<>();
+
+            for(Scene scene: Scene.values()){
+                nameList.add(scene.name);
+            }
+
+            return nameList.toArray(new String[nameList.size()]);
+        }
+
+        public static Scene getSceneFromName(String name){
+            for(Scene scene: Scene.values()){
+                if(scene.name.equals(name)){
+                    return scene;
+                }
+            }
+            return null;
         }
     }
 
@@ -81,7 +110,13 @@ public abstract class CounterScene {
         earningText.setEarnings(earnings, earningType);
     }
 
-    public abstract void dispose();
+    public void dispose() {
+        for (CounterAnim anim : animations) {
+            anim.dispose();
+        }
+
+        backgroundTexture.recycle();
+    }
 
     protected Rect sceneSize(IntVector screenSize){
         int width = screenSize.x;

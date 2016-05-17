@@ -4,6 +4,10 @@
     <PreferenceCategory
         android:key="category_counter_settings"
         android:title="Cash Counter Settings">
+        <ListPreference
+            android:key="@string/counter_scene_key"
+            android:title="Active Scene:"
+            android:summary="Select animation to display in Cash Counter" />
         <com.atasoft.flangeassist.fragments.cashcounter.counterobjects.TimePickerPreference
             android:key="@string/counter_time_picker_key"
             android:negativeButtonText="Cancel"
@@ -11,12 +15,37 @@
             android:positiveButtonText="OK"
             android:title="Cash Counter Shift Start:" />
         <com.atasoft.flangeassist.fragments.cashcounter.counterobjects.ShiftPickerPreference
-            android:key="@string/counter_shift_picker"
+            android:key="@string/counter_shift_picker_key"
             android:negativeButtonText="Cancel"
             android:ems="10"
             android:persistent="true"
             android:positiveButtonText="OK"
-            android:title="Cash Counter Shift Hours:"
-            />
+            android:title="Cash Counter Shift Hours:" />
+        <CheckBoxPreference
+            android:key="@string/counter_night_key"
+            android:title="Night Shift"
+            android:summary="Set Cash Counter is night shift"
+            android:defaultValue="false" />
+        <CheckBoxPreference
+            android:key="@string/counter_weekend_key"
+            android:title="Weekend Doubletime"
+            android:summary="Set Cash Counter Weekends as double time"
+            android:defaultValue="true" />
+        <CheckBoxPreference
+            android:key="@string/counter_holiday_key"
+            android:title="Holiday Doubletime"
+            android:summary="Set Cash Counter shift is a holiday"
+            android:defaultValue="false" />
+        <CheckBoxPreference
+            android:key="@string/counter_fourtens_key"
+            android:title="Four Tens Schedule"
+            android:summary="Set Cash Counter shift under Four-Tens Schedule"
+            android:defaultValue="false" />
+        <EditTextPreference
+            android:key="@string/counter_wage_key"
+            android:title="Wage Rate"
+            android:summary="Cash Counter hourly wage rate"
+            android:ems="10"
+            android:defaultValue="40"/>
     </PreferenceCategory>
 </PreferenceScreen>

@@ -1,24 +1,19 @@
 package com.atasoft.flangeassist;
 
 
-import android.annotation.*;
-import android.app.*;
-import android.app.ActionBar;
 import android.content.*;
 import android.os.*;
-import android.support.v4.app.*;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.*;
 import android.view.*;
-import android.view.View.*;
-import android.widget.*;
 
 import com.atasoft.adapters.NavDrawerAdaptor;
 import com.atasoft.flangeassist.fragments.NavigationDrawerFragment;
 import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.TextureBox;
+import com.atasoft.flangeassist.fragments.settings.PreferenceMenu;
 
 
 public class MainActivity extends ActionBarActivity

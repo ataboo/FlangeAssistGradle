@@ -58,7 +58,6 @@ public class OnceText extends CounterAnim {
 
         IntVector drawPoint = startPoint.lerpTowards(endPoint, progress);
         paint.setTextSize(AtaMathUtils.lerpFloat(FONT_SIZE * START_FONT, FONT_SIZE, progress));
-        Log.w("OnceText", String.format("Progress: %f, Opacity: %f", progress, opacity));
 
         paint.setAlpha((int)(opacity * 255));
         canvas.drawText(text, drawPoint.x, drawPoint.y, paint);

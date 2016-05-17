@@ -10,7 +10,6 @@ import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
  */
 public class OilDripScene extends CounterScene {
     Bitmap backgroundTexture;
-
     StaticAnim backAnim;
 
     private static final String TEXT_DRIP = "drip_textures";
@@ -20,6 +19,7 @@ public class OilDripScene extends CounterScene {
     public OilDripScene(Context context, IntVector screenSize){
         this.context = context;
         sceneRatio = 600f/800f;
+        scene = Scene.OIL_DRIP;
 
         initTextures();
         backAnim = new StaticAnim(backgroundTexture);
@@ -61,11 +61,6 @@ public class OilDripScene extends CounterScene {
 
     @Override
     public void addCoarseAnim(long startTime, float earnings) {
-
-    }
-
-    @Override
-    public void dispose() {
 
     }
 }

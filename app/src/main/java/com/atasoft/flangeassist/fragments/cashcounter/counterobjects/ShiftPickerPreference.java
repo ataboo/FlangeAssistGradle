@@ -49,7 +49,7 @@ public class ShiftPickerPreference extends DialogPreference {
         setNegativeButtonText(android.R.string.cancel);
     }
 
-    public float[] parseHours(String prefString){
+    public static float[] parseHours(String prefString){
         String[] splitStr = prefString.split(",");
 
         return new float[]{Float.parseFloat(splitStr[0]), Float.parseFloat(splitStr[1]), Float.parseFloat(splitStr[2])};
@@ -197,7 +197,7 @@ public class ShiftPickerPreference extends DialogPreference {
             time=defaultValue.toString();
         }
 
-        float[] hours = parseHours(time);
+        float[] hours = ShiftPickerPreference.parseHours(time);
 
         lastStraight = (int) hours[0] * 2;
         lastOT = (int) hours[1] * 2;

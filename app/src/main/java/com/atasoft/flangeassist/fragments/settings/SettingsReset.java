@@ -1,4 +1,4 @@
-package com.atasoft.flangeassist.fragments;
+package com.atasoft.flangeassist.fragments.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

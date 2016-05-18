@@ -47,6 +47,8 @@ public abstract class CounterScene {
                     return new OilDripScene(context, screenSize);
                 case HYDRO_DAM:
                     return new HydroScene(context, screenSize);
+                case NUKE_PLANT:
+                    return new NukeScene(context, screenSize);
             }
         }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
     <header
-        android:fragment="com.atasoft.flangeassist.fragments.settings.SettingsRegional"
+        android:fragment="com.atasoft.flangeassist.fragments.settings.SettingsPayCalc"
         android:title="Regional Settings"
         android:summary="Set Province and Tax Year"/>
     <header

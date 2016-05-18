@@ -7,7 +7,7 @@ import android.preference.PreferenceFragment;
 import com.atasoft.flangeassist.*;
 import com.atasoft.flangeassist.fragments.paycalc.TaxManager;
 
-public class SettingsRegional extends PreferenceFragment {
+public class SettingsPayCalc extends PreferenceFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

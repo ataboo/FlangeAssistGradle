@@ -37,6 +37,10 @@ public class RepeatAnim extends CounterAnim {
         if(timeMillis > lastFrame + frameLength){
             frameIndex = nextIndex(textures, frameIndex);
             lastFrame += frameLength;
+
+            if(timeMillis > lastFrame + 2 * frameLength){
+                lastFrame = timeMillis + frameLength;
+            }
         }
 
         sprite.texture = textures[frameIndex];

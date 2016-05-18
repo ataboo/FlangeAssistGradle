@@ -8,11 +8,6 @@ import android.widget.LinearLayout;
 import android.support.v7.widget.Toolbar;
 
 import com.atasoft.flangeassist.R;
-import com.atasoft.flangeassist.fragments.settings.SettingsCounter;
-import com.atasoft.flangeassist.fragments.settings.SettingsCustomDays;
-import com.atasoft.flangeassist.fragments.settings.SettingsRates;
-import com.atasoft.flangeassist.fragments.settings.SettingsRegional;
-import com.atasoft.flangeassist.fragments.settings.SettingsReset;
 
 import java.util.List;
 
@@ -48,7 +43,7 @@ public class PreferenceMenu extends PreferenceActivity {
     }
 
     private static final String[] fragNames = {
-            SettingsRegional.class.getName(),
+            SettingsPayCalc.class.getName(),
             SettingsRates.class.getName(),
             SettingsCustomDays.class.getName(),
             SettingsReset.class.getName(),

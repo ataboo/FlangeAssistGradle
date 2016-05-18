@@ -36,7 +36,7 @@ public class AnimationSequence extends CounterAnim {
         }
 
         for(OnceAnimation anim: animations){
-            draw(timeMillis, canvas,paint);
+            anim.draw(timeMillis, canvas,paint);
         }
     }
 

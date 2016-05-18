@@ -29,7 +29,14 @@ public class NukeScene extends CounterScene {
 
         initTextures();
 
-        //make animations
+        StaticAnim backAnim = new StaticAnim(backgroundTexture);
+        RepeatAnim smokeAnim = new RepeatAnim(smokeTextures, 70, new AtaVector(116f/1024, 0f / 720f),
+                new AtaVector(514f / 1024f, 156f / 720f));
+        earningText = new EarningText(new AtaVector(0.63f, 0.22f), 0f, CashCounter2.EarningType.OFF_SHIFT);
+
+        animations.add(backAnim);
+        animations.add(smokeAnim);
+        animations.add(earningText);
 
         screenResize(screenSize);
     }
@@ -38,10 +45,10 @@ public class NukeScene extends CounterScene {
         // Stored textures in MainActivity to prevent reloading on screen size change.
         if (!textureBox.contains(TEXT_ELECTRIC)) {
             textureBox.dispose();
-            textureBox.addTextureSeries(TEXT_ELECTRIC, getBitmapsFromSeries(context, "counter_anim/nuke_electric", "Electric_"));
-            textureBox.addTextureSeries(TEXT_BLAST, getBitmapsFromSeries(context, "counter_anim/nuke_blast", "Blast_"));
-            textureBox.addTextureSeries(TEXT_ROCK, getBitmapsFromSeries(context, "counter_anim/nuke_blast", "Rock_"));
-            textureBox.addTextureSeries(TEXT_SMOKE, getBitmapsFromSeries(context, "counter_anim/nuke_smoke", "Smoke_"));
+            textureBox.addTextureSeries(TEXT_ELECTRIC, getBitmapsFromSeries(context, "counter_anim/nuke_electric", "NukeElectric_"));
+            textureBox.addTextureSeries(TEXT_BLAST, getBitmapsFromSeries(context, "counter_anim/nuke_blast", "NukeBlast_"));
+            textureBox.addTextureSeries(TEXT_ROCK, getBitmapsFromSeries(context, "counter_anim/nuke_blast", "NukeRock_"));
+            textureBox.addTextureSeries(TEXT_SMOKE, getBitmapsFromSeries(context, "counter_anim/nuke_smoke", "NukeSmoke_"));
         }
         electricTextures = textureBox.getTextureSet(TEXT_ELECTRIC);
         blastTextures = textureBox.getTextureSet(TEXT_BLAST);
@@ -55,12 +62,13 @@ public class NukeScene extends CounterScene {
     public void addFineAnim(long startTime, float earnings, CashCounter2.EarningType earningType) {
         super.addFineAnim(startTime, earnings, earningType);
 
-        OnceAnimation electricAnim = new OnceAnimation(electricTextures, 50, new AtaVector(760f/1024f, 400f/720f),
-                new AtaVector(264f/1024f, 204f/720f), startTime - 300);
+        OnceAnimation electricAnim = new OnceAnimation(electricTextures, 50, new AtaVector(230f/1024f, 100f/720f),
+                new AtaVector(126f/1024f, 174f/720f), startTime - 800);
 
         electricAnim.resize(sceneRect);
 
-        OnceText electricText = new OnceText(String.format("%d¢", getCents(earnings)), new AtaVector(0.74f, 0.68f), new AtaVector(0.87f, 0.30f), startTime + 100, 2000);
+        OnceText electricText = new OnceText(String.format("%d¢", getCents(earnings)), new AtaVector(293f / 1024f, 150f/720f),
+                new AtaVector(293f / 1024f, 80f/720f), startTime - 500, 2000);
         electricText.resize(sceneRect);
 
         animations.add(electricAnim);
@@ -69,9 +77,10 @@ public class NukeScene extends CounterScene {
 
     @Override
     public void addCoarseAnim(long startTime, float earnings) {
-        OnceAnimation rockRoll = new OnceAnimation(rockTextures, 80, new AtaVector(0, 0), new AtaVector(1, 1), 0);
+        OnceAnimation rockRoll = new OnceAnimation(rockTextures, 80, new AtaVector(0, 328f/720f), new AtaVector(728f/1024f, 392f/720f), 0);
+        rockRoll.resize(sceneRect);
         OnceAnimation blast = new OnceAnimation(blastTextures, 80, new AtaVector(0, 0), new AtaVector(1, 1), 0);
-
+        blast.resize(sceneRect);
         AnimationSequence blastAnim = new AnimationSequence(new OnceAnimation[]{rockRoll, blast}, startTime);
 
         animations.add(blastAnim);

@@ -1,6 +1,9 @@
 package com.atasoft.flangeassist.fragments.settings;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -18,7 +21,7 @@ public class SettingsReset extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings_reset);
-        
+
 
     }
 
@@ -28,22 +31,36 @@ public class SettingsReset extends PreferenceFragment {
         addListener();
     }
 
-    private void addListener(){
+    private void addListener() {
         final Preference resetPref = findPreference("reset_switch");
-        if(resetPref == null){
-            Log.e("SettingsReset", "reset_switch came back null");
-            return;
+        if (resetPref != null) {
+            resetPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference arg0) {
+                    showDialog();
+                    return true;
+                }
+            });
         }
-        resetPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference arg0) {
-                resetPrefs();
-                return true;
-            }
-        });
     }
-    
-    private void resetPrefs(){
+
+    private void showDialog() {
+        int version = Build.VERSION.SDK_INT;
+        int verM = Build.VERSION_CODES.M;
+        new AlertDialog.Builder(getPreferenceScreen().getContext())
+                .setTitle("Reset All Settings")
+                .setMessage("Are you sure you want to reset all settings?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        resetPrefs();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null).show();
+    }
+
+    private void resetPrefs() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences.Editor editor = prefs.edit();
         editor.clear();

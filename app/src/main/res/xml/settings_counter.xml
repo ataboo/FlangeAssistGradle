@@ -25,30 +25,21 @@
             android:positiveButtonText="Set"
             android:title="Cash Counter Shift Hours:" />
         <CheckBoxPreference
-            android:key="@string/counter_night_key"
-            android:title="Night Shift"
-            android:summary="Set Cash Counter is night shift"
-            android:defaultValue="false" />
-        <CheckBoxPreference
             android:key="@string/counter_weekend_key"
             android:title="Weekend Doubletime"
             android:summary="Set Cash Counter Weekends as double time"
             android:defaultValue="true" />
         <CheckBoxPreference
             android:key="@string/counter_holiday_key"
-            android:title="Holiday Doubletime"
-            android:summary="Set Cash Counter shift is a holiday"
-            android:defaultValue="false" />
-        <CheckBoxPreference
-            android:key="@string/counter_fourtens_key"
-            android:title="Four Tens Schedule"
-            android:summary="Set Cash Counter shift under Four-Tens Schedule"
+            android:title="Shift is Holiday"
+            android:summary="Set Cash Counter shift to double time"
             android:defaultValue="false" />
         <EditTextPreference
             android:key="@string/counter_wage_key"
             android:title="Wage Rate"
             android:summary="Cash Counter hourly wage rate"
             android:ems="10"
-            android:defaultValue="40"/>
+            android:defaultValue="40"
+            android:numeric="decimal"/>
     </PreferenceCategory>
 </PreferenceScreen>

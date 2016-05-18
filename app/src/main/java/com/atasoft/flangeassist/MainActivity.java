@@ -11,7 +11,7 @@ import android.view.*;
 
 import com.atasoft.adapters.NavDrawerAdaptor;
 import com.atasoft.flangeassist.fragments.NavigationDrawerFragment;
-import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
+import com.atasoft.flangeassist.fragments.cashcounter.CashCounter;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.TextureBox;
 import com.atasoft.flangeassist.fragments.settings.PreferenceMenu;
 
@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity
                 .replace(R.id.container, newFrag)
                 .commit();
 
-        if(lastFrag instanceof CashCounter2){
+        if(lastFrag instanceof CashCounter){
             MainActivity.TEXTURE_BOX.dispose();
         }
         lastFrag = newFrag;

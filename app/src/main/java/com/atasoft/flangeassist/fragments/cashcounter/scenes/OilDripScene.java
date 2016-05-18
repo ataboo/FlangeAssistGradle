@@ -3,7 +3,7 @@ package com.atasoft.flangeassist.fragments.cashcounter.scenes;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
+import com.atasoft.flangeassist.fragments.cashcounter.CashCounter;
 import com.atasoft.utilities.AtaVector;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.EarningText;
 import com.atasoft.utilities.IntVector;
@@ -29,7 +29,7 @@ public class OilDripScene extends CounterScene {
 
         initTextures();
         backAnim = new StaticAnim(backgroundTexture);
-        earningText = new EarningText(new AtaVector(0.4f, 0.45f), 0f, CashCounter2.EarningType.OFF_SHIFT);
+        earningText = new EarningText(new AtaVector(0.4f, 0.45f), 0f, CashCounter.EarningType.OFF_SHIFT);
 
         animations.add(backAnim);
         animations.add(earningText);
@@ -49,7 +49,7 @@ public class OilDripScene extends CounterScene {
     }
 
     @Override
-    public void addFineAnim(long startTime, float earnings, CashCounter2.EarningType earningType) {
+    public void addFineAnim(long startTime, float earnings, CashCounter.EarningType earningType) {
         super.addFineAnim(startTime, earnings, earningType);
 
         OnceAnimation dripAnim = new OnceAnimation(dripTextures, 36, new AtaVector(524f/800f, 250f/600f),

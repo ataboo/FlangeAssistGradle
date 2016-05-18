@@ -3,7 +3,7 @@ package com.atasoft.flangeassist.fragments.cashcounter.scenes;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
+import com.atasoft.flangeassist.fragments.cashcounter.CashCounter;
 import com.atasoft.utilities.AtaVector;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.EarningText;
 import com.atasoft.utilities.IntVector;
@@ -38,7 +38,7 @@ public class HydroScene extends CounterScene {
         initTextures();
         backAnim = new StaticAnim(backgroundTexture);
         beltAnim = new RepeatAnim(waterTextures, 50, new AtaVector(202f / 1024f, 208f / 720f), new AtaVector(822f / 1024f, 512f / 720f));
-        earningText = new EarningText(new AtaVector(0.5f, 0.14f), 0f, CashCounter2.EarningType.OFF_SHIFT);
+        earningText = new EarningText(new AtaVector(0.5f, 0.14f), 0f, CashCounter.EarningType.OFF_SHIFT);
 
         animations.add(backAnim);
         animations.add(beltAnim);
@@ -63,7 +63,7 @@ public class HydroScene extends CounterScene {
     }
 
     @Override
-    public void addFineAnim(long startTime, float earnings, CashCounter2.EarningType earningType) {
+    public void addFineAnim(long startTime, float earnings, CashCounter.EarningType earningType) {
         super.addFineAnim(startTime, earnings, earningType);
 
         OnceAnimation electricAnim = new OnceAnimation(electricTextures, 50, new AtaVector(132f/1024f, 300f/720f),
@@ -72,7 +72,7 @@ public class HydroScene extends CounterScene {
         electricAnim.resize(sceneRect);
 
         OnceText electricText = new OnceText(String.format("%d¢", getCents(earnings)), new AtaVector(177f/1024f, 370f/720f),
-                new AtaVector(177f/1024f, 200f/720f), startTime - 800, 2000);
+                new AtaVector(177f/1024f, 230f/720f), startTime - 500, 2000);
         electricText.resize(sceneRect);
 
         animations.add(electricAnim);

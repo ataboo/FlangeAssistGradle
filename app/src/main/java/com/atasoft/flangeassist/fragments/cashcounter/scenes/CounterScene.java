@@ -1,7 +1,9 @@
 package com.atasoft.flangeassist.fragments.cashcounter.scenes;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,13 +12,15 @@ import android.graphics.Rect;
 import android.util.Log;
 
 import com.atasoft.flangeassist.MainActivity;
-import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
+import com.atasoft.flangeassist.R;
+import com.atasoft.flangeassist.fragments.cashcounter.CashCounter;
+import com.atasoft.flangeassist.fragments.cashcounter.CashCounterData;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.CounterAnim;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.EarningText;
-import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.RepeatAnim;
 import com.atasoft.utilities.IntVector;
-import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.OnceAnimation;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.TextureBox;
+import com.atasoft.utilities.ShiftPickerPreference;
+import com.atasoft.utilities.TimePickerPreference;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,11 +38,13 @@ public abstract class CounterScene {
     protected TextureBox textureBox = MainActivity.TEXTURE_BOX;
     public Scene scene;
 
+
     public enum Scene{
         PULP_MILL("Pulp Mill"),
         OIL_DRIP("Oil Drip"),
         HYDRO_DAM("Hydro Dam"),
-        NUKE_PLANT("Nuclear Plant");
+        NUKE_PLANT("Nuclear Plant"),
+        BORING("Just Numbers");
 
         public final String name;
         Scene(String name){
@@ -55,6 +61,8 @@ public abstract class CounterScene {
                     return new HydroScene(context, screenSize);
                 case NUKE_PLANT:
                     return new NukeScene(context, screenSize);
+                case BORING:
+                    return new BasicScene(context, screenSize);
             }
         }
 
@@ -74,14 +82,15 @@ public abstract class CounterScene {
                     return scene;
                 }
             }
-            return null;
+
+            return BORING;
         }
     }
 
     protected ArrayList<CounterAnim> animations = new ArrayList<>();
     protected ArrayList<CounterAnim> graveYard = new ArrayList<>();
 
-    public void addFineAnim(long startTime, float earnings, CashCounter2.EarningType earningType){
+    public void addFineAnim(long startTime, float earnings, CashCounter.EarningType earningType){
         earningText.animateEarnings(earnings, startTime, earningType);
     }
 
@@ -113,7 +122,7 @@ public abstract class CounterScene {
         }
     }
 
-    public void setEarnings(float earnings, CashCounter2.EarningType earningType){
+    public void setEarnings(float earnings, CashCounter.EarningType earningType){
         earningText.setEarnings(earnings, earningType);
     }
 

@@ -3,7 +3,7 @@ package com.atasoft.flangeassist.fragments.cashcounter.scenes;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
+import com.atasoft.flangeassist.fragments.cashcounter.CashCounter;
 import com.atasoft.utilities.AtaVector;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.EarningText;
 import com.atasoft.utilities.IntVector;
@@ -40,7 +40,7 @@ public class PulpMillScene extends CounterScene {
         initTextures();
         backAnim = new StaticAnim(backgroundTexture);
         beltAnim = new RepeatAnim(beltTextures, 50, new AtaVector(0, 510f / 720f), new AtaVector(460f / 1024f, 160f / 720f));
-        earningText = new EarningText(new AtaVector(0.5f, 0.20f), 0f, CashCounter2.EarningType.STRAIGHT_TIME);
+        earningText = new EarningText(new AtaVector(0.5f, 0.20f), 0f, CashCounter.EarningType.STRAIGHT_TIME);
 
         animations.add(backAnim);
         animations.add(beltAnim);
@@ -65,7 +65,7 @@ public class PulpMillScene extends CounterScene {
     }
 
     @Override
-    public void addFineAnim(long startTime, float earnings, CashCounter2.EarningType earningType) {
+    public void addFineAnim(long startTime, float earnings, CashCounter.EarningType earningType) {
         super.addFineAnim(startTime, earnings, earningType);
 
         OnceAnimation rollAnim = new OnceAnimation(rollTextures, 50, new AtaVector(760f/1024f, 400f/720f),

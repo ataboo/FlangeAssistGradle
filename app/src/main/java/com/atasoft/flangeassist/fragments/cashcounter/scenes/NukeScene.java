@@ -3,7 +3,7 @@ package com.atasoft.flangeassist.fragments.cashcounter.scenes;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
+import com.atasoft.flangeassist.fragments.cashcounter.CashCounter;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.AnimationSequence;
 import com.atasoft.utilities.AtaVector;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.EarningText;
@@ -40,7 +40,7 @@ public class NukeScene extends CounterScene {
         StaticAnim backAnim = new StaticAnim(backgroundTexture);
         RepeatAnim smokeAnim = new RepeatAnim(smokeTextures, 70, new AtaVector(116f/1024, 0f / 720f),
                 new AtaVector(514f / 1024f, 156f / 720f));
-        earningText = new EarningText(new AtaVector(0.63f, 0.22f), 0f, CashCounter2.EarningType.OFF_SHIFT);
+        earningText = new EarningText(new AtaVector(0.63f, 0.22f), 0f, CashCounter.EarningType.OFF_SHIFT);
 
         animations.add(backAnim);
         animations.add(smokeAnim);
@@ -67,7 +67,7 @@ public class NukeScene extends CounterScene {
     }
 
     @Override
-    public void addFineAnim(long startTime, float earnings, CashCounter2.EarningType earningType) {
+    public void addFineAnim(long startTime, float earnings, CashCounter.EarningType earningType) {
         super.addFineAnim(startTime, earnings, earningType);
 
         OnceAnimation electricAnim = new OnceAnimation(electricTextures, 50, new AtaVector(230f/1024f, 100f/720f),

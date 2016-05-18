@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
+import com.atasoft.flangeassist.fragments.cashcounter.CashCounter;
 import com.atasoft.utilities.AtaMathUtils;
 import com.atasoft.utilities.AtaVector;
 import com.atasoft.utilities.IntVector;
@@ -23,24 +23,24 @@ public class EarningText extends CounterAnim {
     private long nextUpdate = -1;
     private IntVector position = IntVector.zero();
     private IntVector typePos = IntVector.zero();
-    private CashCounter2.EarningType earningType;
+    private CashCounter.EarningType earningType;
 
 
 
-    public EarningText(AtaVector posFactor, float earnings, CashCounter2.EarningType earningType){
+    public EarningText(AtaVector posFactor, float earnings, CashCounter.EarningType earningType){
         this.earnings = earnings;
         this.posFactor = posFactor;
         this.earningType = earningType;
 
     }
 
-    public void animateEarnings(float newEarnings, long updateTime, CashCounter2.EarningType earningType){
+    public void animateEarnings(float newEarnings, long updateTime, CashCounter.EarningType earningType){
         this.nextUpdate = updateTime;
         this.newEarnings = newEarnings;
         this.earningType = earningType;
     }
 
-    public void setEarnings(float earnings, CashCounter2.EarningType earningType){
+    public void setEarnings(float earnings, CashCounter.EarningType earningType){
         this.earnings = this.newEarnings = earnings;
         this.nextUpdate = -1;
         this.earningType = earningType;

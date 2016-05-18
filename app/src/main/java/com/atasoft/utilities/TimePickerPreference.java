@@ -75,6 +75,10 @@ public class TimePickerPreference extends DialogPreference {
         return Integer.parseInt(prefVal.split(",")[1]);
     }
 
+    public static int[] getTimeFromPref(String prefVal){
+        return new int[]{getHourFromPref(prefVal), getMinFromPref(prefVal)};
+    }
+
     @Override
     protected View onCreateDialogView() {
         picker = new TimePicker(getContext());

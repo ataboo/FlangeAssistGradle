@@ -4,7 +4,8 @@ Boilermaker Toolbox is a FREE reference tool designed to help Boilermakers in Ca
 
 Tell your friends with iPhones to search for BoilerMac Toolbox in the IOS Store.
 
-###Main features so far (v0.29.5):
+###Main features so far (v0.30):
+- NEW Rope Value Table
 - BMToolbox Reporter Launcher (Apprentice Reports)
 - Gross Tax Calculator
 - Rigging Calculator: finds load on slings, nylon sling table.
@@ -27,9 +28,11 @@ Feel free to send feedback or suggestions to bmtoolbox@gmail.com
 
 ###Changes:
 
-####C0.29.5 (05/14/16):
+####V0.30 (05/17/16):
 - Updated wages for ON, MB, SK, BC
-- Added QC tax and pay info
+- Added QC
+- Re-wrote Cash Counter with new animations
+- Re-worked settings menu
 
 ####V0.29.4 (12/31/15):
 - Fixed crash caused by Custom Day settings error.

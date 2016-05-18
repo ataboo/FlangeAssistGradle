@@ -23,7 +23,7 @@ import com.atasoft.utilities.AtaMathUtils;
  * Created by ataboo on 2016-05-14.
  */
 public class CounterGameView extends SurfaceView implements Runnable {
-    public enum PrefKey{
+    public enum PrefKey {
         SHIFT_START_PICKER(R.string.counter_time_picker_key),
         SHIFT_HOURS_PICKER(R.string.counter_shift_picker_key),
         WEEKEND_DOUBLE(R.string.counter_weekend_key),
@@ -34,11 +34,11 @@ public class CounterGameView extends SurfaceView implements Runnable {
 
         public int stringRes;
 
-        PrefKey(int res){
+        PrefKey(int res) {
             this.stringRes = res;
         }
 
-        public String getString(Resources resources){
+        public String getString(Resources resources) {
             return resources.getString(stringRes);
         }
     }
@@ -54,8 +54,9 @@ public class CounterGameView extends SurfaceView implements Runnable {
     private long nextCoarseAnim = -1;
     private final int coarseAnimPeriod = 10000;
     private float earnings = 0f;
-    private CashCounter2.EarningType earningType = CashCounter2.EarningType.OFF_SHIFT;
+    private CashCounter.EarningType earningType = CashCounter.EarningType.OFF_SHIFT;
     private CashCounterData cashCounterData = new CashCounterData();
+    private CashCounterData.EarningAttributes earningAttributes;
 
     Thread gameThread;
     CounterScene activeScene;
@@ -69,34 +70,31 @@ public class CounterGameView extends SurfaceView implements Runnable {
         surfaceHolder = getHolder();
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTypeface(Typeface.DEFAULT_BOLD);
-
-        resetScene();
     }
 
-    public void resetScene(){
+    public void resetScene() {
         String prefScene = prefs.getString(getResources().getString(R.string.counter_scene_key), CounterScene.Scene.OIL_DRIP.name);
         CounterScene.Scene newScene = CounterScene.Scene.getSceneFromName(prefScene);
 
-        if(activeScene != null) {
-            if (activeScene.scene == newScene) {
-                return;
-            } else {
+        if (activeScene == null) {
+            activeScene = newScene.makeScene(getContext(), new IntVector(getWidth(), getHeight()));
+        } else {
+            if(activeScene.scene != newScene) {
                 activeScene.dispose();
+                activeScene = newScene.makeScene(getContext(), new IntVector(getWidth(), getHeight()));
             }
         }
 
-        activeScene = newScene.makeScene(getContext(), new IntVector(getWidth(), getHeight()));
-
-        updateEarnings();
+        updateEarnings(-fineAnimPeriod);
         activeScene.setEarnings(earnings, earningType);
-        nextFineAnim = System.currentTimeMillis() + fineAnimPeriod - 200;
-        nextCoarseAnim = System.currentTimeMillis() + coarseAnimPeriod - 200;
+        nextFineAnim = System.currentTimeMillis() + 100;
+        nextCoarseAnim = System.currentTimeMillis() + 100;
     }
 
     @Override
     public void run() {
 
-        while(playing) {
+        while (playing) {
             long startFrameTime = System.currentTimeMillis();
 
             update();
@@ -128,28 +126,36 @@ public class CounterGameView extends SurfaceView implements Runnable {
     public void resume() {
         playing = true;
 
+        recallSettings();
+
         resetScene();
 
         gameThread = new Thread(this);
         gameThread.start();
     }
 
-    public void destroy(){
-        activeScene.dispose();
+    public void destroy() {
+        if(activeScene != null) {
+            activeScene.dispose();
+        }
     }
 
     private void update() {
         long time = System.currentTimeMillis();
 
-        if(time > nextFineAnim){
+        if (time > nextFineAnim) {
             nextFineAnim = time + fineAnimPeriod;
 
-            updateEarnings();
+            updateEarnings(0);
+
+            if (earningType == CashCounter.EarningType.OFF_SHIFT) {
+                return;
+            }
 
             activeScene.addFineAnim(nextFineAnim, earnings, earningType);
         }
 
-        if(time > nextCoarseAnim){
+        if (time > nextCoarseAnim) {
             nextCoarseAnim = time + coarseAnimPeriod;
             activeScene.addCoarseAnim(nextCoarseAnim, 0);
         }
@@ -157,64 +163,61 @@ public class CounterGameView extends SurfaceView implements Runnable {
         activeScene.update();
     }
 
-    private void updateEarnings(){
+    private void recallSettings(){
+        //shift start
+        //shift hours
+        //weekend double
+        //holiday double
+        //four tens
+        //wage rate
+
+        Resources resources = getResources();
+
+        String shiftStartString = prefs.getString(resources.getString(R.string.counter_time_picker_key), "8,0");
+        int[] shiftStart = TimePickerPreference.getTimeFromPref(shiftStartString);
+
+        String shiftHoursString = prefs.getString(resources.getString(R.string.counter_shift_picker_key), "8,2,0");
+        float[] shiftHours = ShiftPickerPreference.parseHours(shiftHoursString);
+
+        boolean weekendDouble = prefs.getBoolean(resources.getString(R.string.counter_weekend_key), true);
+
+        boolean isHoliday = prefs.getBoolean(resources.getString(R.string.counter_holiday_key), false);
+
+        float wageRate = 40;
+        try {
+            wageRate = Float.parseFloat(prefs.getString(resources.getString(R.string.counter_wage_key), "40"));
+        } catch (NumberFormatException e){
+            e.printStackTrace();
+        }
+
+        earningAttributes = cashCounterData.new EarningAttributes(shiftStart, shiftHours,
+                wageRate, isHoliday, false, weekendDouble, false);
+    }
+
+    private void updateEarnings(int offset) {
         Time now = new Time();
         now.setToNow();
 
-        Resources resources = getResources();
-        String shiftStartString = prefs.getString(PrefKey.SHIFT_START_PICKER.getString(resources), "8,0");
-        int[] shiftStart = new int[]{TimePickerPreference.getHourFromPref(shiftStartString), TimePickerPreference.getMinFromPref(shiftStartString)};
-
-        String shiftHoursString = prefs.getString(PrefKey.SHIFT_HOURS_PICKER.getString(resources), "8,2,0");
-        float[] shiftHours = ShiftPickerPreference.parseHours(shiftHoursString);
-
-        boolean fourTens = prefs.getBoolean(PrefKey.FOUR_TENS.getString(resources), false);
-        boolean weekendDouble = prefs.getBoolean(PrefKey.WEEKEND_DOUBLE.getString(resources), true);
-        boolean isHoliday = prefs.getBoolean(PrefKey.HOLIDAY.getString(resources), false);
-        boolean nightShift = prefs.getBoolean(PrefKey.NIGHT_SHIFT.getString(resources), false);
-
-        String wageRateString = prefs.getString(PrefKey.WAGE_RATE.getString(resources), "40");
-
-        float wageRate;
-        try{
-            wageRate = AtaMathUtils.clampFloat(Float.parseFloat(wageRateString), 0f, 500f);
-        } catch (NumberFormatException e){
-            wageRate = 40f;
+        if(offset != 0) {
+            long millis = now.toMillis(false);
+            now.set(millis + offset);
         }
 
-        CashCounterData.EarningAttributes attributes = cashCounterData.new EarningAttributes(shiftStart,
-                shiftHours, wageRate, isHoliday, fourTens, weekendDouble, nightShift);
-        CashCounterData.EarningsReturn earningsRet = cashCounterData.getEarnings(now, attributes);
+        CashCounterData.EarningsReturn earningsRet = cashCounterData.getEarnings(now, earningAttributes);
         earnings = (float) earningsRet.earnings;
         earningType = earningsRet.earningType;
     }
 
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
-            // Lock the canvas ready to draw
             canvas = surfaceHolder.lockCanvas();
 
-            // Draw the background color
-            //canvas.drawColor(Color.argb(255, 26, 128, 182));
             canvas.drawColor(Color.DKGRAY);
-            // Choose the brush color for drawing
-            paint.setColor(Color.argb(255, 249, 129, 0));
-
-            // Make the text a bit bigger
-            paint.setTextSize(45);
 
             // Display the current fps on the screen
-            canvas.drawText("FPS:" + fps, 20, 40, paint);
+            //canvas.drawText("FPS:" + fps, 20, 40, paint);
 
             activeScene.draw(System.currentTimeMillis(), canvas, paint);
-
-
-            // Draw bob at bobXPosition, 200 pixels
-            //canvas.drawBitmap(bitmapBob, bobXPosition, 200, paint);
-
-            // New drawing code goes here
-
-            // Draw everything to the screen
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
     }

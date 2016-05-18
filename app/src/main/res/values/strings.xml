@@ -2,8 +2,8 @@
 <resources>
 
     <string name="version_info">Boilermaker Toolbox v#VERSION
-		\nUpdated: 12/31/15
-		\nWages updated: 12/26/15</string>
+		\nUpdated: 05/18/16
+		\nWages updated: 05/18/16</string>
 
     <!-- Main Menu -->
     <string name="action_settings">Settings</string>

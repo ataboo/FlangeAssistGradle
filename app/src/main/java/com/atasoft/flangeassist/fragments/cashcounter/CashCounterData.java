@@ -4,7 +4,7 @@ import android.text.format.Time;
 import android.util.Log;
 
 import com.atasoft.utilities.AtaMathUtils;
-import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2.*;
+import com.atasoft.flangeassist.fragments.cashcounter.CashCounter.*;
 
 /**
  * Created by ataboo on 2016-03-29.

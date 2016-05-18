@@ -1,6 +1,6 @@
 package com.atasoft.flangeassist.fragments.paycalc;
 
-import com.atasoft.helpers.AtaMathUtils;
+import com.atasoft.utilities.AtaMathUtils;
 
 /**
  * Created by ataboo on 2015-12-12.

@@ -1,9 +1,7 @@
-package com.atasoft.flangeassist.fragments.cashcounter.counterobjects;
+package com.atasoft.utilities;
 
 
 import android.graphics.Rect;
-
-import com.atasoft.helpers.AtaMathUtils;
 
 /**
  * Created by ataboo on 2015-12-19.

@@ -18,7 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.atasoft.flangeassist.*;
-import com.atasoft.flangeassist.fragments.paycalc.PaychequeFragment;
+import com.atasoft.flangeassist.fragments.paycalc.PaycalcFragment;
 import com.atasoft.flangeassist.fragments.paycalc.TaxManager;
 
 
@@ -123,7 +123,7 @@ public class TaxGrossFragment extends Fragment implements OnClickListener {
 
         TaxManager.Prov prov = TaxManager.Prov.getProvFromName(provName);
 
-        double[] taxVals = PaychequeFragment.
+        double[] taxVals = PaycalcFragment.
                 floatToDoubArr(taxMan.getTaxes((float) weekGross, 0f, yearName, provName));
         double taxSum = 0d;
         for(double d: taxVals) taxSum+=d;

@@ -5,6 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import com.atasoft.utilities.AtaSprite;
+import com.atasoft.utilities.IntVector;
+
 /**
  * Created by ataboo on 2016-05-14.
  */

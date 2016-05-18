@@ -1,9 +1,16 @@
-package com.atasoft.flangeassist.fragments.cashcounter.counterobjects;
+package com.atasoft.flangeassist.fragments.cashcounter.scenes;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
+import com.atasoft.utilities.AtaVector;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.EarningText;
+import com.atasoft.utilities.IntVector;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.OnceAnimation;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.OnceText;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.RepeatAnim;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.StaticAnim;
 
 /**
  * Created by ataboo on 2016-05-14.

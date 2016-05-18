@@ -2,6 +2,8 @@ package com.atasoft.flangeassist.fragments.cashcounter.counterobjects;
 
 import android.graphics.Bitmap;
 
+import com.atasoft.flangeassist.fragments.cashcounter.scenes.CounterScene;
+
 import java.util.HashMap;
 
 /**

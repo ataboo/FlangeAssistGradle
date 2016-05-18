@@ -1,6 +1,4 @@
-package com.atasoft.flangeassist.fragments.cashcounter.counterobjects;
-
-import java.util.Objects;
+package com.atasoft.utilities;
 
 /**
  * Created by ataboo on 2015-12-15.

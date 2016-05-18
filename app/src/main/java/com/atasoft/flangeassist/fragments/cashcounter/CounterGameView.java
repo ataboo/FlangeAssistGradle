@@ -13,12 +13,11 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.atasoft.flangeassist.R;
-import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.CounterScene;
-import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.IntVector;
-import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.ShiftPickerPreference;
-import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.TimePickerPreference;
-import com.atasoft.flangeassist.fragments.ropevalues.RopeFragment;
-import com.atasoft.helpers.AtaMathUtils;
+import com.atasoft.flangeassist.fragments.cashcounter.scenes.CounterScene;
+import com.atasoft.utilities.IntVector;
+import com.atasoft.utilities.ShiftPickerPreference;
+import com.atasoft.utilities.TimePickerPreference;
+import com.atasoft.utilities.AtaMathUtils;
 
 /**
  * Created by ataboo on 2016-05-14.

@@ -1,4 +1,4 @@
-package com.atasoft.flangeassist.fragments.cashcounter.counterobjects;
+package com.atasoft.utilities;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.DatePicker;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;

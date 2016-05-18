@@ -13,13 +13,13 @@ import android.widget.*;
 import android.util.Log;
 
 import com.atasoft.flangeassist.*;
-import com.atasoft.helpers.*;
+import com.atasoft.utilities.*;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 
- public class PaychequeFragment extends Fragment implements OnClickListener
+ public class PaycalcFragment extends Fragment implements OnClickListener
 {
     public enum HoursPreset {
         ZERO(0, 0), TENS(2, 0), TWELVES(3, 7);
@@ -77,11 +77,11 @@ import java.text.NumberFormat;
             int selectionLength = spinner.getAdapter().getCount();
 
             if(selectionLength < 1){
-                Log.e("PaychequeFragment", "Couldn't set selection on unpopulated spinner.");
+                Log.e("PaycalcFragment", "Couldn't set selection on unpopulated spinner.");
                 return;
             }
             if(index > selectionLength - 1){
-                Log.w("PaychequeFragment", "Caged index of spinner selection to 0.");
+                Log.w("PaycalcFragment", "Caged index of spinner selection to 0.");
                 index = 0;
             }
 
@@ -95,7 +95,7 @@ import java.text.NumberFormat;
             try{
                 index = Integer.parseInt(indexStr);
             } catch (NumberFormatException e){
-                Log.e("PaychequeFragment", String.format("Failed to parse String \"%s\" as a selectionIndex.", indexStr));
+                Log.e("PaycalcFragment", String.format("Failed to parse String \"%s\" as a selectionIndex.", indexStr));
                 e.printStackTrace();
             }
 
@@ -217,7 +217,7 @@ import java.text.NumberFormat;
 		Boolean custDayCheck = prefs.getBoolean(getString(R.string.pref_custDaysOn), false);
         if(customDaySpinners != custDayCheck){
             String qualifier = custDayCheck ? " with custom days.": " without custom days.";
-            Log.w("PaychequeFragment", "Resetting day spinners" + qualifier);
+            Log.w("PaycalcFragment", "Resetting day spinners" + qualifier);
             updateDaySpinners(custDayCheck);
         }
 		String provWage = prefs.getString("list_provWageNew",  TaxManager.Prov.AB.getName());
@@ -364,13 +364,13 @@ import java.text.NumberFormat;
     public void spinnerItemSelection(Spinner spinner){
         SpinnerData spinnerData = SpinnerData.getDataBySpinner(spinner);
         if(spinnerData == null){
-            Log.w("PaychequeFragment", "Spinner data returned null. Ignoring ItemSelection.");
+            Log.w("PaycalcFragment", "Spinner data returned null. Ignoring ItemSelection.");
             return;
         }
         if(spinnerData.selectionChanged()){
             spinnerData.getSelectedItem();
             updateCalcOutput();
-            //Log.i("PaychequeFragment", "Spinner data changed... running calc.");
+            //Log.i("PaycalcFragment", "Spinner data changed... running calc.");
         } else {
             //Log.i("PayCheque Fragment", "Spinner data didn't change.");
         }
@@ -387,7 +387,7 @@ import java.text.NumberFormat;
         oldProvWage = prefs.getString(getString(R.string.pref_prov), TaxManager.Prov.AB.getName());
 
         if(!TaxManager.validatePrefs(prefs)){
-            Log.e("PaychequeFragment", "Province or Year prefs were malformed... Resetting them");
+            Log.e("PaycalcFragment", "Province or Year prefs were malformed... Resetting them");
             prefs.edit().clear().apply();
 
             oldProvWage = TaxManager.Prov.AB.getName(); //Best Province
@@ -604,6 +604,7 @@ import java.text.NumberFormat;
 		prefEdit.apply();
     }
 
+    /*
 	private float[] getCustomDayPrefs(String itemStr) {
         String prefName = "";
 		float[] dayFloats = new float[custDaySuffix.length];
@@ -615,13 +616,43 @@ import java.text.NumberFormat;
             try{
                 dayFloats[i] = Float.parseFloat(prefs.getString(prefName + custDaySuffix[i], "0"));
             } catch(NumberFormatException nfe){
-                Log.e("PaychequeFragment", itemStr + ", suffix " + custDaySuffix[i] + " NumberFormatException.");
+                Log.e("PaycalcFragment", itemStr + ", suffix " + custDaySuffix[i] + " NumberFormatException.");
                 dayFloats[i] = 0f;
             }
 		}
-        //Log.w("PaychequeFragment", String.format("dayFloats = %.2f, %.2f, %.2f", dayFloats[0], dayFloats[1], dayFloats[2]));
+        //Log.w("PaycalcFragment", String.format("dayFloats = %.2f, %.2f, %.2f", dayFloats[0], dayFloats[1], dayFloats[2]));
 		return dayFloats;
 	}
+	*/
+
+    private float[] getCustomDayPrefs(String dayName){
+        float[] hours = new float[3];
+        String dayPrefString;
+
+        switch (dayName){
+            case "A": default:
+                dayPrefString = prefs.getString(getResources().getString(R.string.pref_dayA_picker), "8,2,0");
+                break;
+            case "B":
+                dayPrefString = prefs.getString(getResources().getString(R.string.pref_dayB_picker), "8,2,2");
+                break;
+            case "C":
+                dayPrefString = prefs.getString(getResources().getString(R.string.pref_dayC_picker), "10,0,0");
+        }
+
+        String[] dayHours = dayPrefString.split(",");
+
+        for(int i=0; i<dayHours.length; i++){
+            try{
+                hours[i] = Float.parseFloat(dayHours[i]);
+            } catch (NumberFormatException e){
+                e.printStackTrace();
+                hours[i] = 0f;
+            }
+        }
+
+        return hours;
+    }
 
     //Groups like views and serializes to CSV strings
     private void saveState(){

@@ -3,7 +3,7 @@ package com.atasoft.flangeassist.fragments.cashcounter;
 import android.text.format.Time;
 import android.util.Log;
 
-import com.atasoft.helpers.AtaMathUtils;
+import com.atasoft.utilities.AtaMathUtils;
 import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2.*;
 
 /**

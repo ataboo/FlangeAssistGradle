@@ -44,10 +44,8 @@ public class PreferenceMenu extends PreferenceActivity {
 
     private static final String[] fragNames = {
             SettingsPayCalc.class.getName(),
-            SettingsRates.class.getName(),
-            SettingsCustomDays.class.getName(),
-            SettingsReset.class.getName(),
-            SettingsCounter.class.getName()};
+            SettingsCounter.class.getName(),
+            SettingsReset.class.getName()};
     
     @Override
     protected boolean isValidFragment(String fragmentName) {

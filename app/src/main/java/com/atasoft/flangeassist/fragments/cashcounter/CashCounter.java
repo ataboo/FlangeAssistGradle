@@ -12,7 +12,7 @@ import android.view.View.*;
 import android.view.animation.*;
 import android.widget.*;
 import com.atasoft.flangeassist.*;
-import com.atasoft.helpers.*;
+import com.atasoft.utilities.*;
 import com.atasoft.flangeassist.fragments.cashcounter.CashCounterData.*;
 
 

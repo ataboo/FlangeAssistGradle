@@ -1,9 +1,15 @@
-package com.atasoft.flangeassist.fragments.cashcounter.counterobjects;
+package com.atasoft.flangeassist.fragments.cashcounter.scenes;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
+import com.atasoft.utilities.AtaVector;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.EarningText;
+import com.atasoft.utilities.IntVector;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.OnceAnimation;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.OnceText;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.StaticAnim;
 
 /**
  * Created by ataboo on 2016-05-15.
@@ -23,7 +29,7 @@ public class OilDripScene extends CounterScene {
 
         initTextures();
         backAnim = new StaticAnim(backgroundTexture);
-        earningText = new EarningText(new AtaVector(0.5f, 0.2f), 0f, CashCounter2.EarningType.OFF_SHIFT);
+        earningText = new EarningText(new AtaVector(0.4f, 0.45f), 0f, CashCounter2.EarningType.OFF_SHIFT);
 
         animations.add(backAnim);
         animations.add(earningText);

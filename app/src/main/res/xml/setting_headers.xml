@@ -2,16 +2,8 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
     <header
         android:fragment="com.atasoft.flangeassist.fragments.settings.SettingsPayCalc"
-        android:title="Regional Settings"
-        android:summary="Set Province and Tax Year"/>
-    <header
-        android:fragment="com.atasoft.flangeassist.fragments.settings.SettingsRates"
-        android:title="Set Rates"
-        android:summary="Set various rates for the pay calculator"/>
-    <header
-        android:fragment="com.atasoft.flangeassist.fragments.settings.SettingsCustomDays"
-        android:title="Custom Day Settings"
-        android:summary="Set custom day values for use in the pay calculator"/>
+        android:title="Pay Calculator Settings"
+        android:summary="Change rates and values to calculate"/>
     <header
         android:fragment="com.atasoft.flangeassist.fragments.settings.SettingsCounter"
         android:title="Cash Counter Settings"

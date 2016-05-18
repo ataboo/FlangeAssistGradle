@@ -7,19 +7,22 @@
         <ListPreference
             android:key="@string/counter_scene_key"
             android:title="Active Scene:"
-            android:summary="Select animation to display in Cash Counter" />
-        <com.atasoft.flangeassist.fragments.cashcounter.counterobjects.TimePickerPreference
+            android:summary="Select animation to display in Cash Counter"
+            android:defaultValue="Oil Drip"/>
+        <com.atasoft.utilities.TimePickerPreference
             android:key="@string/counter_time_picker_key"
             android:negativeButtonText="Cancel"
             android:persistent="true"
-            android:positiveButtonText="OK"
-            android:title="Cash Counter Shift Start:" />
-        <com.atasoft.flangeassist.fragments.cashcounter.counterobjects.ShiftPickerPreference
+            android:positiveButtonText="Set"
+            android:title="Cash Counter Shift Start:"
+            android:defaultValue="8,0"/>
+        <com.atasoft.utilities.ShiftPickerPreference
             android:key="@string/counter_shift_picker_key"
             android:negativeButtonText="Cancel"
             android:ems="10"
             android:persistent="true"
-            android:positiveButtonText="OK"
+            android:defaultValue="8,2,0"
+            android:positiveButtonText="Set"
             android:title="Cash Counter Shift Hours:" />
         <CheckBoxPreference
             android:key="@string/counter_night_key"

@@ -6,8 +6,7 @@ import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 
 import com.atasoft.flangeassist.R;
-import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.CounterScene;
-import com.atasoft.flangeassist.fragments.paycalc.TaxManager;
+import com.atasoft.flangeassist.fragments.cashcounter.scenes.CounterScene;
 
 public class SettingsCounter extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 

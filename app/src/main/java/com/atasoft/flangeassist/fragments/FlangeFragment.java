@@ -8,7 +8,7 @@ import android.util.*;
 import android.view.*;
 import android.widget.*;
 import com.atasoft.flangeassist.*;
-import com.atasoft.helpers.*;
+import com.atasoft.utilities.*;
 
 public class FlangeFragment extends Fragment {
     private View thisFrag;

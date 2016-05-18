@@ -3,10 +3,9 @@ package com.atasoft.tests;
 import android.test.InstrumentationTestCase;
 import android.util.Log;
 
-import com.atasoft.flangeassist.MainActivity;
-import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.IntVector;
+import com.atasoft.utilities.IntVector;
 import com.atasoft.flangeassist.fragments.paycalc.TaxManager;
-import com.atasoft.helpers.AtaMathUtils;
+import com.atasoft.utilities.AtaMathUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

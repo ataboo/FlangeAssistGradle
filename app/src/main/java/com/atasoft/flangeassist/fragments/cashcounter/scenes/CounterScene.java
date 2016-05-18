@@ -1,4 +1,4 @@
-package com.atasoft.flangeassist.fragments.cashcounter.counterobjects;
+package com.atasoft.flangeassist.fragments.cashcounter.scenes;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -11,6 +11,12 @@ import android.util.Log;
 
 import com.atasoft.flangeassist.MainActivity;
 import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.CounterAnim;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.EarningText;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.RepeatAnim;
+import com.atasoft.utilities.IntVector;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.OnceAnimation;
+import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.TextureBox;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -101,10 +107,8 @@ public abstract class CounterScene {
         for(CounterAnim anim: animations){
             anim.draw(time, canvas, paint);
 
-            if(anim instanceof OnceAnimation){
-                if(((OnceAnimation) anim).isDone){
-                    graveYard.add(anim);
-                }
+            if(anim.isDone){
+                graveYard.add(anim);
             }
         }
     }

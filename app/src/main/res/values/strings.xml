@@ -156,6 +156,9 @@
     <string name="counter_night_key">counter_nightshift</string>
     <string name="counter_wage_key">counter_wage_rate</string>
     <string name="counter_scene_key">counter_active_scene</string>
+    <string name="pref_dayA_picker">paycalc_day_a_shift</string>
+    <string name="pref_dayB_picker">paycalc_day_b_shift</string>
+    <string name="pref_dayC_picker">paycalc_day_c_shift</string>
 
     <string-array name="dummy_day_entries">
         <item>0</item>

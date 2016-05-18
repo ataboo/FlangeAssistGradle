@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 
 
 import com.atasoft.flangeassist.fragments.cashcounter.CashCounter2;
-import com.atasoft.flangeassist.fragments.paycalc.PaychequeFragment;
+import com.atasoft.flangeassist.fragments.paycalc.PaycalcFragment;
 import com.atasoft.flangeassist.fragments.*;
 import com.atasoft.flangeassist.fragments.ropevalues.RopeFragment;
 
@@ -20,7 +20,7 @@ public class NavDrawerAdaptor {
         switch (index) {
             case 0:
                 // Flange Tables
-                return new PaychequeFragment();
+                return new PaycalcFragment();
 			case 1:
 				// Flange Tables
 				return new FlangeFragment();

@@ -1,4 +1,4 @@
-package com.atasoft.flangeassist.fragments.cashcounter.counterobjects;
+package com.atasoft.utilities;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -7,20 +7,13 @@ import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.TimePicker;
-
-import com.atasoft.flangeassist.R;
-import com.atasoft.helpers.AtaMathUtils;
 
 
 import java.util.ArrayList;
@@ -183,6 +176,8 @@ public class ShiftPickerPreference extends DialogPreference {
 
     @Override
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
+        super.onSetInitialValue(restoreValue, defaultValue);
+
         String time=null;
 
         if (restoreValue) {

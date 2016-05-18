@@ -1,4 +1,4 @@
-package com.atasoft.flangeassist.fragments.cashcounter.counterobjects;
+package com.atasoft.utilities;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

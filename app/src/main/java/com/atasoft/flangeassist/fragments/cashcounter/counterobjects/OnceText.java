@@ -3,9 +3,10 @@ package com.atasoft.flangeassist.fragments.cashcounter.counterobjects;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
 
-import com.atasoft.helpers.AtaMathUtils;
+import com.atasoft.utilities.AtaMathUtils;
+import com.atasoft.utilities.AtaVector;
+import com.atasoft.utilities.IntVector;
 
 /**
  * Created by ataboo on 2016-05-15.

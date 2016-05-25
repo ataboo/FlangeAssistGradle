@@ -30,7 +30,6 @@ Feel free to send feedback or suggestions to bmtoolbox@gmail.com
 
 ####V0.30 (05/17/16):
 - Updated wages for ON, MB, SK, BC
-- Added QC
 - Re-wrote Cash Counter with new animations
 - Re-worked settings menu
 

@@ -18,7 +18,7 @@ public class TaxManager {
         SK ("Saskatchewan", "SK - ", true, 2),
         MB ("Manitoba", "MB - ", true, 3),
         ON ("Ontario", "ON - ", true, 4),
-        QC ("Quebec", "QC - ", true, 5),
+        QC ("Quebec", "QC - ", false, 5),
         NB ("New Brunswick", "NB - ", true, 6),
         NS ("Nova Scotia", "NS - ", true, 7),
         CB ("Cape Breton", "CB - ", true, 8),

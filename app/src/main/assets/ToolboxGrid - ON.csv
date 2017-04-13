@@ -1,20 +1,26 @@
 Ontario,Classification,Wage,,,
-#wages,GF,48.2,,,
-#wages,Foreperson,46.2,,,
-#wages,Lead Hand,43.2,,,
-#wages,Journeyperson,41.2,,,
-#wages,4th Year App,36.88,,,
-#wages,3rd Year App,32.56,,,
-#wages,2nd Year App,28.24,,,
-#wages,1st Year App,23.92,,,
+#wages,GF,48.85,,,
+#wages,Foreperson,46.85,,,
+#wages,Lead Hand,43.85,,,
+#wages,Journeyperson,41.85,,,
+#wages,4th Year App,37.47,,,
+#wages,3rd Year App,33.08,,,
+#wages,2nd Year App,28.7,,,
+#wages,1st Year App,24.31,,,
 ,,,,,
 "Next Increase May 7, 2017",,,,,
 ,,,,,
 #vac_rate,0.12,,,,
 #field_dues,0.045,,,,
 #month_dues,41.6,,,,
-#night_ot,TRUE,,,,
-#double_ot,TRUE,,,,
+#night_ot,true,,,,
+,,,,,
+,Straight Time,Overtime,,,
+#pay_weekday,8,0,,,
+#pay_weekend,0,0,,,
+#pay_holiday,0,0,,,
+#pay_ft_weekday,10,0,,,
+#pay_ft_friday,0,ƒ,,,
 ,,,,,
 ,,,,,
 ,,,,,
@@ -22,9 +28,11 @@ Ontario,Classification,Wage,,,
 #brackets,0,40120,80242,514090,
 #brackets,0,40922,81847,150000,220000
 #brackets,0,41536,83075,150000,220000
+#brackets,0,42201,84404,150000,220000
 ,,,,,
 #rates,0.0505,0.0915,0.1116,0.1316,
 #rates,0.0505,0.0915,0.1116,0.1316,
+#rates,0.0505,0.0915,0.1116,0.1216,0.1316
 #rates,0.0505,0.0915,0.1116,0.1216,0.1316
 #rates,0.0505,0.0915,0.1116,0.1216,0.1316
 ,,,,,
@@ -32,24 +40,29 @@ Ontario,Classification,Wage,,,
 #const_k,0,1645,3258,13540,
 #const_k,0,1678,3323,4823,7023
 #const_k,0,1703,3373,4873,7073
+#const_k,0,1730,3427,4927,7127
 ,,,,,
-#claim_amount,9574,9670,9863,10011,
+#claim_amount,9574,9670,9863,10011,10171
 ,,,,,
 #tax_red,221,,,,
 #tax_red,223,,,,
 #tax_red,228,,,,
 #tax_red,231,,,,
+#tax_red,235,,,,
 ,,,,,
 #health_brackets,20000,36000,48000,72000,200000
 #health_brackets,20000,36000,48000,72000,200000
 #health_brackets,20000,36000,48000,72000,200000
 #health_brackets,20000,36000,48000,72000,200000
+#health_brackets,20000,36000,48000,72000,200000
 ,,,,,
 #health_rates,0.06,0.06,0.25,0.25,0.25
 #health_rates,0.06,0.06,0.25,0.25,0.25
 #health_rates,0.06,0.06,0.25,0.25,0.25
 #health_rates,0.06,0.06,0.25,0.25,0.25
+#health_rates,0.06,0.06,0.25,0.25,0.25
 ,,,,,
+#health_amounts,300,450,600,750,900
 #health_amounts,300,450,600,750,900
 #health_amounts,300,450,600,750,900
 #health_amounts,300,450,600,750,900
@@ -59,3 +72,4 @@ Ontario,Classification,Wage,,,
 #surtax,4331,5543,0.2,0.36,
 #surtax,4418,5654,0.2,0.36,
 #surtax,4484,5739,0.2,0.36,
+#surtax,4556,5831,0.2,0.36,

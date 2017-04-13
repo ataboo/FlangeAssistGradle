@@ -5,6 +5,7 @@
 	android:layout_height="wrap_content"
 	android:textSize="16sp"
 	android:gravity="center"
+	android:textColor="@drawable/spinner_select"
 />
 
 <!-- android:textColor="#FFFFFF" -->

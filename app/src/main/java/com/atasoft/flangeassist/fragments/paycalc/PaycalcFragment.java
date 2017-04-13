@@ -127,7 +127,7 @@ import java.text.NumberFormat;
                 //throw(new Error("updateBonusAdaptor invalid spinner type call."));
             }
 
-            ArrayAdapter<String> bonusDayAdaptor = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, bonusDayOptions);
+            ArrayAdapter<String> bonusDayAdaptor = new ArrayAdapter<String>(context,  R.layout.spinner_layout, bonusDayOptions);
             spinner.setAdapter(bonusDayAdaptor);
         }
 
@@ -402,7 +402,7 @@ import java.text.NumberFormat;
 		this.wageRates = taxManager.getWageRates(oldProvWage);
 		this.wageNames = taxManager.getWageNames(oldProvWage);
         ArrayAdapter<String> wageAdapt = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-                android.R.layout.simple_spinner_item, wageNames);
+                R.layout.spinner_layout, wageNames);
 
         SpinnerData.WAGE.spinner.setAdapter(wageAdapt);
 
@@ -522,7 +522,7 @@ import java.text.NumberFormat;
             // Sends to add hours as weekend if double time checked
             int dayIndex = weekHolidays[i] ? 0 : i;
 
-            payCalcData.addHours(splitArr, fourToggle.isChecked(), nightToggle.isChecked(), dayIndex, nightOT, doubleOT);
+            payCalcData.addHours(splitArr, fourToggle.isChecked(), nightToggle.isChecked(), dayIndex, nightOT, taxManager.getProvStats(provString));
         }
 
         float wageRate;

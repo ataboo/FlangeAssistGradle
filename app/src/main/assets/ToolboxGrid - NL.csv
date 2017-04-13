@@ -1,20 +1,26 @@
 Newfoundland,Classification,Wage,,,
-#wages,GF,40.91,,,
-#wages,Foreperson,39.81,,,
-#wages,Lead Hand,38.46,,,
-#wages,Journeyperson,36.76,,,
-#wages,3rd Year App,32.95,,,
-#wages,2nd Year App,27.24,,,
-#wages,1st Year App,21.52,,,
-#wages,Helper,27.24,,,
-Next Increase May 2016?,,,,,
+#wages,GF,40.87,,,
+#wages,Foreperson,39.77,,,
+#wages,Lead Hand,38.42,,,
+#wages,Journeyperson,36.72,,,
+#wages,3rd Year App,32.91,,,
+#wages,2nd Year App,27.21,,,
+#wages,1st Year App,21.5,,,
+,,,,,
+Next Increase?,Sun May 06 2018 00:00:00 GMT-0600 (MDT),,,,
 ,,,,,
 #vac_rate,0.12,,,,
 ,,,,,
 #field_dues,0.045,,,,
 #month_dues,50.85,,,,
-#night_ot,TRUE,,,,
-#double_ot,TRUE,,,,
+#night_ot,true,,,,
+,,,,,
+,Straight Time,Overtime,,,
+#pay_weekday,8,0,,,
+#pay_weekend,0,0,,,
+#pay_holiday,0,0,,,
+#pay_ft_weekday,10,0,,,
+#pay_ft_friday,0,0,,,
 ,,,,,
 ,,,,,
 ,,,,,
@@ -22,16 +28,19 @@ Next Increase May 2016?,,,,,
 #brackets,0,34254,68508,,
 #brackets,0,35008,70015,125000,175000
 #brackets,0,35148,70295,125500,175700
+#brackets,0,35851,71701,128010,179214
 ,,,,,
 #rates,0.077,0.125,0.133,,
 #rates,0.077,0.125,0.133,,
 #rates,0.077,0.125,0.133,0.143,0.153
 #rates,0.077,0.125,0.133,0.143,0.153
+#rates,0.087,0.145,0.158,0.173,0.183
 ,,,,,
 #const_k,0,1620,2160,,
 #const_k,0,1644,2192,,
 #const_k,0,1680,2241,3491,5241
 #const_k,0,1687,2249,3504,5261
+#const_k,0,2079,3011,4932,6724
 ,,,,,
 Claim code 1,,,,,
-#claim_amount,8451,8578,8767,8802,
+#claim_amount,8451,8578,8767,8802,8978

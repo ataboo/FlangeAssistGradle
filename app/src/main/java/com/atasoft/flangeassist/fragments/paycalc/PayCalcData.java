@@ -1,6 +1,10 @@
 package com.atasoft.flangeassist.fragments.paycalc;
 
+import android.util.Log;
+
 import com.atasoft.utilities.AtaMathUtils;
+
+import java.util.Arrays;
 
 /**
  * Created by ataboo on 2015-12-12.
@@ -115,8 +119,8 @@ public class PayCalcData {
     }
 
     /// Shift already split into [single, ot, double] array
-    public void addHours(float[] dayHours, boolean isFourTens, boolean isNightShift, int dayIndex, boolean nightShiftOT, boolean otDouble){
-        float[] splitHours = splitShiftHours(dayHours, isFourTens, dayIndex, nightShiftOT && isNightShift, otDouble);
+    public void addHours(float[] dayHours, boolean isFourTens, boolean isNightShift, int dayIndex, boolean nightShiftOT, TaxStatHolder taxStatHolder){
+        float[] splitHours = splitShiftHours(dayHours, isFourTens, dayIndex, nightShiftOT && isNightShift, taxStatHolder);
         float hoursWorked = splitHours[0] + splitHours[1] + splitHours[2];
         if(isNightShift && !nightShiftOT){
             earnings.nightShiftBonus += earnings.nightShiftPremium * hoursWorked;
@@ -151,33 +155,33 @@ public class PayCalcData {
 
     // Pass sunday or saturday dayIndex for holiday.
     /// Split hours for a specific shift length into [single, ot, double].
-    float[] splitShiftHours(float shiftHours[], boolean isFourTens, int dayIndex, boolean nightOTActive, boolean otDouble){
+    float[] splitShiftHours(float shiftHours[], boolean isFourTens, int dayIndex, boolean nightOTActive, TaxStatHolder taxStatHolder){
         // Shift is already split and overwrites other settings.
-        if(shiftHours.length == 3){
+        if(shiftHours.length == 3 || taxStatHolder == null){
             return shiftHours;
         }
         if(shiftHours.length !=1){
             throw new Error("PayCalcData didn't expect shift hours of length: " + shiftHours.length);
         }
 
+        float[] provHours;
         // Weekend or holiday all double time.
-        // Passed weekend dayIndex for holiday.
-        if(dayIndex == 0 || dayIndex == 6){
-            return new float[]{0,0,shiftHours[0]};
-        }
-
-        float[] splitHours;
-
-        if (isFourTens){
-            splitHours = splitShiftFourTens(shiftHours[0], dayIndex);
+        // Passed weekend dayIndex for holiday (brutal).
+        if (dayIndex == 0 || dayIndex == 6) {
+            provHours = taxStatHolder.hoursWeekend;
         } else {
-            splitHours = splitShiftFiveEights(shiftHours[0]);
+            if (isFourTens) {
+                provHours = dayIndex == 5 ? taxStatHolder.hoursFTFriday : taxStatHolder.hoursFTWeekday;
+            } else {
+                provHours = taxStatHolder.hoursWeekday;
+            }
         }
 
-        // All Overtime is Double Time
-        if(otDouble){
-            splitHours = makeOTDouble(splitHours);
-        }
+        float straight = Math.min(shiftHours[0], provHours[0]);
+        float overTime = Math.min(shiftHours[0] - straight, provHours[1]);
+        float doubleTime = shiftHours[0] - straight - overTime;
+
+        float[] splitHours = {straight, overTime, doubleTime};
 
         // All straight time is Overtime
         if(nightOTActive){
@@ -185,29 +189,6 @@ public class PayCalcData {
         }
 
         return splitHours;
-    }
-
-    float[] splitShiftFourTens(float shiftHours, int dayIndex){
-        // Monday to Thursday: 10 hours straight double after that.
-        float straight = AtaMathUtils.clampFloat(shiftHours, 0, 10);
-        float overTime = 0;
-        float doubleTime = AtaMathUtils.clampFloat(shiftHours - 10, 0, Float.MAX_VALUE);
-
-        // Friday: overtime first 10 double after that.
-        if(dayIndex == 5) {
-            overTime = straight;
-            straight = 0;
-        }
-
-        return new float[]{straight, overTime, doubleTime};
-    }
-
-    float[] splitShiftFiveEights(float shiftHours){
-        float straight = AtaMathUtils.clampFloat(shiftHours, 0, 8);
-        float overTime = AtaMathUtils.clampFloat(shiftHours - 8, 0, 2);
-        float doubleTime = AtaMathUtils.clampFloat(shiftHours - 10, 0, Float.MAX_VALUE);
-
-        return new float[]{straight, overTime, doubleTime};
     }
 
     float[] makeStraightOT(float[] hours){

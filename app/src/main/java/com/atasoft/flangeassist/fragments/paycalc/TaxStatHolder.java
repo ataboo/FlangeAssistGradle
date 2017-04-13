@@ -47,6 +47,12 @@ public class TaxStatHolder {
     public static final String qpipMaxTag = "#qpip_max";
     public static final String empDedTag = "#emp_ded";
 
+    public static final String hoursHolidayTag = "#pay_holiday";
+    public static final String hoursWeekendTag = "#pay_weekend";
+    public static final String hoursWeekdayTag = "#pay_weekday";
+    public static final String hoursFTFridayTag = "#pay_ft_weekday";
+    public static final String hoursFTWeekdayTag = "#pay_ft_friday";
+
 
     //TODO: change public stats to getters and add null checks;
     public TaxManager.Prov prov = TaxManager.Prov.FED;
@@ -75,6 +81,13 @@ public class TaxStatHolder {
     public float[] qpipRate;
     public float[] qpipMax;
     public float[] empDeduction;
+
+    public float[] hoursHoliday;
+    public float[] hoursWeekend;
+    public float[] hoursWeekday;
+    public float[] hoursFTFriday;
+    public float[] hoursFTWeekday;
+
 
     public float vacRate = 0f;
     public String surName = "fail";
@@ -145,6 +158,12 @@ public class TaxStatHolder {
         receiver.nightOT = wageStats.nightOT;
         receiver.doubleOT = wageStats.doubleOT;
         receiver.nightPremiumRate = wageStats.nightPremiumRate;
+
+        receiver.hoursWeekday = wageStats.hoursWeekday;
+        receiver.hoursHoliday = wageStats.hoursHoliday;
+        receiver.hoursWeekend = wageStats.hoursWeekend;
+        receiver.hoursFTFriday = wageStats.hoursFTFriday;
+        receiver.hoursFTWeekday = wageStats.hoursFTWeekday;
     }
 
     private static void copyTaxFields(TaxStatHolder receiver, TaxManager.Prov taxProv, AssetManager assets){
@@ -330,6 +349,27 @@ public class TaxStatHolder {
         }
         if(lineTag.equals(empDedTag)){
             this.empDeduction = parseFloatArr(lineTrim, empDedTag);
+        }
+
+        if(lineTag.equals(hoursWeekdayTag)) {
+            this.hoursWeekday = parseFloatArr(lineTrim, hoursWeekdayTag);
+            Log.i("TaxStatHolder", "Weekday: " + Arrays.toString(hoursWeekday));
+        }
+        if(lineTag.equals(hoursWeekendTag)) {
+            this.hoursWeekend = parseFloatArr(lineTrim, hoursWeekendTag);
+            Log.i("TaxStatHolder", "Weekend: " + Arrays.toString(hoursWeekend));
+        }
+        if(lineTag.equals(hoursHolidayTag)) {
+            this.hoursHoliday = parseFloatArr(lineTrim, hoursHolidayTag);
+            Log.i("TaxStatHolder", "Holiday: " + Arrays.toString(hoursHoliday));
+        }
+        if(lineTag.equals(hoursFTFridayTag)) {
+            this.hoursFTFriday = parseFloatArr(lineTrim, hoursFTFridayTag);
+            Log.i("TaxStatHolder", "FT Friday: " + Arrays.toString(hoursFTFriday));
+        }
+        if(lineTag.equals(hoursFTWeekdayTag)) {
+            this.hoursFTWeekday = parseFloatArr(lineTrim, hoursFTWeekdayTag);
+            Log.i("TaxStatHolder", "FT Weekday: " + Arrays.toString(hoursFTWeekday));
         }
 
         // Single Values

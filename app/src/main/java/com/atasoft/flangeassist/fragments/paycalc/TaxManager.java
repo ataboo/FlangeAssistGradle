@@ -18,7 +18,7 @@ public class TaxManager {
         SK ("Saskatchewan", "SK - ", true, 2),
         MB ("Manitoba", "MB - ", true, 3),
         ON ("Ontario", "ON - ", true, 4),
-        QC ("Quebec", "QC - ", false, 5),
+        QC ("Quebec", "QC - ", true, 5),
         NB ("New Brunswick", "NB - ", true, 6),
         NS ("Nova Scotia", "NS - ", true, 7),
         CB ("Cape Breton", "CB - ", true, 8),
@@ -68,7 +68,8 @@ public class TaxManager {
         TY_2013 ("2013", 0),
         TY_2014 ("2014", 1),
         TY_2015 ("2015", 2),
-        TY_2016 ("2016", 3);
+        TY_2016 ("2016", 3),
+        TY_2017 ("2017", 4);
 
         private String name;
         private int index;
@@ -252,6 +253,10 @@ public class TaxManager {
         return stats.fieldDuesRate;
     }
 
+    public TaxStatHolder getProvStats(String province) {
+        return getStatType(province);
+    }
+
 	private BigDecimal[] getCppEi(BigDecimal anGross, int year){
 		//[cpp rate, exemption, ei rate]
 		float cppRate = fedStats.cppEi[year][0];
@@ -278,9 +283,9 @@ public class TaxManager {
         float qpipDed = gross * qcStats.qpipRate[year];
         float eiDed = gross * qcStats.cppEi[year][0];
 
-        qppDed = qppDed > 0 ? qppDed : 0;
-        qpipDed = qpipDed > 0 ? qpipDed : 0;
-        eiDed = eiDed > 0 ? eiDed : 0;
+        qppDed = Math.max(qppDed, 0);
+        qpipDed = Math.max(qpipDed, 0);
+        eiDed = Math.max(eiDed, 0);
 
         return new BigDecimal[]{new BigDecimal(qppDed), new BigDecimal(qpipDed), new BigDecimal(eiDed)};
     }
@@ -298,10 +303,9 @@ public class TaxManager {
         float maxEiCont = qcHolder.cppEi[year][1];
         float claimAmount = fedStats.claimAmount[year];
 
-        qppCont = qppCont < maxQppCont ? qppCont: maxQppCont;
-        qpipCont = qpipCont < maxQpipCont ? qpipCont : maxQpipCont;
-        eiCont = eiCont < maxEiCont ? eiCont : maxEiCont;
-
+        qppCont = Math.min(maxQppCont, qppCont);
+        qpipCont = Math.min(maxQpipCont, qpipCont);
+        eiCont = Math.min(eiCont, maxEiCont);
 
         return (claimAmount + qppCont + qpipCont + eiCont) * fedStats.rates[year][0];
     }
@@ -378,6 +382,11 @@ public class TaxManager {
     }
 
     private float getQCHealthPrem(float anGross, TaxStatHolder qcStats, int year){
+        //HealthPrem discontinued in 2017.
+        if (year >= 4) {
+            return 0;
+        }
+
         int healthIndex = TaxManager.bracketGrossIndex(anGross, qcStats.healthBracket[year]);
         if(healthIndex == 0) return 0;
 

@@ -309,14 +309,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/travelday_but" />
+            android:layout_below="@id/travelday_but"
+            android:background="#505052"
+            android:padding="6dp"/>
 
         <Spinner
             android:id="@+id/loa_spin"
+            android:layout_marginTop="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/meals_spin" />
+            android:layout_below="@id/meals_spin"
+            android:background="#505052"
+            android:padding="6dp"/>
 
         <TextView
             android:id="@+id/meal_text"
@@ -324,7 +329,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/travelday_but"
             android:layout_toLeftOf="@id/meals_spin"
-            android:text="@string/meal_text" />
+            android:padding="6dp"
+            android:text="@string/meal_text"
+            />
 
         <TextView
             android:id="@+id/loa_text"
@@ -332,6 +339,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/meals_spin"
             android:layout_toLeftOf="@id/loa_spin"
+            android:padding="6dp"
             android:text="@string/loa_text" />
 
         <TextView
@@ -360,7 +368,9 @@
             android:id="@+id/wageSpin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/doub_val" />
+            android:layout_below="@id/doub_val"
+            android:background="#505052"
+            android:padding="6dp"/>
 
         <TextView
             android:id="@+id/wageRate_val"

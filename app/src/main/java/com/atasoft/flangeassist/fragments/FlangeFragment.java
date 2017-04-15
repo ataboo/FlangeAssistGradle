@@ -14,8 +14,7 @@ public class FlangeFragment extends Fragment {
     private View thisFrag;
 	private Context context;
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.flanges, container, false);
         thisFrag = v;
@@ -71,17 +70,17 @@ public class FlangeFragment extends Fragment {
 
 		this.sizeS = (Spinner) thisFrag.findViewById(R.id.sizeSpinner);
 		ArrayAdapter<String> adaptorSize = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-																 android.R.layout.simple_spinner_item, fSizes);
+				R.layout.spinner_layout_left, fSizes);
 		sizeS.setAdapter(adaptorSize);
 		
 		this.rateS = (Spinner) thisFrag.findViewById(R.id.rateSpinner);
         ArrayAdapter<String> adapterRate = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-                android.R.layout.simple_spinner_item, fRates);
+				R.layout.spinner_layout_left, fRates);
         rateS.setAdapter(adapterRate);
 
         this.studSizeSpinner = (Spinner) thisFrag.findViewById(R.id.stud_spinner);
         ArrayAdapter<String> adapterStud = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-            android.R.layout.simple_spinner_item, fStuds);
+				R.layout.spinner_layout_left, fStuds);
         studSizeSpinner.setAdapter(adapterStud);
 
         //Set Listeners on spinners to draw stats

@@ -72,11 +72,11 @@ public class RigTrig extends Fragment
 		for(int i=0; i<8; i++){
 			legsString[i] =Integer.toString(i+1);
 		} 
-		ArrayAdapter<String> legAd = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, legsString);
+		ArrayAdapter<String> legAd = new ArrayAdapter<String>(context, R.layout.spinner_layout_left, legsString);
 		legSpin.setAdapter(legAd);
 		
 		this.wrapSpin = (Spinner) thisFrag.findViewById(R.id.rigtrig_wrapSpinner);
-		ArrayAdapter<String> wrapAd = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, WRAP_TYPES);
+		ArrayAdapter<String> wrapAd = new ArrayAdapter<String>(context, R.layout.spinner_layout_left, WRAP_TYPES);
 		wrapSpin.setAdapter(wrapAd);
 		
 		this.loadEdit = (EditText) thisFrag.findViewById(R.id.rigtrig_loadEdit);
@@ -86,7 +86,7 @@ public class RigTrig extends Fragment
 		
 		//-------------------Nylon Table------------------
 		this.nylonSizeSpin = (Spinner) thisFrag.findViewById(R.id.rigtrig_nylonSizeSpin);
-		ArrayAdapter<String> nylonSizeAd = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, NYLON_CAPACITIES[0]);
+		ArrayAdapter<String> nylonSizeAd = new ArrayAdapter<String>(context, R.layout.spinner_layout_left, NYLON_CAPACITIES[0]);
 		nylonSizeSpin.setAdapter(nylonSizeAd);
 		
 		this.nylonWrapSpin = (Spinner) thisFrag.findViewById(R.id.rigtrig_nylonWrapSpin);

@@ -1,0 +1,88 @@
+{"pull_time": "2017-04-14 16:00:03",
+  "data": [
+    {
+      "id": "21136",
+      "job_name": "HUSKY - LLOYDMINSTER",
+      "contractor": "EDM. EX. & REF. SERVICES LTD",
+      "open_to": "Members Only",
+      "start_date": "2017-04-17 00:00:00",
+      "dayshift": "1",
+      "work_type": "SHUTDOWN",
+      "hours": "10's",
+      "duration": "2 WEEKS PLUS",
+      "accommodation": "$160.00 DAY/DAYS WORKED",
+      "drug_testing": "PRE-ACCESS D&A REQUIRED",
+      "comments": "INDOC SATURDAY ON DAYS, SUNDAY APRIL 16 OFF THEN MONDAY APRIL 17 START ON DAYS--SOME EXTRA SAFETY MAY BE REQUIRED TO BE DONE OFFSITE--SITE SAFETY/SIGN ON WILL BE AT THE START OF THE SHIFT -WORKING 2 (TWO) HALF HOUR BREAKS",
+      "created_at": "2017-04-14 12:00:12",
+      "updated_at": "2017-04-14 22:00:03",
+      "active": true,
+      "start_time": "07:00:00",
+      "date_time": "2017-04-16 07:00:00",
+      "manpowers": [
+        {
+          "id": 161,
+          "callout_job_id": "21136",
+          "title": "FITTER",
+          "detail": "1",
+          "created_at": "2017-04-14 12:00:12",
+          "updated_at": "2017-04-14 12:00:12"
+        }
+      ],
+      "namehires": []
+    },
+    {
+      "id": "21339",
+      "job_name": "SUNCOR FIRE BAG - FT. MCMURRAY",
+      "contractor": "ALTEX FIELD SERVICES",
+      "open_to": "Members and Travel Cards Only",
+      "start_date": "2017-04-17 00:00:00",
+      "dayshift": "1",
+      "work_type": "MAINTENANCE: EXCHANGER MAINT.",
+      "hours": "10's",
+      "duration": "1 WEEK PLUS",
+      "accommodation": "CAMP TO BE DETERMINED",
+      "drug_testing": "PRE-ACCESS D&A REQUIRED",
+      "comments": "WILL BACKFILL IF NECESSARY--CHARTERED FLIGHTS FROM EDMONTON & CALGARY ONLY--OUTAGE GOES FROM APRIL 17 TO MAY 10--LOTS OF STAIR CLIMBING INVOLVED--NO VEHICLES TO SITE--MUST BE ABLE TO WEAR HALF AND FULL FACE RESPIRATORS--POSSIBLE CONFINED SPACES",
+      "created_at": "2017-04-08 20:42:44",
+      "updated_at": "2017-04-14 22:00:03",
+      "active": true,
+      "start_time": "07:00:00",
+      "date_time": "2017-04-16 07:00:00",
+      "manpowers": [
+        {
+          "id": 33,
+          "callout_job_id": "21339",
+          "title": "B2",
+          "detail": "2",
+          "created_at": "2017-04-08 20:42:44",
+          "updated_at": "2017-04-08 20:42:44"
+        },
+        {
+          "id": 34,
+          "callout_job_id": "21339",
+          "title": "FITTER",
+          "detail": "4",
+          "created_at": "2017-04-08 20:42:44",
+          "updated_at": "2017-04-08 20:42:44"
+        },
+        {
+          "id": 79,
+          "callout_job_id": "21339",
+          "title": "BMKR APPR",
+          "detail": "1",
+          "created_at": "2017-04-10 12:00:11",
+          "updated_at": "2017-04-11 00:45:03"
+        },
+        {
+          "id": 80,
+          "callout_job_id": "21339",
+          "title": "JM BM",
+          "detail": "2",
+          "created_at": "2017-04-10 12:00:11",
+          "updated_at": "2017-04-13 12:00:12"
+        }
+      ],
+      "namehires": []
+    }
+  ]
+}

@@ -17,14 +17,18 @@
             android:text="By ASME Flange Size:" />
         <Spinner
             android:id="@+id/sizeSpinner"
-            android:layout_width="96dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/AppBaseTheme"
             android:layout_below="@id/title"
+            android:padding="8dp"
             android:layout_alignParentLeft="true" />
         <Spinner
             android:id="@+id/rateSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:layout_marginLeft="4dp"
             android:layout_toRightOf="@+id/sizeSpinner"
             android:layout_below="@id/title" />
 
@@ -178,9 +182,12 @@
             android:text="By Stud Size:" />
         <Spinner
             android:id="@+id/stud_spinner"
-            android:layout_width="96dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/stud_title"
+            android:padding="6dp"
+            android:layout_margin="2dp"
+
         />
         <TextView
             android:id="@+id/stud_wrenchText"

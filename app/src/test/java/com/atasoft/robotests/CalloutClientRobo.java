@@ -1,7 +1,7 @@
 package com.atasoft.robotests;
 
 
-import com.atasoft.flangeassist.fragments.callout.daters.CalloutClient;
+import com.atasoft.flangeassist.fragments.callout.daters.client.CalloutClient;
 
 import org.junit.Test;
 import org.mockito.Mock;

@@ -212,18 +212,13 @@ public class TaxStatHolder {
 
     private String[][] listToStringArray(ArrayList<String[]> list, String errorName) {
         if(list.size() == 0){
-            //Log.w("TaxStatHolder", surName + ", " + errorName + " has no list.");
             list.clear();
             return null;
         }
 
         String[][] retArr = new String[list.size()][];
-        int sizeCheck = list.get(0).length;
         for(int i=0; i<retArr.length; i++){
             retArr[i] = list.get(i);
-            if(retArr[i].length != sizeCheck){
-               // Log.w("TaxStatHolder", "Size mismatch on:  " + surName + ", " + errorName);
-            }
         }
         list.clear();
         return retArr;
@@ -231,17 +226,12 @@ public class TaxStatHolder {
 
     private float[][] listToFloatArray(ArrayList<String[]> list, String errorName) {
         if(list.size() == 0){
-            //Log.w("TaxStatHolder", surName + ", " + errorName + " has no list.");
             list.clear();
             return null;
         }
         float[][] retArr = new float[list.size()][];
-        int sizeCheck = list.get(0).length;
         for(int i=0; i < retArr.length; i++){
             retArr[i] = parseFloatArr(list.get(i), errorName);
-            if(retArr[i].length != sizeCheck){
-                //Log.w("TaxStatHolder", "Size mismatch on:  " + surName + ", " + errorName);
-            }
         }
         list.clear();
         return retArr;
@@ -353,23 +343,18 @@ public class TaxStatHolder {
 
         if(lineTag.equals(hoursWeekdayTag)) {
             this.hoursWeekday = parseFloatArr(lineTrim, hoursWeekdayTag);
-            Log.i("TaxStatHolder", "Weekday: " + Arrays.toString(hoursWeekday));
         }
         if(lineTag.equals(hoursWeekendTag)) {
             this.hoursWeekend = parseFloatArr(lineTrim, hoursWeekendTag);
-            Log.i("TaxStatHolder", "Weekend: " + Arrays.toString(hoursWeekend));
         }
         if(lineTag.equals(hoursHolidayTag)) {
             this.hoursHoliday = parseFloatArr(lineTrim, hoursHolidayTag);
-            Log.i("TaxStatHolder", "Holiday: " + Arrays.toString(hoursHoliday));
         }
         if(lineTag.equals(hoursFTFridayTag)) {
             this.hoursFTFriday = parseFloatArr(lineTrim, hoursFTFridayTag);
-            Log.i("TaxStatHolder", "FT Friday: " + Arrays.toString(hoursFTFriday));
         }
         if(lineTag.equals(hoursFTWeekdayTag)) {
             this.hoursFTWeekday = parseFloatArr(lineTrim, hoursFTWeekdayTag);
-            Log.i("TaxStatHolder", "FT Weekday: " + Arrays.toString(hoursFTWeekday));
         }
 
         // Single Values

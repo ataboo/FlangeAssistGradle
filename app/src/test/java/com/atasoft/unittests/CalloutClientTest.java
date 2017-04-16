@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 
-import com.atasoft.flangeassist.fragments.callout.daters.CalloutClient;
+import com.atasoft.flangeassist.fragments.callout.daters.client.CalloutClient;
 
 import org.junit.*;
 import org.junit.runner.RunWith;

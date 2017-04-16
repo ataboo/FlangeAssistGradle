@@ -3,9 +3,9 @@ package com.atasoft.robotests;
 import android.content.Context;
 
 import com.android.volley.Response;
-import com.atasoft.flangeassist.fragments.callout.daters.CalloutClient;
-import com.atasoft.flangeassist.fragments.callout.daters.CalloutListener;
-import com.atasoft.flangeassist.fragments.callout.daters.CalloutParser;
+import com.atasoft.flangeassist.fragments.callout.daters.client.CalloutClient;
+import com.atasoft.flangeassist.fragments.callout.daters.client.CalloutListener;
+import com.atasoft.flangeassist.fragments.callout.daters.client.CalloutParser;
 import com.atasoft.flangeassist.fragments.callout.daters.CalloutResponse;
 
 import org.junit.Assert;
@@ -15,11 +15,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;

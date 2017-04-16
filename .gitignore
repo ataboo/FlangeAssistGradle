@@ -32,3 +32,4 @@ Thumbs.db
 build/
 
 config.json
+config_local.json

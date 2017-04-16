@@ -1,4 +1,4 @@
-package com.atasoft.flangeassist.fragments.callout;
+package com.atasoft.shared;
 
 import android.content.Context;
 
@@ -6,10 +6,10 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-/**
- * Created by ataboo on 4/13/2017.
- */
 
+/**
+ * Singleton implementation of Volley's Request Queue.
+ */
 public class AtaRequestQueue {
     private static AtaRequestQueue mInstance;
     private RequestQueue mRequestQueue;

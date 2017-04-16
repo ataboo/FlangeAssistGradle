@@ -3,9 +3,9 @@ package com.atasoft.unittests;
 import android.content.Context;
 
 import com.android.volley.Response;
-import com.atasoft.flangeassist.fragments.callout.daters.CalloutClient;
-import com.atasoft.flangeassist.fragments.callout.daters.CalloutListener;
-import com.atasoft.flangeassist.fragments.callout.daters.CalloutParser;
+import com.atasoft.flangeassist.fragments.callout.daters.client.CalloutClient;
+import com.atasoft.flangeassist.fragments.callout.daters.client.CalloutListener;
+import com.atasoft.flangeassist.fragments.callout.daters.client.CalloutParser;
 import com.atasoft.flangeassist.fragments.callout.daters.CalloutResponse;
 
 import org.junit.Before;

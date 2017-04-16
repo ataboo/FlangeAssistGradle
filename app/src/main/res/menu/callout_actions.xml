@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:flangeassist="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        flangeassist:showAsAction="never" />
+    <item android:id="@+id/callout_settings"
+        android:title="Callout Settings"
+        android:icon="@drawable/ic_menu_gear"
+        flangeassist:showAsAction="ifRoom"/>
+    <item android:id="@+id/action_about"
+        android:title="@string/action_about"
+        flangeassist:showAsAction="never" />
+</menu>

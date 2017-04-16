@@ -2,6 +2,9 @@ package com.atasoft.flangeassist.fragments.callout.daters;
 
 
 import android.util.Log;
+import android.util.SparseArray;
+
+import com.atasoft.flangeassist.fragments.callout.daters.hire.ClassificationFilter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,16 +15,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
+import java.util.EnumSet;
 import java.util.Locale;
 
 public class CalloutResponse {
-    final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CANADA);
+    public final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CANADA);
 
     public CalloutJob[] jobs;
     public Date lastPull;
 
-    CalloutResponse(String response) {
+    public CalloutResponse(String response) {
         ArrayList<CalloutJob> newJobs = new ArrayList<>();
 
         try {
@@ -40,6 +43,20 @@ public class CalloutResponse {
             e.printStackTrace();
             jobs = new CalloutJob[0];
             lastPull = new Date(0);
+        }
+    }
+
+    public void fillSparse(SparseArray<CalloutJob> sparseArray, EnumSet<ClassificationFilter> filters) {
+        sparseArray.clear();
+
+        int sparseCount = 0;
+        for (int i=0; i<jobs.length; i++) {
+            CalloutJob job = jobs[i];
+
+            if (job.matchesFilters(filters)) {
+                sparseArray.append(sparseCount, jobs[i]);
+                sparseCount++;
+            }
         }
     }
 

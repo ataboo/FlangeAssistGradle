@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="?android:attr/listPreferredItemHeight"
+android:padding="6dp"
+    android:background="@color/callout_table_background">
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="30dip"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:ellipsize="marquee"
+        android:maxLines="1"
+        android:text="Job Location"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/detail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dip"
+
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/title"
+        android:gravity="center_vertical"
+        android:ellipsize="marquee"
+        android:maxLines="1"
+        android:text="Contractor"
+        android:textSize="16sp" />
+</RelativeLayout>

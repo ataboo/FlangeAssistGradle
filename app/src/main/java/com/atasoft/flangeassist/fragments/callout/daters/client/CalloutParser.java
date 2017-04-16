@@ -1,27 +1,27 @@
-package com.atasoft.flangeassist.fragments.callout.daters;
+package com.atasoft.flangeassist.fragments.callout.daters.client;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.atasoft.flangeassist.fragments.callout.daters.CalloutClient;
+import com.atasoft.flangeassist.fragments.callout.daters.CalloutResponse;
 
 /**
- * Created by ataboo on 4/14/2017.
+ * Invokes the CalloutClient and generates a CalloutResponse on success.
+ *
  */
-
 public class CalloutParser {
     private CalloutClient calloutClient;
 
     public CalloutParser() {
-        calloutClient = new CalloutClient();
+        this.calloutClient = new CalloutClient();
     }
 
     /**
-     * Inject client for unit testing.
+     * Convenience constructor allowing injected client.
      *
-     * @param client Client can be injected for unit testing.
+     * @param client Mocked Client can be injected for unit testing.
      */
     public CalloutParser(CalloutClient client) {
         this.calloutClient = client;

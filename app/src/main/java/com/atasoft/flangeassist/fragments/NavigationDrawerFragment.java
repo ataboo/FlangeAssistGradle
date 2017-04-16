@@ -1,5 +1,6 @@
 package com.atasoft.flangeassist.fragments;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -11,6 +12,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,9 +23,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.atasoft.adapters.NavDrawerAdaptor;
+import com.atasoft.shared.NavDrawerAdaptor;
 import com.atasoft.flangeassist.R;
 
 /**
@@ -42,6 +44,8 @@ public class NavigationDrawerFragment extends Fragment {
      * expands it. This shared preference tracks this.
      */
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
+
+    private static final String PREF_LAST_SELECTED_FRAG = "navigation_drawer_last_selected";
 
     /**
      * A pointer to the current callbacks instance (the Activity).
@@ -73,8 +77,12 @@ public class NavigationDrawerFragment extends Fragment {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, true);
 
+
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
+            mFromSavedInstanceState = true;
+        } else {
+            mCurrentSelectedPosition = sp.getInt(PREF_LAST_SELECTED_FRAG, 0);
             mFromSavedInstanceState = true;
         }
 
@@ -183,10 +191,12 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
     }
 
     private void selectItem(int position) {
+        Log.e("debut select", "Selected: " + position);
+
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
@@ -197,15 +207,20 @@ public class NavigationDrawerFragment extends Fragment {
         if (mCallbacks != null) {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
+
+        PreferenceManager
+                .getDefaultSharedPreferences(getContext())
+                .edit()
+                .putInt(PREF_LAST_SELECTED_FRAG, position)
+                .apply();
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mCallbacks = (NavigationDrawerCallbacks) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof NavigationDrawerCallbacks) {
+            mCallbacks = (NavigationDrawerCallbacks) context;
         }
     }
 
@@ -228,22 +243,6 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    /*
-    //Options Menu handled in MainActivity already
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        // If the drawer is open, show the global app actions in the action bar. See also
-        // showGlobalContextActionBar, which controls the top-left area of the action bar.
-        if (mDrawerLayout != null && isDrawerOpen()) {
-            inflater.inflate(R.menu.main_actions, menu);
-            showGlobalContextActionBar();
-        }
-
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-    */
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
@@ -260,12 +259,11 @@ public class NavigationDrawerFragment extends Fragment {
     private void showGlobalContextActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setTitle(R.string.app_name);
     }
 
     private ActionBar getActionBar() {
-        return ((ActionBarActivity) getActivity()).getSupportActionBar();
+        return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
     /**

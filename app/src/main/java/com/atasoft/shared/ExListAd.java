@@ -1,4 +1,4 @@
-package com.atasoft.adapters;
+package com.atasoft.shared;
 
 import android.app.*;
 import android.content.*;

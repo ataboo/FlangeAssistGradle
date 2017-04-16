@@ -1,11 +1,11 @@
-package com.atasoft.flangeassist.fragments.callout.daters;
+package com.atasoft.flangeassist.fragments.callout.daters.client;
 
 import android.content.Context;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
-import com.atasoft.flangeassist.fragments.callout.AtaRequestQueue;
+import com.atasoft.shared.AtaRequestQueue;
 
 import org.json.JSONException;
 import org.json.JSONObject;

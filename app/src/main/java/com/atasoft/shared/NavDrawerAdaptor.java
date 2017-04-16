@@ -1,8 +1,9 @@
-package com.atasoft.adapters;
+package com.atasoft.shared;
 
 import android.support.v4.app.Fragment;
 
 
+import com.atasoft.flangeassist.fragments.callout.CalloutFragment;
 import com.atasoft.flangeassist.fragments.cashcounter.CashCounter;
 import com.atasoft.flangeassist.fragments.paycalc.PaycalcFragment;
 import com.atasoft.flangeassist.fragments.*;
@@ -10,7 +11,7 @@ import com.atasoft.flangeassist.fragments.ropevalues.RopeFragment;
 
 
 public class NavDrawerAdaptor {
-	public static final String[] TABS = {"Paycheque Calculator", "Flange Tables", "Torque Pattern",
+	public static final String[] TABS = {"Paycheque Calculator", "Flange Tables", "146 Callout", "Torque Pattern",
             "CPI Raise Estimator", "Rope Values", "Unit Converter", "Shape Calculator", "Welding Reference",
             "Cash Counter", "Rigging Calculator", "Nozzle Calculator", "Hall Links", "Boilermaker Reporter", "Gross Tax Estimator"};
 	private static int TAB_COUNT = TABS.length;
@@ -19,46 +20,34 @@ public class NavDrawerAdaptor {
 
         switch (index) {
             case 0:
-                // Flange Tables
                 return new PaycalcFragment();
 			case 1:
-				// Flange Tables
 				return new FlangeFragment();
 			case 2:
-				// Torque Pattern
-				return new TorqueFragment();
+				return new CalloutFragment();
 			case 3:
-				// CPI Raise Estimator
-				return new WageCPIEstimate();
+				return new TorqueFragment();
 			case 4:
-				// RopeValues
-				return new RopeFragment();
+				return new WageCPIEstimate();
 			case 5:
-				// Unit Converter
-				return new UnitConFragment();
+				return new RopeFragment();
 			case 6:
-				// Shape Calculator
-				return new ShapeCalcFrag();
+				return new UnitConFragment();
 			case 7:
-				// Welding Reference
-				return new WeldingFrag();
+				return new ShapeCalcFrag();
 			case 8:
-				// Cash Counter
-				return new CashCounter();
+				return new WeldingFrag();
 			case 9:
-				// Rigging Calculator
-				return new RigTrig();
+				return new CashCounter();
 			case 10:
-				// Nozzle Calculator
+				return new RigTrig();
+			case 11:
 				return new NozzleCalc();
-            case 11:
-                //Hall Links
-                return new HallFragment();
             case 12:
-                //Boilermaker Reporter
-                return new ReporterFragment();
+                return new HallFragment();
             case 13:
-                //Gross Tax
+                return new ReporterFragment();
+            case 14:
                 return new TaxGrossFragment();
 		}
 

@@ -3,20 +3,27 @@ package com.atasoft.flangeassist;
 
 import android.content.*;
 import android.os.*;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.*;
+import android.util.Log;
 import android.view.*;
 
-import com.atasoft.adapters.NavDrawerAdaptor;
+import com.atasoft.flangeassist.fragments.callout.CalloutDialogFrag;
+import com.atasoft.flangeassist.fragments.callout.daters.hire.ClassificationFilter;
+import com.atasoft.shared.NavDrawerAdaptor;
 import com.atasoft.flangeassist.fragments.NavigationDrawerFragment;
 import com.atasoft.flangeassist.fragments.cashcounter.CashCounter;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.TextureBox;
 import com.atasoft.flangeassist.fragments.settings.PreferenceMenu;
 
+import java.util.EnumSet;
 
-public class MainActivity extends ActionBarActivity
+
+public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private NavigationDrawerFragment mNavigationDrawerFragment;
@@ -58,10 +65,14 @@ public class MainActivity extends ActionBarActivity
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu items for use in the action bar
+        int menuRes = R.menu.main_actions;
+
+        if(lastFrag instanceof CustomMenuLayout) {
+            menuRes = ((CustomMenuLayout) lastFrag).getMenuRes();
+        }
+
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_actions, menu);
-        restoreActionBar();
+		inflater.inflate(menuRes, menu);
 		return true;
 	}
 
@@ -75,6 +86,8 @@ public class MainActivity extends ActionBarActivity
             case R.id.action_about:
                 openAbout();
                 return true;
+            case R.id.callout_settings:
+                openCalloutSettings();
         }
 		return super.onOptionsItemSelected(item);
     }
@@ -89,12 +102,21 @@ public class MainActivity extends ActionBarActivity
         startActivity(intent);
     }
 
-    public void restoreActionBar() {
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(android.support.v7.app.ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+    private void openCalloutSettings() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        if (lastFrag instanceof CalloutDialogFrag.DismissListener) {
+            DialogFragment newDialog = CalloutDialogFrag.newInstance((CalloutDialogFrag.DismissListener)lastFrag);
+            newDialog.show(ft, "dialog");
+        } else {
+            Log.e("FlangeAssist", "Failed to set dismiss listener for callout settings.");
+        }
+
     }
-	
 }
 

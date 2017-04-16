@@ -1,4 +1,4 @@
-package com.atasoft.adapters;
+package com.atasoft.shared;
 
 import java.util.ArrayList;
 import java.util.List;

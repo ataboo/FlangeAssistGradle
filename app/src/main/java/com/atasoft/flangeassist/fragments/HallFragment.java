@@ -6,7 +6,7 @@ import android.util.*;
 import android.view.*;
 import android.widget.*;
 
-import com.atasoft.adapters.*;
+import com.atasoft.shared.*;
 import com.atasoft.flangeassist.*;
 
 public class HallFragment extends Fragment {

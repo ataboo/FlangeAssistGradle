@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 	<resources>
 		<color name="my_colour">#999999</color>
+		<color name="callout_table_background">#464646</color>
 	</resources>

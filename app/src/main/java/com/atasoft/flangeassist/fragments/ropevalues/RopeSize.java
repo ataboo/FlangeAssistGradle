@@ -28,7 +28,6 @@ public class RopeSize {
             RopeSize ropeSizeObj = new RopeSize(ropeSize);
             sizes.add(ropeSizeObj);
             ropeSize += 1f/16f;
-            Log.w("RopeSize", String.format("Added %s from %.3f", ropeSizeObj, ropeSize));
         }
 
         return sizes.toArray(new RopeSize[sizes.size()]);

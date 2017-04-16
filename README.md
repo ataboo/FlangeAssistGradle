@@ -28,6 +28,14 @@ Feel free to send feedback or suggestions to bmtoolbox@gmail.com
 
 ###Changes:
 
+####V0.41 (04/16/17):
+- NEW: Callout Viewer
+- Updated wages/taxes for 2017.
+- Updated 146 overtime changes.
+- Re-wrote pay calculator tax calculating and config parsing.
+- Tweaked some spinners misbehaving in Nougat.
+- Fixed side-panel not retaining last selected tool on reopen.
+
 ####V0.30 (05/17/16):
 - Updated wages for ON, MB, SK, BC
 - Re-wrote Cash Counter with new animations

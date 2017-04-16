@@ -3,8 +3,10 @@
 	android:id="@+id/spinnerTarget"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
+	android:minWidth="24dp"
 	android:textSize="16sp"
 	android:gravity="center"
+
 	android:textColor="@drawable/spinner_select"
 />
 

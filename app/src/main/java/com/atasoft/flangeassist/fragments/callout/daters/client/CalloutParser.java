@@ -33,12 +33,14 @@ public class CalloutParser {
             @Override
             public void onResponse(String response) {
                 listener.onSuccess(new CalloutResponse(response));
+                listener.onBoth();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("FlangeAssistGradle", "Failed volley response with: " + error.toString());
-                listener.onFail();
+                listener.onFail(error);
+                listener.onBoth();
             }
         });
     }

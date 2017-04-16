@@ -29,12 +29,23 @@ public class AtaRequestQueue {
     public RequestQueue getRequestQueue(Context context) {
         if (mRequestQueue == null) {
             mRequestQueue = Volley.newRequestQueue(context);
+            mRequestQueue.getCache().clear();
         }
 
         return mRequestQueue;
     }
 
+    public static void cancelAllRequests(Context context) {
+        getInstance(context).getRequestQueue(context).cancelAll(new RequestQueue.RequestFilter() {
+            @Override
+            public boolean apply(Request<?> request) {
+                return true;
+            }
+        });
+    }
+
     public <T> void addToRequestQueue(Request<T> req, Context context) {
+        req.setShouldCache(true);
         getRequestQueue(context).add(req);
     }
 }

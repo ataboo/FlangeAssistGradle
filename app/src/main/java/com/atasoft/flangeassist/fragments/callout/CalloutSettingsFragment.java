@@ -21,14 +21,14 @@ import java.util.EnumSet;
  * Created by ataboo on 4/15/2017.
  */
 
-public class CalloutDialogFrag extends DialogFragment {
+public class CalloutSettingsFragment extends DialogFragment {
     public interface DismissListener {
         public void onDismiss(EnumSet<ClassificationFilter> filters);
         public EnumSet<ClassificationFilter> getActiveFilters();
     }
 
-    public static CalloutDialogFrag newInstance(DismissListener listener) {
-        CalloutDialogFrag frag = new CalloutDialogFrag();
+    public static CalloutSettingsFragment newInstance(DismissListener listener) {
+        CalloutSettingsFragment frag = new CalloutSettingsFragment();
         frag.listener = listener;
 
         Bundle args = new Bundle();

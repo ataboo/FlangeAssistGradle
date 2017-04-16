@@ -313,8 +313,6 @@ import java.text.NumberFormat;
             if (view instanceof LinearLayout) {
                 LinearLayout daySpinnerLayout = (LinearLayout) view;
                 daySpinnerLayout.getLayoutParams().width = dayWidth;
-                //Log.w("PayCalc", String.format("Screen Dimensions: %d x %d. DP: %d x %d", metrics.widthPixels, metrics.heightPixels,
-                        //pixelToDp(metrics.widthPixels, logicalDensity), pixelToDp(metrics.heightPixels, logicalDensity)));
             }
         }
     }

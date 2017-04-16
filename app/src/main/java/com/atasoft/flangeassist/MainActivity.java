@@ -12,15 +12,12 @@ import android.support.v7.app.*;
 import android.util.Log;
 import android.view.*;
 
-import com.atasoft.flangeassist.fragments.callout.CalloutDialogFrag;
-import com.atasoft.flangeassist.fragments.callout.daters.hire.ClassificationFilter;
+import com.atasoft.flangeassist.fragments.callout.CalloutSettingsFragment;
 import com.atasoft.shared.NavDrawerAdaptor;
 import com.atasoft.flangeassist.fragments.NavigationDrawerFragment;
 import com.atasoft.flangeassist.fragments.cashcounter.CashCounter;
 import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.TextureBox;
 import com.atasoft.flangeassist.fragments.settings.PreferenceMenu;
-
-import java.util.EnumSet;
 
 
 public class MainActivity extends AppCompatActivity
@@ -110,8 +107,8 @@ public class MainActivity extends AppCompatActivity
         }
         ft.addToBackStack(null);
 
-        if (lastFrag instanceof CalloutDialogFrag.DismissListener) {
-            DialogFragment newDialog = CalloutDialogFrag.newInstance((CalloutDialogFrag.DismissListener)lastFrag);
+        if (lastFrag instanceof CalloutSettingsFragment.DismissListener) {
+            DialogFragment newDialog = CalloutSettingsFragment.newInstance((CalloutSettingsFragment.DismissListener)lastFrag);
             newDialog.show(ft, "dialog");
         } else {
             Log.e("FlangeAssist", "Failed to set dismiss listener for callout settings.");

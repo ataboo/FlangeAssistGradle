@@ -3,6 +3,7 @@ package com.atasoft.robotests;
 import android.content.Context;
 
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.atasoft.flangeassist.fragments.callout.daters.client.CalloutClient;
 import com.atasoft.flangeassist.fragments.callout.daters.client.CalloutListener;
 import com.atasoft.flangeassist.fragments.callout.daters.client.CalloutParser;
@@ -60,8 +61,13 @@ public class CalloutParserRobo extends RoboTestCase {
             }
 
             @Override
-            public void onFail() {
+            public void onFail(VolleyError error) {
                 Assert.fail("Callout response failed!");
+            }
+
+            @Override
+            public void onBoth() {
+
             }
         });
     }

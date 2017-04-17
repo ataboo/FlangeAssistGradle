@@ -50,8 +50,8 @@ public class TaxStatHolder {
     public static final String hoursHolidayTag = "#pay_holiday";
     public static final String hoursWeekendTag = "#pay_weekend";
     public static final String hoursWeekdayTag = "#pay_weekday";
-    public static final String hoursFTFridayTag = "#pay_ft_weekday";
-    public static final String hoursFTWeekdayTag = "#pay_ft_friday";
+    public static final String hoursFTFridayTag = "#pay_ft_friday";
+    public static final String hoursFTWeekdayTag = "#pay_ft_weekday";
 
 
     //TODO: change public stats to getters and add null checks;

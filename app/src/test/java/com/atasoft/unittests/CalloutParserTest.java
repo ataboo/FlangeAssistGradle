@@ -3,6 +3,7 @@ package com.atasoft.unittests;
 import android.content.Context;
 
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.atasoft.flangeassist.fragments.callout.daters.client.CalloutClient;
 import com.atasoft.flangeassist.fragments.callout.daters.client.CalloutListener;
 import com.atasoft.flangeassist.fragments.callout.daters.client.CalloutParser;
@@ -71,8 +72,13 @@ public class CalloutParserTest {
             }
 
             @Override
-            public void onFail() {
+            public void onFail(VolleyError error) {
                 Assert.fail("Callout response failed!");
+            }
+
+            @Override
+            public void onBoth() {
+
             }
         });
     }

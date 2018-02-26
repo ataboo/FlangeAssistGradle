@@ -6,6 +6,7 @@ import android.content.res.AssetManager;
 import android.util.Log;
 
 import java.math.BigDecimal;
+import java.text.Format;
 import java.util.ArrayList;
 
 //----Tax Manager holds tax and wage values by province and year---------
@@ -69,7 +70,8 @@ public class TaxManager {
         TY_2014 ("2014", 1),
         TY_2015 ("2015", 2),
         TY_2016 ("2016", 3),
-        TY_2017 ("2017", 4);
+        TY_2017 ("2017", 4),
+        TY_2018 ("2018", 5);
 
         private String name;
         private int index;
@@ -376,7 +378,7 @@ public class TaxManager {
         float taxPayable = taxableAnnual * qcStats.rates[year][taxIndex];
         taxPayable -= qcStats.constK[year][taxIndex];
         taxPayable += getQCHealthPrem(taxableAnnual, qcStats, year);
-        taxPayable -= qcStats.claimAmount[year] * 0.20;
+        taxPayable -= qcStats.claimAmount[year] * qcStats.rates[year][0];
 
         return BigDecimal.valueOf(taxPayable);
     }
@@ -461,7 +463,14 @@ public class TaxManager {
     private BigDecimal getNSTax(BigDecimal anGrossDec, int year, boolean cbFlag) {
         //So it doesn't have to jump between stat types
         TaxStatHolder provStats = cbFlag ? getStatType(Prov.CB): getStatType(Prov.NS);
-        return getStandardProvincialTax(anGrossDec, year, provStats);
+
+        //get tax rate from bracket chart
+        int brackIndex = bracketGrossIndex(anGrossDec.floatValue(), provStats.brackets[year]);
+
+        BigDecimal taxDec = anGrossDec.multiply((BigDecimal.valueOf((provStats.rates[year][brackIndex]))));
+        taxDec = taxDec.subtract((BigDecimal.valueOf(provStats.constK[year][brackIndex])));
+        taxDec = taxDec.subtract(getNsTaxCredit(provStats, anGrossDec, year));
+        return taxDec;
     }
 
     private BigDecimal getPEITax(BigDecimal anGrossDec, int year) {
@@ -481,7 +490,27 @@ public class TaxManager {
 
     private BigDecimal getNLTax(BigDecimal anGrossDec, int year){
         TaxStatHolder nlStats = getStatType(Prov.NL);
-        return getStandardProvincialTax(anGrossDec, year, nlStats);
+        BigDecimal provTax = getStandardProvincialTax(anGrossDec, year, nlStats);
+
+        if (year > 4) {
+            provTax = provTax.add(this.getNLLevy(anGrossDec, year, nlStats));
+        }
+
+        return provTax;
+    }
+
+    private BigDecimal getNLLevy(BigDecimal anGrossDec, int year, TaxStatHolder nlStats) {
+        int yearIndex = year - 5;
+
+        int brackIndex = bracketGrossIndex(anGrossDec.floatValue(), nlStats.levyBrackets[yearIndex]);
+        float baseVal = nlStats.levyBase[yearIndex][brackIndex];
+        float calcVal = (anGrossDec.floatValue() - nlStats.levyBrackets[yearIndex][brackIndex]) * nlStats.levyRate[yearIndex];
+        if (brackIndex > 0) {
+            calcVal += nlStats.levyBase[yearIndex][brackIndex - 1];
+        }
+        float levy = Math.min(baseVal, calcVal);
+
+        return BigDecimal.valueOf(levy);
     }
 
     private BigDecimal getStandardProvincialTax(BigDecimal anGrossDec, int year, TaxStatHolder provStats) {
@@ -560,8 +589,6 @@ public class TaxManager {
         //T4032 example doesn't account for cpp exemption but CRA calculator does.
         BigDecimal[] cppEiDec = getCppEi(anGross, year);
 
-        //Log.w("TaxManager", "Cpp before is: " + cppEiDec[0].toString() + " EI before is: " + cppEiDec[1].toString());
-
         //cap cpp component at max contribution
         cppEiDec[0] = (cppEiDec[0].compareTo(BigDecimal.valueOf(fedStats.cppEi[year][3])) > 0) ?
             BigDecimal.valueOf(fedStats.cppEi[year][3]) : cppEiDec[0];
@@ -573,9 +600,35 @@ public class TaxManager {
                 .add(cppEiDec[0])
                 .add(cppEiDec[1])
                 .multiply(BigDecimal.valueOf(stats.rates[year][0]));
-        //Log.w("TaxManager", "cpp is: " + cppEiDec[0].toString() + " ei is: "+ cppEiDec[1].toString()
-               // +" Tax credit is: " + result.toString());
         return result;
+    }
+
+    private BigDecimal getNsTaxCredit(TaxStatHolder stats, BigDecimal anGross, int year) {
+        //taxCred == (cpp contribution + ei contribution + claimAmount) / lowest bracket
+
+        //T4032 example doesn't account for cpp exemption but CRA calculator does.
+        BigDecimal[] cppEiDec = getCppEi(anGross, year);
+
+        //cap cpp component at max contribution
+        cppEiDec[0] = (cppEiDec[0].compareTo(BigDecimal.valueOf(fedStats.cppEi[year][3])) > 0) ?
+                BigDecimal.valueOf(fedStats.cppEi[year][3]) : cppEiDec[0];
+        //cap ei component at max contribution
+        cppEiDec[1] = (cppEiDec[1].compareTo(BigDecimal.valueOf(fedStats.cppEi[year][4])) > 0) ?
+                BigDecimal.valueOf(fedStats.cppEi[year][4]) : cppEiDec[1];
+
+        float claimAmount = stats.claimAmount[year];
+        // In 2018, claim amount is based on gross.
+        if (year > 4) {
+            float flGross = anGross.floatValue();
+            if (flGross > stats.claimNs[0] && flGross < stats.claimNs[1]) {
+                claimAmount = stats.claimNs[2] - ((flGross - stats.claimNs[0]) * stats.claimNs[3]);
+            }
+        }
+
+        return BigDecimal.valueOf(claimAmount)
+                .add(cppEiDec[0])
+                .add(cppEiDec[1])
+                .multiply(BigDecimal.valueOf(stats.rates[year][0]));
     }
 
      /*

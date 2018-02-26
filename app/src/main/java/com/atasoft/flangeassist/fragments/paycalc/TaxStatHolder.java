@@ -17,41 +17,46 @@ import java.util.List;
  * Fork of TaxManager using CSVs generated from spreadsheets
  */
 public class TaxStatHolder {
-    public static final String defaultWageName = "Journeyperson";
-    public static final String fileNameConvention = "ToolboxGrid - %s.csv";
-    public static final String csvSeparator = ",";
+    private static final String defaultWageName = "Journeyperson";
+    private static final String fileNameConvention = "ToolboxGrid - %s.csv";
+    private static final String csvSeparator = ",";
 
     //Trending so hard
-    public static final String wageTag  = "#wages";
-    public static final String ratesTag = "#rates";
-    public static final String bracketsTag = "#brackets";
-    public static final String constKTag = "#const_k";
-    public static final String taxReductionTag = "#tax_red";
-    public static final String surtaxTag = "#surtax";
-    public static final String claimAmountTag = "#claim_amount";
-    public static final String cppEiTag = "#cpp_ei";
-    public static final String vacRateTag = "#vac_rate";
-    public static final String healthBracketTag = "#health_brackets";
-    public static final String healthRateTag = "#health_rates";
-    public static final String healthAmountTag = "#health_amounts";
+    private static final String wageTag  = "#wages";
+    private static final String ratesTag = "#rates";
+    private static final String bracketsTag = "#brackets";
+    private static final String constKTag = "#const_k";
+    private static final String taxReductionTag = "#tax_red";
+    private static final String surtaxTag = "#surtax";
+    private static final String claimAmountTag = "#claim_amount";
+    private static final String claimNsTag = "#claim_ns";
+    private static final String cppEiTag = "#cpp_ei";
+    private static final String vacRateTag = "#vac_rate";
+    private static final String healthBracketTag = "#health_brackets";
+    private static final String healthRateTag = "#health_rates";
+    private static final String healthAmountTag = "#health_amounts";
 
-    public static final String fieldDuesTag = "#field_dues";
-    public static final String monthDuesTag = "#month_dues";
-    public static final String nightPremiumTag = "#night_prem";
-    public static final String nightOTTag = "#night_ot";
-    public static final String doubleOTTag = "#double_ot";
+    private static final String fieldDuesTag = "#field_dues";
+    private static final String monthDuesTag = "#month_dues";
+    private static final String nightPremiumTag = "#night_prem";
+    private static final String nightOTTag = "#night_ot";
+    private static final String doubleOTTag = "#double_ot";
 
-    public static final String qppRateTag = "#qpp_rate";
-    public static final String qppMaxTag = "#qpp_max";
-    public static final String qpipRateTag = "#qpip_rate";
-    public static final String qpipMaxTag = "#qpip_max";
-    public static final String empDedTag = "#emp_ded";
+    private static final String qppRateTag = "#qpp_rate";
+    private static final String qppMaxTag = "#qpp_max";
+    private static final String qpipRateTag = "#qpip_rate";
+    private static final String qpipMaxTag = "#qpip_max";
+    private static final String empDedTag = "#emp_ded";
 
-    public static final String hoursHolidayTag = "#pay_holiday";
-    public static final String hoursWeekendTag = "#pay_weekend";
-    public static final String hoursWeekdayTag = "#pay_weekday";
-    public static final String hoursFTFridayTag = "#pay_ft_friday";
-    public static final String hoursFTWeekdayTag = "#pay_ft_weekday";
+    private static final String hoursHolidayTag = "#pay_holiday";
+    private static final String hoursWeekendTag = "#pay_weekend";
+    private static final String hoursWeekdayTag = "#pay_weekday";
+    private static final String hoursFTFridayTag = "#pay_ft_friday";
+    private static final String hoursFTWeekdayTag = "#pay_ft_weekday";
+
+    private static final String levyBracketsTag = "#levy_brackets";
+    private static final String levyBaseTag = "#levy_base";
+    private static final String levyRateTag = "#levy_rate";
 
 
     //TODO: change public stats to getters and add null checks;
@@ -66,6 +71,7 @@ public class TaxStatHolder {
 
     public float[][] surtax;
     public float[] claimAmount;
+    public float[] claimNs;
     public float[] wageRates;
     public String[] wageNames;
     public float[][] cppEi;
@@ -88,6 +94,11 @@ public class TaxStatHolder {
     public float[] hoursFTFriday;
     public float[] hoursFTWeekday;
 
+    public float[][] levyBrackets;
+    public float[][] levyBase;
+    public float[] levyRate;
+
+
 
     public float vacRate = 0f;
     public String surName = "fail";
@@ -103,6 +114,8 @@ public class TaxStatHolder {
     private ArrayList<String[]> healthAmountList = new ArrayList<>();
     private ArrayList<String[]> surtaxList = new ArrayList<>();
     private ArrayList<String[]> cppEiList = new ArrayList<>();
+    private ArrayList<String[]> levyBracketsList = new ArrayList<>();
+    private ArrayList<String[]> levyBaseList = new ArrayList<>();
 
     private AssetManager assets;
 
@@ -128,6 +141,8 @@ public class TaxStatHolder {
         this.healthBracket = listToFloatArray(healthBracketList, "healthBrack");
         this.healthRate = listToFloatArray(healthRateList, "healthRate");
         this.healthAmount = listToFloatArray(healthAmountList, "healthAmount");
+        this.levyBrackets = listToFloatArray(levyBracketsList, "levyBrackets");
+        this.levyBase = listToFloatArray(levyBaseList, "levyBase");
 
         this.surtax = listToFloatArray(surtaxList, "surtaxList");
         this.cppEi = listToFloatArray(cppEiList, "cppEiList");
@@ -316,12 +331,23 @@ public class TaxStatHolder {
             cppEiList.add(lineTrim);
             return;
         }
+        if(lineTag.equals(levyBracketsTag)) {
+            levyBracketsList.add(lineTrim);
+        }
+        if(lineTag.equals(levyBaseTag)) {
+            levyBaseList.add(lineTrim);
+        }
 
         // Single Row Arrays
         if(lineTag.equals(claimAmountTag)) {
             this.claimAmount = parseFloatArr(lineTrim, claimAmountTag);
             return;
         }
+
+        if(lineTag.equals(claimNsTag)) {
+            this.claimNs = parseFloatArr(lineTrim, claimNsTag);
+        }
+
         if(lineTag.equals(qppRateTag)){
             this.qppRate = parseFloatArr(lineTrim, qppRateTag);
             return;
@@ -378,6 +404,11 @@ public class TaxStatHolder {
             this.doubleOT = parseBoolVal(lineTrim, doubleOTTag);
             //return;
         }
+
+        if(lineTag.equals(levyRateTag)) {
+            this.levyRate = parseFloatArr(lineTrim, levyRateTag);
+        }
+
     }
 
     private static String[] trimArray(String[] srcArr){

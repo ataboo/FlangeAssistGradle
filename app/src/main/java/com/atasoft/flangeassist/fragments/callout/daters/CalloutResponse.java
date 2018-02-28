@@ -50,14 +50,14 @@ public class CalloutResponse {
         sparseArray.clear();
 
         int sparseCount = 0;
-        for (int i=0; i<jobs.length; i++) {
-            CalloutJob job = jobs[i];
-
+        for (CalloutJob job: jobs) {
             if (job.matchesFilters(filters)) {
-                sparseArray.append(sparseCount, jobs[i]);
+                sparseArray.append(sparseCount, job);
                 sparseCount++;
             }
         }
+
+        Log.i("dump2", String.format("Sparse count: %d", sparseCount));
     }
 
     @Override

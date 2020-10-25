@@ -60,7 +60,7 @@ public class TaxStatHolder {
 
 
     //TODO: change public stats to getters and add null checks;
-    public TaxManager.Prov prov = TaxManager.Prov.FED;
+    public Province prov = Province.FED;
     public float[][] brackets;
     public float[][] rates;
     public float[][] constK;
@@ -72,8 +72,7 @@ public class TaxStatHolder {
     public float[][] surtax;
     public float[] claimAmount;
     public float[] claimNs;
-    public float[] wageRates;
-    public String[] wageNames;
+    public WageRate[] wageRates;
     public float[][] cppEi;
 
     public float fieldDuesRate;
@@ -98,8 +97,6 @@ public class TaxStatHolder {
     public float[][] levyBase;
     public float[] levyRate;
 
-
-
     public float vacRate = 0f;
     public String surName = "fail";
     public int defaultWageIndex = 0;  //tacked on end of wageRates inplace of custom value
@@ -119,7 +116,7 @@ public class TaxStatHolder {
 
     private AssetManager assets;
 
-    public TaxStatHolder(TaxManager.Prov prov, AssetManager assets){
+    public TaxStatHolder(Province prov, AssetManager assets){
         this.prov = prov;
         this.surName = prov.getSurname();
 
@@ -148,25 +145,28 @@ public class TaxStatHolder {
         this.cppEi = listToFloatArray(cppEiList, "cppEiList");
 
         //Cape Breton has it's own wage info and uses NS Tax
-        if(prov == TaxManager.Prov.CB) {capeBretonInit();}
+        if(prov == Province.CB) {capeBretonInit();}
 
         //PEI uses NS wage table but needs to parse its tax info.
-        if(prov == TaxManager.Prov.PE){peiInit();}
+        if(prov == Province.PE){peiInit();}
     }
 
     private void capeBretonInit(){
-        copyTaxFields(this, TaxManager.Prov.NS, assets);
+        copyTaxFields(this, Province.NS, assets);
     }
 
     private void peiInit(){
         //parseWageTable won't overwrite because it aborts when there's no table in the csv
-        copyWageFields(this, TaxManager.Prov.NS, assets);
+        copyWageFields(this, Province.NS, assets);
     }
 
-    private static void copyWageFields(TaxStatHolder receiver, TaxManager.Prov wageProv, AssetManager assets){
+    private static void copyWageFields(TaxStatHolder receiver, Province wageProv, AssetManager assets){
         TaxStatHolder wageStats = new TaxStatHolder(wageProv, assets);
-        receiver.wageNames = wageStats.wageNames;
-        receiver.wageRates = wageStats.wageRates;
+        receiver.wageRates = new WageRate[wageStats.wageRates.length];
+        for (int i=0; i<wageStats.wageRates.length; i++) {
+            receiver.wageRates[i] = new WageRate(wageStats.wageRates[i].rate, wageStats.wageRates[i].name);
+        }
+
         receiver.vacRate = wageStats.vacRate;
         receiver.fieldDuesRate = wageStats.fieldDuesRate;
         receiver.monthDuesRate = wageStats.monthDuesRate;
@@ -181,7 +181,7 @@ public class TaxStatHolder {
         receiver.hoursFTWeekday = wageStats.hoursFTWeekday;
     }
 
-    private static void copyTaxFields(TaxStatHolder receiver, TaxManager.Prov taxProv, AssetManager assets){
+    private static void copyTaxFields(TaxStatHolder receiver, Province taxProv, AssetManager assets){
         TaxStatHolder taxStats = new TaxStatHolder(taxProv, assets);
         receiver.brackets = taxStats.brackets;
         receiver.rates = taxStats.rates;
@@ -197,14 +197,14 @@ public class TaxStatHolder {
         if (wageTableList.size() == 0){
             Log.w("TaxStatHolder", String.format("statHolder %s has no wage table.", surName));
             wageTableList.clear();
-        return;
+            return;
         }
 
         Collections.reverse(wageTableList);
-        String[][] wageTable =  listToStringArray(wageTableList, "wageTable");
+        String[][] wageTable = listToStringArray(wageTableList, "wageTable");
+        assert wageTable != null;
 
-        this.wageRates = new float[wageTable.length];
-        this.wageNames = new String[wageTable.length];
+        this.wageRates = new WageRate[wageTable.length];
 
         try {
             for (int i = 0; i < wageTable.length; i++) {
@@ -212,9 +212,8 @@ public class TaxStatHolder {
                     Log.e("TaxStatHolder", surName + " wage table malformed in row: " + i);
                     return;
                 }
-                this.wageNames[i] = wageTable[i][0];
-                this.wageRates[i] = Float.parseFloat(wageTable[i][1]);
-                if(wageNames[i].equals(defaultWageName)){
+                this.wageRates[i] = new WageRate(Float.parseFloat((wageTable[i][1])), wageTable[i][0]);
+                if(wageRates[i].name.equals(defaultWageName)){
                     this.defaultWageIndex = i;
                 }
             }
@@ -450,7 +449,7 @@ public class TaxStatHolder {
         return lineStrings[0].equals("TRUE");
     }
 
-    public static String getCSVFileName(TaxManager.Prov prov){
+    public static String getCSVFileName(Province prov){
         return String.format(fileNameConvention, prov.getSurname().split(" ")[0]);
     }
 
@@ -463,7 +462,7 @@ public class TaxStatHolder {
             return;
         }
 
-        for(TaxManager.Prov prov: TaxManager.Prov.values()){
+        for(Province prov: Province.values()){
             if(!assetFileList.contains(getCSVFileName(prov))){
                 Log.w("TaxStatHolder", String.format("Couldn't find file: %s in assets.", getCSVFileName(prov)));
             }

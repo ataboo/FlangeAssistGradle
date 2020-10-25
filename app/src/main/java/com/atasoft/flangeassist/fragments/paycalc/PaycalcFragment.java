@@ -3,9 +3,9 @@
 
 import android.content.*;
 import android.os.*;
-import android.preference.*;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.*;
 import android.view.View.*;
@@ -136,8 +136,7 @@ import java.text.NumberFormat;
     }
 
     public static final String NAME = "Paycheque Calculator";
-    private float[] wageRates;
-    private String[] wageNames;
+    private WageRate[] wageRates;
 
     private SpinnerData[] daySpinners = {SpinnerData.SUN, SpinnerData.MON, SpinnerData.TUE, SpinnerData.WED, SpinnerData.THU, SpinnerData.FRI, SpinnerData.SAT};
     private SpinnerData[] bonusSpinners = {SpinnerData.MEAL, SpinnerData.LOA};
@@ -220,7 +219,7 @@ import java.text.NumberFormat;
             Log.w("PaycalcFragment", "Resetting day spinners" + qualifier);
             updateDaySpinners(custDayCheck);
         }
-		String provWage = prefs.getString("list_provWageNew",  TaxManager.Prov.AB.getName());
+		String provWage = prefs.getString("list_provWageNew",  Province.AB.getName());
 		if(!provWage.equals(oldProvWage)){
             oldProvWage = provWage;
             updateWageSpinner();
@@ -248,7 +247,7 @@ import java.text.NumberFormat;
     private void setupViews(){
         if(taxManager == null){
             this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            String provName = prefs.getString(getString(R.string.pref_prov), TaxManager.Prov.AB.getName());
+            String provName = prefs.getString(getString(R.string.pref_prov), Province.AB.getName());
             this.taxManager = new TaxManager(provName, getActivity().getAssets());
         }
 
@@ -382,13 +381,13 @@ import java.text.NumberFormat;
 	}
 
 	private void updateWageSpinner() {
-        oldProvWage = prefs.getString(getString(R.string.pref_prov), TaxManager.Prov.AB.getName());
+        oldProvWage = prefs.getString(getString(R.string.pref_prov), Province.AB.getName());
 
         if(!TaxManager.validatePrefs(prefs)){
             Log.e("PaycalcFragment", "Province or Year prefs were malformed... Resetting them");
             prefs.edit().clear().apply();
 
-            oldProvWage = TaxManager.Prov.AB.getName(); //Best Province
+            oldProvWage = Province.AB.getName();
 
             SharedPreferences.Editor prefEdit =  prefs.edit();
             prefEdit.putString(getString(R.string.pref_prov), oldProvWage);
@@ -398,14 +397,17 @@ import java.text.NumberFormat;
         }
 
 		this.wageRates = taxManager.getWageRates(oldProvWage);
-		this.wageNames = taxManager.getWageNames(oldProvWage);
-        ArrayAdapter<String> wageAdapt = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-                R.layout.spinner_layout, wageNames);
+        String[] wageNames = new String[wageRates.length];
+        for(int i=0; i<wageRates.length; i++) {
+            wageNames[i] = wageRates[i].name;
+        }
+
+        ArrayAdapter<String> wageAdapt = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.spinner_layout, wageNames);
 
         SpinnerData.WAGE.spinner.setAdapter(wageAdapt);
 
         String lastSelectedWage = prefs.getString(getString(R.string.pref_lastWageName), TaxManager.defaultWageName);
-        int newSelectedWageIndex = (int) wageRates[wageRates.length - 1];
+        int newSelectedWageIndex = wageRates.length - 1;
         for(int i=0; i<wageNames.length; i++){
             if(wageNames[i].contains(lastSelectedWage)){
                 newSelectedWageIndex = i;
@@ -460,11 +462,11 @@ import java.text.NumberFormat;
     }
 
 	private void updateCalcOutput() {
-        String provString = prefs.getString(getString(R.string.pref_prov), TaxManager.Prov.AB.getName());
+        String provString = prefs.getString(getString(R.string.pref_prov), Province.AB.getName());
         String yearString = prefs.getString(getString(R.string.pref_taxYear), TaxManager.yearStrings[TaxManager.yearStrings.length - 1]);
 
         PayCalcData payCalcData = new PayCalcData(taxManager, provString, yearString);
-        TaxManager.Prov activeProv = TaxManager.Prov.getProvFromName(provString);
+        Province activeProv = Province.getProvFromName(provString);
 
         int mealCount = Integer.parseInt(SpinnerData.MEAL.getSelectedItem());
         int loaCount = Integer.parseInt(SpinnerData.LOA.getSelectedItem());
@@ -527,7 +529,7 @@ import java.text.NumberFormat;
         if(SpinnerData.WAGE.getSelectedItem().contains("Custom")) {
             wageRate = checkPref(getString(R.string.pref_custom_wage), 20, "Custom Wage");
         } else {
-            wageRate = (float) wageRates[SpinnerData.WAGE.spinner.getSelectedItemPosition()];
+            wageRate = (float) wageRates[SpinnerData.WAGE.spinner.getSelectedItemPosition()].rate;
         }
 
         float vacRate = (prefs.getBoolean(getString(R.string.pref_vacOn), false)) ?
@@ -556,7 +558,7 @@ import java.text.NumberFormat;
         vacationVal.setText(String.format("Vac\\Hol (%.2f%%): $%.2f", vacRate * 100d, earnings.vacationBonus));
         grossVal.setText(String.format("Gross: $%.2f", earnings.getGross()));
         exemptVal.setText(String.format("Tax Exempt: $%.2f", earnings.getExempt()));
-        if(activeProv == TaxManager.Prov.QC){
+        if(activeProv == Province.QC){
             cppToggle.setText(String.format("QPIP/QPP: $%.2f + $%.2f", deductions.ei, deductions.cpp));
         } else {
             cppToggle.setText(String.format("EI/CPP: $%.2f + $%.2f", deductions.ei, deductions.cpp));
@@ -601,27 +603,6 @@ import java.text.NumberFormat;
 		prefEdit.putString(prefKey, defaultVal);
 		prefEdit.apply();
     }
-
-    /*
-	private float[] getCustomDayPrefs(String itemStr) {
-        String prefName = "";
-		float[] dayFloats = new float[custDaySuffix.length];
-
-		if(itemStr.contains("A")) prefName = custDayKeys[0];
-		if(itemStr.contains("B")) prefName = custDayKeys[1];
-		if(itemStr.contains("C")) prefName = custDayKeys[2];
-		for(int i=0; i<custDaySuffix.length; i++) {
-            try{
-                dayFloats[i] = Float.parseFloat(prefs.getString(prefName + custDaySuffix[i], "0"));
-            } catch(NumberFormatException nfe){
-                Log.e("PaycalcFragment", itemStr + ", suffix " + custDaySuffix[i] + " NumberFormatException.");
-                dayFloats[i] = 0f;
-            }
-		}
-        //Log.w("PaycalcFragment", String.format("dayFloats = %.2f, %.2f, %.2f", dayFloats[0], dayFloats[1], dayFloats[2]));
-		return dayFloats;
-	}
-	*/
 
     private float[] getCustomDayPrefs(String dayName){
         float[] hours = new float[3];
@@ -712,10 +693,10 @@ import java.text.NumberFormat;
         int mealIndex = AtaMathUtils.clampInt(prefs.getInt(getString(R.string.pref_mealSelectedIndex), 0), 0, 6);
         SpinnerData.MEAL.setSelectionIndex(mealIndex, false);
 
-        if(wageNames != null){
+        if(wageRates != null){
             String lastWageName = prefs.getString(getString(R.string.pref_lastWageName), TaxManager.defaultWageName);
-            for(int i=0; i<wageNames.length; i++){
-                if (wageNames[i].contains(lastWageName)){
+            for(int i=0; i<wageRates.length; i++){
+                if (wageRates[i].name.contains(lastWageName)){
                     SpinnerData.WAGE.setSelectionIndex(i, false);
                     break;
                 }

@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.atasoft.flangeassist.*;
 import com.atasoft.flangeassist.fragments.paycalc.PaycalcFragment;
+import com.atasoft.flangeassist.fragments.paycalc.Province;
 import com.atasoft.flangeassist.fragments.paycalc.TaxManager;
 
 
@@ -84,7 +85,7 @@ public class TaxGrossFragment extends Fragment implements OnClickListener {
 
         submitButton.setOnClickListener(this);
         //===================================Populate Spinners=====================================
-        String[] resProv = TaxManager.Prov.getActiveProvinceNames();
+        String[] resProv = Province.getActiveProvinceNames();
         String[] provArr = new String[resProv.length +1];
         provArr[0] = noProvinceName;
 
@@ -115,13 +116,13 @@ public class TaxGrossFragment extends Fragment implements OnClickListener {
             yearName = "";
         }
         //=====================================Calc Taxes===========================================
-        provName = provName.equals(noProvinceName) ? TaxManager.Prov.FED.getName(): provName;
+        provName = provName.equals(noProvinceName) ? Province.FED.getName(): provName;
 
         if(taxMan == null){
             taxMan = new TaxManager(provName, getActivity().getAssets());
         }
 
-        TaxManager.Prov prov = TaxManager.Prov.getProvFromName(provName);
+        Province prov = Province.getProvFromName(provName);
 
         double[] taxVals = PaycalcFragment.
                 floatToDoubArr(taxMan.getTaxes((float) weekGross, 0f, yearName, provName));
@@ -132,7 +133,7 @@ public class TaxGrossFragment extends Fragment implements OnClickListener {
         Resources res = getResources();
         fedTaxText.setText(String.format("Federal Tax:   $%.2f", taxVals[0]));
         provTaxText.setText(String.format("Provincial Tax:   $%.2f", taxVals[1]));
-        if(prov == TaxManager.Prov.QC) {
+        if(prov == Province.QC) {
             cppEIText.setText(String.format("QPP and QPIP:   $%.2f,  $%.2f", taxVals[2], taxVals[3]));
         } else {
             cppEIText.setText(String.format("CPP and EI:   $%.2f,  $%.2f", taxVals[2], taxVals[3]));

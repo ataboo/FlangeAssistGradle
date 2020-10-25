@@ -88,7 +88,7 @@ public class ShiftPickerPreference extends DialogPreference {
     }
 
     public static void fixPreferenceTitle(TextView title, Context context) {
-        setTextAppearance(title, context, android.support.v7.appcompat.R.style.Base_TextAppearance_AppCompat_Menu);
+        setTextAppearance(title, context, androidx.appcompat.R.style.Base_TextAppearance_AppCompat_Menu);
     }
 
     private static void setTextAppearance(TextView textView, Context context, int resId) {

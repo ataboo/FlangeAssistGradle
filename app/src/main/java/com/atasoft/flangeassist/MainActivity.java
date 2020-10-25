@@ -1,18 +1,13 @@
 package com.atasoft.flangeassist;
 
-
 import android.content.*;
 import android.os.*;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.*;
-import android.util.Log;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.*;
 import android.view.*;
 
-import com.atasoft.flangeassist.fragments.callout.CalloutSettingsFragment;
 import com.atasoft.shared.NavDrawerAdaptor;
 import com.atasoft.flangeassist.fragments.NavigationDrawerFragment;
 import com.atasoft.flangeassist.fragments.cashcounter.CashCounter;
@@ -20,23 +15,21 @@ import com.atasoft.flangeassist.fragments.cashcounter.counterobjects.TextureBox;
 import com.atasoft.flangeassist.fragments.settings.PreferenceMenu;
 
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    private NavigationDrawerFragment mNavigationDrawerFragment;
-    private CharSequence mTitle;
     private Fragment lastFrag;
     public static MainActivity staticRef;
     public static TextureBox TEXTURE_BOX = new TextureBox();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-        this.staticRef = this;
+        staticRef = this;
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
+        NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
+        CharSequence mTitle = getTitle();
 
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
@@ -47,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         // draw the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        Fragment newFrag = NavDrawerAdaptor.getItem(position);
+        Fragment newFrag = NavDrawerAdaptor.getFragmentAtIndex(position);
 
         fragmentManager.beginTransaction()
                 .replace(R.id.container, newFrag)
@@ -83,8 +76,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_about:
                 openAbout();
                 return true;
-            case R.id.callout_settings:
-                openCalloutSettings();
         }
 		return super.onOptionsItemSelected(item);
     }
@@ -97,23 +88,6 @@ public class MainActivity extends AppCompatActivity
     private void openAbout(){
         Intent intent = new Intent(this, AboutPage.class);
         startActivity(intent);
-    }
-
-    private void openCalloutSettings() {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
-        if (lastFrag instanceof CalloutSettingsFragment.DismissListener) {
-            DialogFragment newDialog = CalloutSettingsFragment.newInstance((CalloutSettingsFragment.DismissListener)lastFrag);
-            newDialog.show(ft, "dialog");
-        } else {
-            Log.e("FlangeAssist", "Failed to set dismiss listener for callout settings.");
-        }
-
     }
 }
 

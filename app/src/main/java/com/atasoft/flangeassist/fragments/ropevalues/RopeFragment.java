@@ -13,13 +13,15 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import com.atasoft.flangeassist.R;
 
 /**
  * Created by ataboo on 2016-05-10.
  */
 
-public class RopeFragment extends android.support.v4.app.Fragment {
+public class RopeFragment extends Fragment {
 
     public enum PrefKey {
         ROPE_TYPE("rope_type_index"),

@@ -3,10 +3,13 @@ package com.atasoft.flangeassist.fragments;
 import android.content.*;
 import android.os.*;
 import android.preference.*;
-import android.support.v4.app.*;
+import androidx.core.app.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
+
+import androidx.fragment.app.Fragment;
+
 import com.atasoft.flangeassist.*;
 import com.atasoft.utilities.*;
 

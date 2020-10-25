@@ -4,11 +4,14 @@ import android.content.*;
 import android.graphics.*;
 import android.os.*;
 import android.preference.*;
-import android.support.v4.app.*;
+import androidx.core.app.*;
 import android.text.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
+
+import androidx.fragment.app.Fragment;
+
 import com.atasoft.flangeassist.*;
 
 public class NozzleCalc extends Fragment

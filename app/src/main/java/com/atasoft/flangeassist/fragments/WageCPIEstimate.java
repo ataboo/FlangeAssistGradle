@@ -1,10 +1,13 @@
 package com.atasoft.flangeassist.fragments;
 
 import android.os.*;
-import android.support.v4.app.*;
+import androidx.core.app.*;
 import android.view.*;
 import android.view.View.*;
 import android.widget.*;
+
+import androidx.fragment.app.Fragment;
+
 import com.atasoft.flangeassist.*;
 
 public class WageCPIEstimate extends Fragment implements OnClickListener

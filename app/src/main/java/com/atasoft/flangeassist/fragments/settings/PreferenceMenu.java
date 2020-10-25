@@ -5,7 +5,7 @@ import android.preference.PreferenceActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import com.atasoft.flangeassist.R;
 

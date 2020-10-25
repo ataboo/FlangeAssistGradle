@@ -1,7 +1,7 @@
 package com.atasoft.flangeassist.fragments;
 
 import android.os.*;
-import android.support.v4.app.*;
+import androidx.core.app.*;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -10,6 +10,8 @@ import com.atasoft.flangeassist.*;
 import com.atasoft.utilities.*;
 
 import android.text.*;
+
+import androidx.fragment.app.Fragment;
 
 public class UnitConFragment extends Fragment //implements OnClickListener
 {

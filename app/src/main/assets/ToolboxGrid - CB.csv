@@ -10,9 +10,9 @@ Cape Breton,Classification,Wage
 Next Increase ?,July 2017?,
 ,,
 #vac_rate,0.12,
-#field_dues,0.0525,
-#month_dues,43.75,
-#night_ot,true,
+#field_dues,0.0425,
+#month_dues,45.95,
+#night_ot,TRUE,
 ,,
 ,Straight Time,Overtime
 #pay_weekday,8,0

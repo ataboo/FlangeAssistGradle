@@ -18,7 +18,7 @@ public class AboutPage extends Activity {
         actionBar.setHomeButtonEnabled(true);
 
         TextView versionView = findViewById(R.id.versionInfo);
-        TextView aboutBlurdTextView = findViewById(R.id.aboutblurb);
+        TextView aboutBlurbTextView = findViewById(R.id.aboutblurb);
         try {
             String versionInfo = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
             String versionBlurb = getString(R.string.version_info);
@@ -29,7 +29,7 @@ public class AboutPage extends Activity {
             e.printStackTrace();
         }
 
-        aboutBlurdTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        aboutBlurbTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
     }
 }

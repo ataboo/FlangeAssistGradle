@@ -5,6 +5,7 @@ import com.atasoft.utilities.AtaStringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -19,14 +20,22 @@ public enum ClassificationFilter {
     RIGGER("Rigger", new ClassificationTag[]{ClassificationTag.RIGGER}),
     APPRENTICE("Apprentice", new ClassificationTag[]{ClassificationTag.WELDING_APP, ClassificationTag.FITTER_APP}),
     WELD_APPR("Welding Apprentice", new ClassificationTag[]{ClassificationTag.WELDING_APP}),
-    BM_APPR("Fitter Apprentice", new ClassificationTag[]{ClassificationTag.FITTER_APP});
+    BM_APPR("Fitter Apprentice", new ClassificationTag[]{ClassificationTag.FITTER_APP}),
+    FOREMAN("Foreman", new ClassificationTag[]{ClassificationTag.FOREMAN}),
+    OTHER("Other", true);
 
     public String name;
     public ClassificationTag[] tags;
+    public boolean matchAll = false;
 
     ClassificationFilter(String name, ClassificationTag[] tags) {
         this.name = name;
         this.tags = tags;
+    }
+
+    ClassificationFilter(String name, boolean matchAll) {
+        this.matchAll = matchAll;
+        this.name = name;
     }
 
     public static String serialize(EnumSet<ClassificationFilter> set) {
@@ -48,5 +57,19 @@ public enum ClassificationFilter {
         }
 
         return filters;
+    }
+
+    public boolean matchesTags(HashSet<ClassificationTag> tags) {
+        if (this.matchAll) {
+            return true;
+        }
+
+        for (ClassificationTag tag : this.tags) {
+            if (tags.contains(tag)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

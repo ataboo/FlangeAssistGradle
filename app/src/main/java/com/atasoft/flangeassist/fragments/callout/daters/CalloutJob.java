@@ -1,5 +1,7 @@
 package com.atasoft.flangeassist.fragments.callout.daters;
 
+import android.util.Log;
+
 import com.atasoft.flangeassist.fragments.callout.daters.hire.ClassificationFilter;
 import com.atasoft.flangeassist.fragments.callout.daters.hire.ClassificationTag;
 import com.atasoft.flangeassist.fragments.callout.daters.hire.Manpower;
@@ -64,6 +66,8 @@ public class CalloutJob {
             tags.addAll(Arrays.asList(namehire.getMatchingTags()));
         }
 
+        Log.i("Dump", jobObject.toString());
+
     }
 
     public DetailRow getGroupRow() {
@@ -106,10 +110,8 @@ public class CalloutJob {
 
     public boolean matchesFilters(EnumSet<ClassificationFilter> filters) {
         for (ClassificationFilter filter : filters) {
-            for (ClassificationTag tag : filter.tags) {
-                if (tags.contains(tag)) {
-                    return true;
-                }
+            if (filter.matchesTags(this.tags)) {
+                return true;
             }
         }
 
